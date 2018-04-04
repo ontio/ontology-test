@@ -1,0 +1,21 @@
+{
+  "Configuration": {
+    "Magic": 7630401,
+    "Version": 23,
+    "SeedList": [
+      "127.0.0.1:20338"
+    ],
+    "HttpJsonPort": 20366,
+    "HttpLocalPort": 20367,
+    "NodePort": 20368,
+    "BookKeeperName": "c4",
+    "IsTLS": false,
+    "CertPath": "./sample-cert.pem",
+    "KeyPath": "./sample-cert-key.pem",
+    "CAPath": "./sample-ca.pem",
+    "MultiCoreNum": 2,
+    "PrintLevel":4,
+    "IsTLS": false,
+    "BookKeeperCount": 7
+  }
+}
