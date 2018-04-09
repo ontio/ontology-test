@@ -24,7 +24,7 @@ import (
 	"fmt"
 	log4 "github.com/alecthomas/log4go"
 	sdk "github.com/ontio/ontology-go-sdk"
-	wallet "github.com/ontio/ontology-go-sdk/wallet"
+	"github.com/ontio/ontology-go-sdk/wallet"
 	"math/big"
 )
 
@@ -70,11 +70,11 @@ func (this *TestFrameworkContext) FailNow() {
 
 //AssertToInt compare with int, if not equal, return error
 func (this *TestFrameworkContext) AssertToInt(value interface{}, expect int) error {
-	v, ok := value.(int)
+	v, ok := value.(*big.Int)
 	if !ok {
 		return fmt.Errorf("Assert:%v to int failed", value)
 	}
-	if int(v) != expect {
+	if int(v.Int64()) != expect {
 		return fmt.Errorf("%v not equal:%v", value, expect)
 	}
 	return nil
@@ -82,11 +82,11 @@ func (this *TestFrameworkContext) AssertToInt(value interface{}, expect int) err
 
 //AssertToInt compare with uint, if not equal, return error
 func (this *TestFrameworkContext) AssertToUint(value interface{}, expect uint) error {
-	v, ok := value.(uint)
+	v, ok := value.(*big.Int)
 	if !ok {
 		return fmt.Errorf("Assert:%v to uint failed", value)
 	}
-	if uint(v) != expect {
+	if uint(v.Uint64()) != expect {
 		return fmt.Errorf("%v not equal:%v", value, expect)
 	}
 	return nil
@@ -118,28 +118,23 @@ func (this *TestFrameworkContext) AssertToString(value interface{}, expect strin
 
 //AssertToInt compare with byteArray, if not equal, return error
 func (this *TestFrameworkContext) AssertToByteArray(value interface{}, expect []byte) error {
-	v, ok := value.(string)
+	v, ok := value.([]byte)
 	if !ok {
 		return fmt.Errorf("Assert:%v to string failed", value)
 	}
-	d, err := hex.DecodeString(v)
-	if err != nil {
-		return fmt.Errorf("hex.DecodeString:%s error:%s", v, err)
-	}
-	if !bytes.EqualFold(d, expect) {
-		return fmt.Errorf("%x not equal:%x", d, expect)
+	if !bytes.EqualFold(v, expect) {
+		return fmt.Errorf("%x not equal:%x", v, expect)
 	}
 	return nil
 }
 
 //AssertToInt compare with big.Int, if not equal, return error
 func (this *TestFrameworkContext) AssertBigInteger(value interface{}, expect *big.Int) error {
-	v, ok := value.(float64)
+	v, ok := value.(*big.Int)
 	if !ok {
 		return fmt.Errorf("Assert:%v to big.int failed", value)
 	}
-
-	if big.NewInt(int64(v)).Cmp(expect) != 0 {
+	if v.Cmp(expect) != 0 {
 		return fmt.Errorf("%v not equal:%v", v, expect)
 	}
 	return nil

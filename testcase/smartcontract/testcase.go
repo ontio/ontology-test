@@ -27,4 +27,3 @@ func TestSmartContract() {
 	native.TestNative()
 	neovm.TestNeoVM()
 }
-

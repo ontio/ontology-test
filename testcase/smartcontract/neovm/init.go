@@ -18,10 +18,15 @@
 package neovm
 
 import (
+	"github.com/ontio/ontology-test/testcase/smartcontract/neovm/hash"
 	"github.com/ontio/ontology-test/testcase/smartcontract/neovm/nep5"
+	"github.com/ontio/ontology-test/testcase/smartcontract/neovm/utils"
 	"github.com/ontio/ontology-test/testframework"
 )
 
 func TestNeoVM() {
 	testframework.TFramework.RegTestCase("TestNep5Contract", nep5.TestNep5Contract)
+
+	utils.TestUtils()
+	hash.TestHash()
 }

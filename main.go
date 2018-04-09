@@ -26,17 +26,20 @@ import (
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common/log"
 	"math/rand"
+	"strings"
 	"time"
 )
 
 var (
 	TestConfig string //Test config file
 	LogConfig  string //Log config file
+	TestCases  string //TestCase list in cmdline
 )
 
 func init() {
 	flag.StringVar(&TestConfig, "cfg", "./config_test.json", "Config of ontology-test")
 	flag.StringVar(&LogConfig, "lfg", "./log4go.xml", "Log config of ontology-test")
+	flag.StringVar(&TestCases, "t", "", "Test case to run. use ',' to split test case")
 	flag.Parse()
 }
 
@@ -60,9 +63,9 @@ func main() {
 		log4.Error("OpenOrCreateWallet %s error:%s", common.DefConfig.WalletFile, err)
 		return
 	}
-
+	testCases := strings.Split(TestCases, ",")
 	testframework.TFramework.SetOntSdk(ontSdk)
 	testframework.TFramework.SetWallet(wallet)
 	//Start run test case
-	testframework.TFramework.Start()
+	testframework.TFramework.Start(testCases)
 }

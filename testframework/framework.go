@@ -40,9 +40,11 @@ type TestFramework struct {
 	startTime time.Time
 	//hold the test case for testing
 	testCases []TestCase
-	//Map the test case name to test case
-	testCasesMap map[string]string
-	//hold the test case result for testing
+	//Map the test case id to test case name
+	testCaseNameMap map[string]string
+	//Map test case id to test case
+	testCasesMap map[string]TestCase
+	//Map the test case result for testing
 	testCaseRes map[string]bool
 	//OntologySdk object
 	ont *sdk.OntologySdk
@@ -53,28 +55,47 @@ type TestFramework struct {
 //NewTestFramework return a TestFramework instance
 func NewTestFramework() *TestFramework {
 	return &TestFramework{
-		testCases:    make([]TestCase, 0),
-		testCasesMap: make(map[string]string, 0),
-		testCaseRes:  make(map[string]bool, 0),
+		testCases:       make([]TestCase, 0),
+		testCaseNameMap: make(map[string]string, 0),
+		testCasesMap:    make(map[string]TestCase, 0),
+		testCaseRes:     make(map[string]bool, 0),
 	}
 }
 
 //RegTestCase register a test case to framework
 func (this *TestFramework) RegTestCase(name string, testCase TestCase) {
 	this.testCases = append(this.testCases, testCase)
-	this.testCasesMap[this.getTestCaseId(testCase)] = name
+	testCaseId := this.getTestCaseId(testCase)
+	this.testCaseNameMap[testCaseId] = name
+	this.testCasesMap[testCaseId] = testCase
 }
 
 //Start run test case
-func (this *TestFramework) Start() {
+func (this *TestFramework) Start(testCases []string) {
+	if len(testCases) > 0 {
+		taseCaseList := make([]TestCase, 0, len(testCases))
+		for _, t := range testCases {
+			if t == "" {
+				continue
+			}
+			testCase := this.getTestCaseByName(t)
+			if testCase != nil {
+				taseCaseList = append(taseCaseList, testCase)
+			}
+		}
+		if len(taseCaseList) > 0 {
+			this.runTestList(taseCaseList)
+			return
+		}
+	}
 	this.runTestList(this.testCases)
 }
 
 func (this *TestFramework) runTestList(testCaseList []TestCase) {
 	this.onTestStart()
-	defer this.onTestFinish()
+	defer this.onTestFinish(testCaseList)
 	failNowCh := make(chan interface{}, 0)
-	for i, testCase := range this.testCases {
+	for i, testCase := range testCaseList {
 		select {
 		case <-failNowCh:
 			this.onTestFailNow()
@@ -115,7 +136,7 @@ func (this *TestFramework) onTestStart() {
 }
 
 //onTestStart invoke at the end of test
-func (this *TestFramework) onTestFinish() {
+func (this *TestFramework) onTestFinish(testCaseList []TestCase) {
 	failedList := make([]string, 0)
 	successList := make([]string, 0)
 	for testCase, ok := range this.testCaseRes {
@@ -127,7 +148,7 @@ func (this *TestFramework) onTestFinish() {
 	}
 
 	skipList := make([]string, 0)
-	for _, testCase := range this.testCases {
+	for _, testCase := range testCaseList {
 		_, ok := this.testCaseRes[this.getTestCaseId(testCase)]
 		if !ok {
 			skipList = append(skipList, this.getTestCaseName(testCase))
@@ -197,11 +218,26 @@ func (this *TestFramework) getTestCaseName(testCase interface{}) string {
 	if !ok {
 		testCaseStr = this.getTestCaseId(testCase)
 	}
-	name, ok := this.testCasesMap[testCaseStr]
+	name, ok := this.testCaseNameMap[testCaseStr]
 	if ok {
 		return name
 	}
 	return ""
+}
+
+//getTestCaseByName return test case by test case name
+func (this *TestFramework) getTestCaseByName(name string) TestCase {
+	testCaseId := ""
+	for id, n := range this.testCaseNameMap {
+		if n == name {
+			testCaseId = id
+			break
+		}
+	}
+	if testCaseId == "" {
+		return nil
+	}
+	return this.testCasesMap[testCaseId]
 }
 
 //getTestCaseId return the id of test case

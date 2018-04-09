@@ -19,9 +19,11 @@ package testcase
 
 import (
 	"github.com/ontio/ontology-test/testcase/smartcontract"
+	"github.com/ontio/ontology-test/testcase/vm"
 )
 
 //TestCase list
 func init() {
 	smartcontract.TestSmartContract()
+	vm.TestVM()
 }

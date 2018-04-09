@@ -97,7 +97,7 @@ func nep5Transfer(ctx *testframework.TestFrameworkContext, from, to *account.Acc
 		return common.Uint256{}, fmt.Errorf("InvokeNeoVM %s error:%s", method, err)
 	}
 	//WaitForGenerateBlock
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second,1)
 	if err != nil {
 		return common.Uint256{}, fmt.Errorf("WaitForGenerateBlock error:%s", err)
 	}
@@ -111,7 +111,7 @@ func nep5Init(ctx *testframework.TestFrameworkContext, acc *account.Account) (co
 		return common.Uint256{}, fmt.Errorf("InvokeNeoVM %s error:%s", method, err)
 	}
 	//WaitForGenerateBlock
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second,1)
 	if err != nil {
 		return common.Uint256{}, fmt.Errorf("WaitForGenerateBlock error:%s", err)
 	}
@@ -134,7 +134,7 @@ func nep5Deploy(ctx *testframework.TestFrameworkContext, signer *account.Account
 		return common.Uint256{}, fmt.Errorf("TestNep5Contract DeploySmartContract error:%s", err)
 	}
 	//WaitForGenerateBlock
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second,1)
 	if err != nil {
 		return common.Uint256{}, fmt.Errorf("WaitForGenerateBlock error:%s", err)
 	}
