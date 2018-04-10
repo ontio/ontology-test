@@ -14,7 +14,8 @@ import (
 )
 
 const (
-	 filePath = "/home/zhoupw/work/go/src/github.com/ontio/ontology/vm/wasmvm/exec/test_data2"
+	 //filePath = "/home/zhoupw/work/go/src/github.com/ontio/ontology/vm/wasmvm/exec/test_data2"
+	 filePath = "test_data"
 )
 
 

@@ -888,3 +888,36 @@
 [2018/04/10 14:38:41 CST] [INFO] 			1.	TestWasmJsonContract
 [2018/04/10 14:38:41 CST] [INFO] 			2.	TestWasmRawContract
 [2018/04/10 14:38:41 CST] [INFO] 		===============================================================
+[2018/04/10 15:34:53 CST] [INFO] 			===============================================================
+[2018/04/10 15:34:53 CST] [INFO] 			-------Ontology Test Start Version:23
+[2018/04/10 15:34:53 CST] [INFO] 			===============================================================
+[2018/04/10 15:34:53 CST] [INFO] 
+[2018/04/10 15:34:53 CST] [INFO] ===============================================================
+[2018/04/10 15:34:53 CST] [INFO] 1. Start TestCase:TestWasmJsonContract
+[2018/04/10 15:34:53 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 15:35:00 CST] [INFO] TestWasmJsonContract deploy TxHash:9a764d8ad70c8832f1f2f28c25ac1220fdee0e142211ff8ef84b8b70cadb7f3e
+[2018/04/10 15:35:11 CST] [INFO] invokeContract: b5e127216fb1b173f908122f3afb197471112fa7cbfe69506d4d349f1332c983
+
+[2018/04/10 15:35:11 CST] [INFO] TestWasmJsonContract invokeContract success
+[2018/04/10 15:35:11 CST] [INFO] TestNep5Contract init notify [%!s(*common.SmartContactEvent=&{<nil> [7b2274797065223a22696e74222c2276616c7565223a223530227d] b5e127216fb1b173f908122f3afb197471112fa7cbfe69506d4d349f1332c983})]
+[2018/04/10 15:35:11 CST] [INFO] TestCase:TestWasmJsonContract success.
+[2018/04/10 15:35:11 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 15:35:11 CST] [INFO] 
+[2018/04/10 15:35:11 CST] [INFO] ===============================================================
+[2018/04/10 15:35:11 CST] [INFO] 2. Start TestCase:TestWasmRawContract
+[2018/04/10 15:35:11 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 15:35:23 CST] [INFO] TestWasmRawContract deploy TxHash:9f833dc18a1ca52877e54a8ecc893b41febfacc60434491b5bb04b1e1e6d7adc
+[2018/04/10 15:35:35 CST] [INFO] invokeContract: 1b7bc3d6780d66b5c3990172adaaa5cf722c29a507fa1349fc4ed22e8c6e5842
+
+[2018/04/10 15:35:35 CST] [INFO] TestWasmRawContract invokeContract success
+[2018/04/10 15:35:35 CST] [INFO] TestWasmRawContract invoke notify [%!s(*common.SmartContactEvent=&{<nil> [7b2274797065223a22696e74222c2276616c7565223a223530227d] 1b7bc3d6780d66b5c3990172adaaa5cf722c29a507fa1349fc4ed22e8c6e5842})]
+[2018/04/10 15:35:35 CST] [INFO] TestCase:TestWasmRawContract success.
+[2018/04/10 15:35:35 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 15:35:35 CST] [INFO] 
+[2018/04/10 15:35:35 CST] [INFO] 		===============================================================
+[2018/04/10 15:35:35 CST] [INFO] 		Ontology Test Finish Total:2 Success:2 Failed:0 Skip:0 TimeCost:42.09 s.
+[2018/04/10 15:35:35 CST] [INFO] 		---------------------------------------------------------------
+[2018/04/10 15:35:35 CST] [INFO] 			Success list:
+[2018/04/10 15:35:35 CST] [INFO] 			1.	TestWasmRawContract
+[2018/04/10 15:35:35 CST] [INFO] 			2.	TestWasmJsonContract
+[2018/04/10 15:35:35 CST] [INFO] 		===============================================================
