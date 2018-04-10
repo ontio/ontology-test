@@ -72,7 +72,7 @@ func (this *TestFrameworkContext) FailNow() {
 func (this *TestFrameworkContext) AssertToInt(value interface{}, expect int) error {
 	v, ok := value.(*big.Int)
 	if !ok {
-		return fmt.Errorf("Assert:%v to int failed", value)
+		return fmt.Errorf("Assert:%v to big.Int failed", value)
 	}
 	if int(v.Int64()) != expect {
 		return fmt.Errorf("%v not equal:%v", value, expect)
