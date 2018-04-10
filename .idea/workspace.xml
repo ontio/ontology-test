@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="757a32c8-5446-4bdd-b364-4a290c1e7612" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/test_data/contract.wasm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/rawcontract.wasm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcase/smartcontract/wasmvm/contract_invoke.go" beforeDir="false" afterPath="$PROJECT_DIR$/testcase/smartcontract/wasmvm/contract_invoke.go" afterDir="false" />
-    </list>
+    <list default="true" id="757a32c8-5446-4bdd-b364-4a290c1e7612" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -47,8 +43,8 @@
       <file leaf-file-name="contract_invoke.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/testcase/smartcontract/wasmvm/contract_invoke.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="17" column="26" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
+            <state relative-caret-position="398">
+              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="30" />
               <folding>
                 <element signature="e#16#99#0" expanded="true" />
               </folding>
@@ -175,6 +171,51 @@
               <item name="ontology-test" type="462c0819:PsiDirectoryNode" />
               <item name="test_data" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="ontology-test" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ontology-test" type="462c0819:PsiDirectoryNode" />
+              <item name="testcase" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ontology-test" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ontology-test" type="462c0819:PsiDirectoryNode" />
+              <item name="testcase" type="462c0819:PsiDirectoryNode" />
+              <item name="smartcontract" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ontology-test" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ontology-test" type="462c0819:PsiDirectoryNode" />
+              <item name="testcase" type="462c0819:PsiDirectoryNode" />
+              <item name="smartcontract" type="462c0819:PsiDirectoryNode" />
+              <item name="native" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ontology-test" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ontology-test" type="462c0819:PsiDirectoryNode" />
+              <item name="testcase" type="462c0819:PsiDirectoryNode" />
+              <item name="smartcontract" type="462c0819:PsiDirectoryNode" />
+              <item name="neovm" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ontology-test" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ontology-test" type="462c0819:PsiDirectoryNode" />
+              <item name="testcase" type="462c0819:PsiDirectoryNode" />
+              <item name="smartcontract" type="462c0819:PsiDirectoryNode" />
+              <item name="neovm" type="462c0819:PsiDirectoryNode" />
+              <item name="nep5" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ontology-test" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ontology-test" type="462c0819:PsiDirectoryNode" />
+              <item name="testcase" type="462c0819:PsiDirectoryNode" />
+              <item name="smartcontract" type="462c0819:PsiDirectoryNode" />
+              <item name="wasmvm" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ontology-test" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ontology-test" type="462c0819:PsiDirectoryNode" />
+              <item name="testframework" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -275,27 +316,26 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1523253799694</updated>
-      <workItem from="1523253802858" duration="23487000" />
+      <workItem from="1523253802858" duration="24216000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23487000" />
+    <option name="totallyTimeSpent" value="24216000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="10" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="1" />
       <window_info anchor="bottom" id="Database Changes" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="6" weight="0.547744" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.54702705" />
       <window_info anchor="bottom" id="Version Control" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="1" visible="true" weight="0.33945945" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="1" visible="true" weight="0.33945945" />
       <window_info id="Designer" order="1" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.2498618" />
+      <window_info content_ui="combo" id="Project" order="2" visible="true" weight="0.2498618" />
       <window_info anchor="right" id="Database" order="0" />
       <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="4" weight="0.25" />
@@ -452,8 +492,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/testcase/smartcontract/wasmvm/contract_invoke.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="17" column="26" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
+        <state relative-caret-position="398">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="30" />
           <folding>
             <element signature="e#16#99#0" expanded="true" />
           </folding>
