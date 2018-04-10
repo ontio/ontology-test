@@ -2,25 +2,16 @@ package wasmvm
 
 import (
 	"github.com/ontio/ontology/account"
-	"math/big"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/smartcontract/service/wasm"
-	"github.com/ontio/ontology/smartcontract/service/native/states"
-	"bytes"
 	"github.com/ontio/ontology/vm/types"
-	"github.com/ontio/ontology/vm/wasmvm/exec"
-	"strconv"
 	"errors"
 	"fmt"
-	"encoding/json"
-	"github.com/ontio/ontology/common/serialization"
-	"encoding/binary"
 	"github.com/ontio/ontology-test/testframework"
 	"time"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"io/ioutil"
 )
-
+/* move to go sdk
 func InvokeWasmVMContract(ctx *testframework.TestFrameworkContext,
 	siger*account.Account,
 	gasLimit *big.Int,
@@ -52,11 +43,11 @@ func InvokeWasmVMContract(ctx *testframework.TestFrameworkContext,
 	if err != nil {
 		return common.Uint256{}, nil
 	}
-	isPre := false
-	if len(isPreExec) > 0 && isPreExec[0] {
-		isPre = true
-	}
-	return ctx.Ont.Rpc.SendRawTransaction(tx, isPre)
+	//isPre := false
+	//if len(isPreExec) > 0 && isPreExec[0] {
+	//	isPre = true
+	//}
+	return ctx.Ont.Rpc.SendRawTransaction(tx)
 
 }
 
@@ -137,7 +128,7 @@ func buildWasmContractParam(params []interface{},paramType wasm.ParamType)([]byt
 		return nil,errors.New("unsupported type")
 	}
 }
-
+*/
 
 func DeployWasmJsonContract(ctx *testframework.TestFrameworkContext, signer *account.Account,wasmfile string,contractName string,version string) (common.Uint256, error){
 

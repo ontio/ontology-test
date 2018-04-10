@@ -72,7 +72,8 @@ func invokeContract(ctx *testframework.TestFrameworkContext, acc *account.Accoun
 	params := make([]interface{},2)
 	params[0] = 20
 	params[1] = 30
-	txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
+	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method,wasm.Json,1,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

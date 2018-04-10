@@ -48,6 +48,7 @@ func TestWasmRawContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
+
 	ctx.LogInfo("invokeContract: %x\n", txHash)
 	ctx.LogInfo("TestWasmRawContract invokeContract success")
 	notifies, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
@@ -70,7 +71,8 @@ func invokeRawContract(ctx *testframework.TestFrameworkContext, acc *account.Acc
 	params := make([]interface{},2)
 	params[0] = 20
 	params[1] = 30
-	txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),contractAddress,method,wasm.Raw,params,1,false)
+	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),contractAddress,method,wasm.Raw,params,1,false)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),contractAddress,method,wasm.Raw,1,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

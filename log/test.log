@@ -822,3 +822,69 @@
 [2018/04/10 11:52:18 CST] [INFO] 			1.	TestWasmRawContract
 [2018/04/10 11:52:18 CST] [INFO] 			2.	TestWasmJsonContract
 [2018/04/10 11:52:18 CST] [INFO] 		===============================================================
+[2018/04/10 14:35:31 CST] [INFO] 			===============================================================
+[2018/04/10 14:35:31 CST] [INFO] 			-------Ontology Test Start Version:23
+[2018/04/10 14:35:31 CST] [INFO] 			===============================================================
+[2018/04/10 14:35:31 CST] [INFO] 
+[2018/04/10 14:35:31 CST] [INFO] ===============================================================
+[2018/04/10 14:35:31 CST] [INFO] 1. Start TestCase:TestWasmJsonContract
+[2018/04/10 14:35:31 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 14:35:42 CST] [INFO] TestWasmJsonContract deploy TxHash:5e94878b61fd194faf61e375be22c2e0de57635c1bb23ab7b4134c629e90b96a
+[2018/04/10 14:35:54 CST] [INFO] invokeContract: d71cd590988450024e790b0e6683be2b3e3bc3be242a5608ec46124ca4405f7b
+
+[2018/04/10 14:35:54 CST] [INFO] TestWasmJsonContract invokeContract success
+[2018/04/10 14:35:54 CST] [INFO] TestNep5Contract init notify [%!s(*common.SmartContactEvent=&{<nil> [7b2274797065223a22696e74222c2276616c7565223a223530227d] d71cd590988450024e790b0e6683be2b3e3bc3be242a5608ec46124ca4405f7b})]
+[2018/04/10 14:35:54 CST] [INFO] TestCase:TestWasmJsonContract success.
+[2018/04/10 14:35:54 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 14:35:54 CST] [INFO] 
+[2018/04/10 14:35:54 CST] [INFO] ===============================================================
+[2018/04/10 14:35:54 CST] [INFO] 2. Start TestCase:TestWasmRawContract
+[2018/04/10 14:35:54 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 14:36:06 CST] [INFO] TestWasmRawContract deploy TxHash:8612513d14073d82318dfa00dad063cab35949acccc7abce24343b926c4126d2
+[2018/04/10 14:36:18 CST] [INFO] invokeContract: ef15b9db67e52c043bbc27bdad3b7aa1627c743b5e4e7b8b0eafa9f26afd0c04
+
+[2018/04/10 14:36:18 CST] [INFO] TestWasmRawContract invokeContract success
+[2018/04/10 14:36:18 CST] [INFO] TestWasmRawContract invoke notify [%!s(*common.SmartContactEvent=&{<nil> [7b2274797065223a22696e74222c2276616c7565223a223530227d] ef15b9db67e52c043bbc27bdad3b7aa1627c743b5e4e7b8b0eafa9f26afd0c04})]
+[2018/04/10 14:36:18 CST] [INFO] TestCase:TestWasmRawContract success.
+[2018/04/10 14:36:18 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 14:36:18 CST] [INFO] 
+[2018/04/10 14:36:18 CST] [INFO] 		===============================================================
+[2018/04/10 14:36:18 CST] [INFO] 		Ontology Test Finish Total:2 Success:2 Failed:0 Skip:0 TimeCost:47.07 s.
+[2018/04/10 14:36:18 CST] [INFO] 		---------------------------------------------------------------
+[2018/04/10 14:36:18 CST] [INFO] 			Success list:
+[2018/04/10 14:36:18 CST] [INFO] 			1.	TestWasmJsonContract
+[2018/04/10 14:36:18 CST] [INFO] 			2.	TestWasmRawContract
+[2018/04/10 14:36:18 CST] [INFO] 		===============================================================
+[2018/04/10 14:37:54 CST] [INFO] 			===============================================================
+[2018/04/10 14:37:54 CST] [INFO] 			-------Ontology Test Start Version:23
+[2018/04/10 14:37:54 CST] [INFO] 			===============================================================
+[2018/04/10 14:37:54 CST] [INFO] 
+[2018/04/10 14:37:54 CST] [INFO] ===============================================================
+[2018/04/10 14:37:54 CST] [INFO] 1. Start TestCase:TestWasmJsonContract
+[2018/04/10 14:37:54 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 14:38:05 CST] [INFO] TestWasmJsonContract deploy TxHash:c6490e5a0ba2139b1167284871f89b82b9f09a63ce880bef5370c6c899ed66ea
+[2018/04/10 14:38:17 CST] [INFO] invokeContract: a3e1c66691ecefa53500cdce745551b3d91a8c005bef8bcd9a2bdc657740ca37
+
+[2018/04/10 14:38:17 CST] [INFO] TestWasmJsonContract invokeContract success
+[2018/04/10 14:38:17 CST] [INFO] TestNep5Contract init notify [%!s(*common.SmartContactEvent=&{<nil> [7b2274797065223a22696e74222c2276616c7565223a223530227d] a3e1c66691ecefa53500cdce745551b3d91a8c005bef8bcd9a2bdc657740ca37})]
+[2018/04/10 14:38:17 CST] [INFO] TestCase:TestWasmJsonContract success.
+[2018/04/10 14:38:17 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 14:38:17 CST] [INFO] 
+[2018/04/10 14:38:17 CST] [INFO] ===============================================================
+[2018/04/10 14:38:17 CST] [INFO] 2. Start TestCase:TestWasmRawContract
+[2018/04/10 14:38:17 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 14:38:29 CST] [INFO] TestWasmRawContract deploy TxHash:4d427af0a34419f77af4939e00a75ec7a66a69bd8f8a40c259fdf1c91c74d29e
+[2018/04/10 14:38:41 CST] [INFO] invokeContract: 420cfdf73e0a09bc69e3af27e8e2ff19f479a67fea2b46432ec48479bf92766b
+
+[2018/04/10 14:38:41 CST] [INFO] TestWasmRawContract invokeContract success
+[2018/04/10 14:38:41 CST] [INFO] TestWasmRawContract invoke notify [%!s(*common.SmartContactEvent=&{<nil> [7b2274797065223a22696e74222c2276616c7565223a223530227d] 420cfdf73e0a09bc69e3af27e8e2ff19f479a67fea2b46432ec48479bf92766b})]
+[2018/04/10 14:38:41 CST] [INFO] TestCase:TestWasmRawContract success.
+[2018/04/10 14:38:41 CST] [INFO] ---------------------------------------------------------------
+[2018/04/10 14:38:41 CST] [INFO] 
+[2018/04/10 14:38:41 CST] [INFO] 		===============================================================
+[2018/04/10 14:38:41 CST] [INFO] 		Ontology Test Finish Total:2 Success:2 Failed:0 Skip:0 TimeCost:47.08 s.
+[2018/04/10 14:38:41 CST] [INFO] 		---------------------------------------------------------------
+[2018/04/10 14:38:41 CST] [INFO] 			Success list:
+[2018/04/10 14:38:41 CST] [INFO] 			1.	TestWasmJsonContract
+[2018/04/10 14:38:41 CST] [INFO] 			2.	TestWasmRawContract
+[2018/04/10 14:38:41 CST] [INFO] 		===============================================================
