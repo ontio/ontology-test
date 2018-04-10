@@ -6,4 +6,5 @@ import (
 
 func TestWasmVM() {
 	testframework.TFramework.RegTestCase("TestWasmJsonContract", TestWasmJsonContract)
+	testframework.TFramework.RegTestCase("TestWasmRawContract", TestWasmRawContract)
 }
