@@ -3,7 +3,7 @@ package wasmvm
 import (
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/vm/types"
+	"github.com/ontio/ontology/smartcontract/types"
 	"errors"
 	"fmt"
 	"github.com/ontio/ontology-test/testframework"

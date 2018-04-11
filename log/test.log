@@ -921,3 +921,254 @@
 [2018/04/10 15:35:35 CST] [INFO] 			1.	TestWasmRawContract
 [2018/04/10 15:35:35 CST] [INFO] 			2.	TestWasmJsonContract
 [2018/04/10 15:35:35 CST] [INFO] 		===============================================================
+[2018/04/11 12:10:29 CST] [INFO] 			===============================================================
+[2018/04/11 12:10:29 CST] [INFO] 			-------Ontology Test Start Version:23
+[2018/04/11 12:10:29 CST] [INFO] 			===============================================================
+[2018/04/11 12:10:29 CST] [INFO] 
+[2018/04/11 12:10:29 CST] [INFO] ===============================================================
+[2018/04/11 12:10:29 CST] [INFO] 1. Start TestCase:TestWasmJsonContract
+[2018/04/11 12:10:29 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:10:40 CST] [INFO] TestWasmJsonContract deploy TxHash:23418e9011ebf8dd2cb3544d13fcbc67ce80cb988f6503ab10503a4af25a521b
+[2018/04/11 12:10:52 CST] [INFO] invokeContract: bf461c61751bed17e17593a45eb3875683e05a4249256f40c7d6f58b370507e8
+
+[2018/04/11 12:10:52 CST] [INFO] TestWasmJsonContract invokeContract success
+[2018/04/11 12:10:52 CST] [INFO] TestNep5Contract init notify [%!s(*common.SmartContactEvent=&{9007be541a1aef3d566aa219a74ef16e71644715 bf461c61751bed17e17593a45eb3875683e05a4249256f40c7d6f58b370507e8 [7b2274797065223a22696e74222c2276616c7565223a223530227d]})]
+[2018/04/11 12:10:52 CST] [INFO] TestCase:TestWasmJsonContract success.
+[2018/04/11 12:10:52 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:10:52 CST] [INFO] 
+[2018/04/11 12:10:52 CST] [INFO] ===============================================================
+[2018/04/11 12:10:52 CST] [INFO] 2. Start TestCase:TestWasmRawContract
+[2018/04/11 12:10:52 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:04 CST] [INFO] TestWasmRawContract deploy TxHash:cf69ca0b5ab8cf75ef9d6ef22d5d33411e6dc82787e0bf7c93b6dae3faf62cda
+[2018/04/11 12:11:16 CST] [INFO] invokeContract: c14e540433e31c55de99fbc6999952c5a5a438df42da68ec915ff2a8a8311e58
+
+[2018/04/11 12:11:16 CST] [INFO] TestWasmRawContract invokeContract success
+[2018/04/11 12:11:16 CST] [INFO] TestWasmRawContract invoke notify [%!s(*common.SmartContactEvent=&{90ca57034b30a3fe0da266c20b337ed2a0aa47a6 c14e540433e31c55de99fbc6999952c5a5a438df42da68ec915ff2a8a8311e58 [7b2274797065223a22696e74222c2276616c7565223a223530227d]})]
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestWasmRawContract success.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 3. Start TestCase:TestOperationAdd
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationAdd GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationAdd failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 4. Start TestCase:TestOperationSub
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationSub GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationSub failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 5. Start TestCase:TestOperationMulti
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationMulti GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationMulti failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 6. Start TestCase:TestOperationDivide
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationDivide GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationDivide failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 7. Start TestCase:TestOperationSelfAdd
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationSelfAdd GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationSelfAdd failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 8. Start TestCase:TestOperationSelfSub
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationSelfAdd GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationSelfSub failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 9. Start TestCase:TestOperationLarger
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationLarger GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationLarger failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 10. Start TestCase:TestOperationLargerEqual
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationLargerEqual GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationLargerEqual failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 11. Start TestCase:TestOperationSmaller
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationSmaller GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationSmaller failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 12. Start TestCase:TestOperationSmallerEqual
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationSmallerEqual GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationSmallerEqual failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 13. Start TestCase:TestOperationEqual
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationEqual GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationEqual failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 14. Start TestCase:TestOperationNotEqual
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationNotEqual GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationNotEqual failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 15. Start TestCase:TestOperationNegative
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationNegative GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationNegative failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 16. Start TestCase:TestOperationOr
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationOr GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationOr failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 17. Start TestCase:TestOperationAnd
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationAnd GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationAnd failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 18. Start TestCase:TestOperationLeftShift
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationLeftShift GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationLeftShift failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 19. Start TestCase:TestOperationRightShift
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestOperationRightShift GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestOperationRightShift failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 20. Start TestCase:TestBoolean
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestReturnType GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestBoolean failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 21. Start TestCase:TestInteger
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestInteger GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestInteger failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 22. Start TestCase:TestString
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestString GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestString failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 23. Start TestCase:TestArray
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestArray GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestArray failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 24. Start TestCase:TestReturnType
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestReturnType GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestReturnType failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 25. Start TestCase:TestByteArray
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestByteArray GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestByteArray failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 26. Start TestCase:TestIfElse
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestIfElse GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestIfElse failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 27. Start TestCase:TestSwitch
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestArray GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestSwitch failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 28. Start TestCase:TestFor
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestFor GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestFor failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] ===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 29. Start TestCase:TestCallContractStatic
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [EROR] TestIfElse GetDefaultAccount error:Can't load default account.
+[2018/04/11 12:11:16 CST] [INFO] TestCase:TestCallContractStatic failed.
+[2018/04/11 12:11:16 CST] [INFO] ---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 
+[2018/04/11 12:11:16 CST] [INFO] 		===============================================================
+[2018/04/11 12:11:16 CST] [INFO] 		Ontology Test Finish Total:29 Success:2 Failed:27 Skip:0 TimeCost:47.09 s.
+[2018/04/11 12:11:16 CST] [INFO] 		---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 			Success list:
+[2018/04/11 12:11:16 CST] [INFO] 			1.	TestWasmRawContract
+[2018/04/11 12:11:16 CST] [INFO] 			2.	TestWasmJsonContract
+[2018/04/11 12:11:16 CST] [INFO] 		---------------------------------------------------------------
+[2018/04/11 12:11:16 CST] [INFO] 			Fail list:
+[2018/04/11 12:11:16 CST] [INFO] 			1.	TestOperationAdd
+[2018/04/11 12:11:16 CST] [INFO] 			2.	TestOperationLeftShift
+[2018/04/11 12:11:16 CST] [INFO] 			3.	TestBoolean
+[2018/04/11 12:11:16 CST] [INFO] 			4.	TestString
+[2018/04/11 12:11:16 CST] [INFO] 			5.	TestOperationSub
+[2018/04/11 12:11:16 CST] [INFO] 			6.	TestOperationDivide
+[2018/04/11 12:11:16 CST] [INFO] 			7.	TestOperationSelfSub
+[2018/04/11 12:11:16 CST] [INFO] 			8.	TestOperationSmaller
+[2018/04/11 12:11:16 CST] [INFO] 			9.	TestOperationAnd
+[2018/04/11 12:11:16 CST] [INFO] 			10.	TestIfElse
+[2018/04/11 12:11:16 CST] [INFO] 			11.	TestSwitch
+[2018/04/11 12:11:16 CST] [INFO] 			12.	TestOperationEqual
+[2018/04/11 12:11:16 CST] [INFO] 			13.	TestOperationNegative
+[2018/04/11 12:11:16 CST] [INFO] 			14.	TestOperationLarger
+[2018/04/11 12:11:16 CST] [INFO] 			15.	TestOperationLargerEqual
+[2018/04/11 12:11:16 CST] [INFO] 			16.	TestOperationNotEqual
+[2018/04/11 12:11:16 CST] [INFO] 			17.	TestOperationSmallerEqual
+[2018/04/11 12:11:16 CST] [INFO] 			18.	TestCallContractStatic
+[2018/04/11 12:11:16 CST] [INFO] 			19.	TestByteArray
+[2018/04/11 12:11:16 CST] [INFO] 			20.	TestFor
+[2018/04/11 12:11:16 CST] [INFO] 			21.	TestOperationOr
+[2018/04/11 12:11:16 CST] [INFO] 			22.	TestInteger
+[2018/04/11 12:11:16 CST] [INFO] 			23.	TestArray
+[2018/04/11 12:11:16 CST] [INFO] 			24.	TestOperationMulti
+[2018/04/11 12:11:16 CST] [INFO] 			25.	TestOperationSelfAdd
+[2018/04/11 12:11:16 CST] [INFO] 			26.	TestOperationRightShift
+[2018/04/11 12:11:16 CST] [INFO] 			27.	TestReturnType
+[2018/04/11 12:11:16 CST] [INFO] 		===============================================================
