@@ -1,9 +1,10 @@
 package deploy_invoke
 
 import (
-	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/vm/types"
 	"time"
+
+	"github.com/ontio/ontology-test/testframework"
+	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestDeploySmartContract(ctx *testframework.TestFrameworkContext) bool {

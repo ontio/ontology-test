@@ -1,13 +1,14 @@
 package utils
 
 import (
+	"math/big"
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/vm/types"
-	"math/big"
-	"time"
+	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
@@ -40,15 +41,15 @@ func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	input := new(big.Int).SetInt64(-233545554)
-	if !testAsArray_BigInteger(ctx, codeAddress, input){
+	if !testAsArray_BigInteger(ctx, codeAddress, input) {
 		return false
 	}
 	input = new(big.Int).SetInt64(-3434)
-	if !testAsArray_BigInteger(ctx, codeAddress, input){
+	if !testAsArray_BigInteger(ctx, codeAddress, input) {
 		return false
 	}
 	input = new(big.Int).SetInt64(1)
-	if !testAsArray_BigInteger(ctx, codeAddress, input){
+	if !testAsArray_BigInteger(ctx, codeAddress, input) {
 		return false
 	}
 	return true

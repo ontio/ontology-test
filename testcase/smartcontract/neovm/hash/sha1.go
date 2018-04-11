@@ -2,12 +2,13 @@ package hash
 
 import (
 	"crypto/sha1"
+	"math/big"
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/vm/types"
-	"math/big"
-	"time"
+	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestSha1(ctx *testframework.TestFrameworkContext) bool {

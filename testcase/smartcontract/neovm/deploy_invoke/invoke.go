@@ -1,9 +1,10 @@
 package deploy_invoke
 
 import (
-	"github.com/ontio/ontology-test/testframework"
-	"time"
 	"math/big"
+	"time"
+
+	"github.com/ontio/ontology-test/testframework"
 )
 
 func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
@@ -13,7 +14,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txHash,  err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,new(big.Int), contractCodeAddress,[]interface{}{})
+	txHash, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer, new(big.Int), contractCodeAddress, []interface{}{})
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract InvokeNeoVMSmartContract error:%s", err)
 	}
