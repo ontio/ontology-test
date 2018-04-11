@@ -1,13 +1,14 @@
 package hash
 
 import (
+	"crypto/sha256"
+	"math/big"
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/vm/types"
-	"math/big"
-	"time"
-	"crypto/sha256"
+	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestSha256(ctx *testframework.TestFrameworkContext) bool {
@@ -62,7 +63,7 @@ func TestSha256(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
-func csha256(input []byte) [32]byte{
+func csha256(input []byte) [32]byte {
 	return sha256.Sum256(input)
 }
 

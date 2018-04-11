@@ -1,13 +1,14 @@
 package utils
 
 import (
+	"math/big"
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/vm/types"
-	"math/big"
-	"time"
+	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
@@ -44,7 +45,7 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	b = big.NewInt(0)
-	if !testAsBigInteger(ctx, codeAddress, b){
+	if !testAsBigInteger(ctx, codeAddress, b) {
 		return false
 	}
 	b = big.NewInt(-1233)
