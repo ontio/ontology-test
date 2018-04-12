@@ -2,7 +2,7 @@ package deploy_invoke
 
 import (
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/vm/types"
+	"github.com/ontio/ontology/smartcontract/types"
 	"time"
 )
 

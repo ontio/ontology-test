@@ -15,15 +15,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
-package neovm
 
-import (
-	"github.com/ontio/ontology-test/testcase/smartcontract/neovm/deploy_invoke"
-	"github.com/ontio/ontology-test/testcase/smartcontract/neovm/utils"
-)
+package api
 
-func TestNeoVM() {
-	deploy_invoke.TestDeployInvoke()
+import "github.com/ontio/ontology-test/testframework"
 
-	utils.TestUtils()
+func TestSmartContractApi() {
+	testframework.TFramework.RegTestCase("TestOntBlockApi", TestOntBlockApi)
+	testframework.TFramework.RegTestCase("TestGetBlock", TestGetBlock)
 }

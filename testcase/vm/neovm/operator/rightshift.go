@@ -5,7 +5,7 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/vm/types"
+	"github.com/ontio/ontology/smartcontract/types"
 	"math/big"
 	"time"
 )

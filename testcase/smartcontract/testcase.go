@@ -20,10 +20,12 @@ package smartcontract
 import (
 	"github.com/ontio/ontology-test/testcase/smartcontract/native"
 	"github.com/ontio/ontology-test/testcase/smartcontract/neovm"
+	"github.com/ontio/ontology-test/testcase/smartcontract/api"
 )
 
 //Register test case
 func TestSmartContract() {
 	native.TestNative()
 	neovm.TestNeoVM()
+	api.TestSmartContractApi()
 }
