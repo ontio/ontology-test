@@ -16,7 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package api
+package blockchain
 
 import (
 	"math/big"
@@ -28,6 +28,7 @@ import (
 	vtypes "github.com/ontio/ontology/vm/neovm/types"
 )
 
+//
 //using Neo.SmartContract.Framework;
 //using Neo.SmartContract.Framework.Services.Neo;
 //using Neo.SmartContract.Framework.Services.System;
@@ -62,8 +63,15 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer, types.NEOVM, true, code,
-		"TestGetBlock", "1.0", "", "", "")
+	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+		types.NEOVM,
+		true,
+		code,
+		"TestGetBlock",
+		"1.0",
+		"",
+		"",
+		"")
 
 	if err != nil {
 		ctx.LogError("TestGetBlock - DeploySmartContract error:%s", err)
@@ -91,7 +99,10 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 
 	header := block.Header
 	codeHash := utils.GetNeoVMContractAddress(code)
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer, new(big.Int), codeHash, []interface{}{int(height)})
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
+		new(big.Int),
+		codeHash,
+		[]interface{}{int(height)})
 
 	if err != nil {
 		ctx.LogError("TestGetBlock - InvokeNeoVMSmartContract error: %s", err)
@@ -111,20 +122,20 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 
 	vmHash, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("hash"))
 	if err != nil {
-		ctx.LogError("TestGetBlock - GetStorage error: %s", err)
+		ctx.LogError("TestGetBlock - GetStorage1111 error: %s", err)
 		return false
 	}
 
 	hash := header.Hash()
 	err = ctx.AssertToByteArray(vmHash, hash.ToArray())
 	if err != nil {
-		ctx.LogError("TestGetBlock - GetStorage error: %s", err)
+		ctx.LogError("TestGetBlock - GetStorage2222 error: %s", err)
 		return false
 	}
 
 	index, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("index"))
 	if err != nil {
-		ctx.LogError("TestGetBlock - GetStorage error: %s", err)
+		ctx.LogError("TestGetBlock - GetStorage4 error: %s", err)
 		return false
 	}
 
