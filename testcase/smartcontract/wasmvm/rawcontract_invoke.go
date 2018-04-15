@@ -1,13 +1,14 @@
 package wasmvm
 
 import (
+	"fmt"
+	"math/big"
+	"time"
+
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common"
-	"math/big"
-	"github.com/ontio/ontology/smartcontract/service/wasm"
-	"time"
-	"fmt"
+	"github.com/ontio/ontology/smartcontract/service/wasmvm"
 )
 
 func TestWasmRawContract(ctx *testframework.TestFrameworkContext) bool {
@@ -26,8 +27,7 @@ func TestWasmRawContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-
-	txHash, err := DeployWasmJsonContract(ctx,admin,filePath + "/rawcontract.wasm","rwc","1.0")
+	txHash, err := DeployWasmJsonContract(ctx, admin, filePath+"/rawcontract.wasm", "rwc", "1.0")
 
 	if err != nil {
 		ctx.LogError("TestWasmRawContract deploy error:%s", err)
@@ -36,18 +36,17 @@ func TestWasmRawContract(ctx *testframework.TestFrameworkContext) bool {
 
 	ctx.LogInfo("TestWasmRawContract deploy TxHash:%x", txHash)
 
-	address ,err := GetWasmContractAddress(filePath + "/rawcontract.wasm")
-	if err != nil{
+	address, err := GetWasmContractAddress(filePath + "/rawcontract.wasm")
+	if err != nil {
 		ctx.LogError("TestWasmRawContract GetWasmContractAddress error:%s", err)
 		return false
 	}
 
-	txHash,err = invokeRawContract(ctx,admin,address)
+	txHash, err = invokeRawContract(ctx, admin, address)
 	if err != nil {
 		ctx.LogError("TestWasmRawContract invokeContract error:%s", err)
 		return false
 	}
-
 
 	ctx.LogInfo("invokeContract: %x\n", txHash)
 	ctx.LogInfo("TestWasmRawContract invokeContract success")
@@ -58,21 +57,20 @@ func TestWasmRawContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 	ctx.LogInfo("TestWasmRawContract invoke notify %s", notifies)
 	fmt.Println("============result is===============")
-	bs ,_:= common.HexToBytes(notifies[0].States[0].(string))
+	bs, _ := common.HexToBytes(notifies[0].States[0].(string))
 
-	fmt.Printf("+==========%s\n",string(bs))
-
+	fmt.Printf("+==========%s\n", string(bs))
 
 	return true
 }
 
-func invokeRawContract(ctx *testframework.TestFrameworkContext, acc *account.Account,contractAddress common.Address) (common.Uint256, error) {
+func invokeRawContract(ctx *testframework.TestFrameworkContext, acc *account.Account, contractAddress common.Address) (common.Uint256, error) {
 	method := "add"
-	params := make([]interface{},2)
+	params := make([]interface{}, 2)
 	params[0] = 20
 	params[1] = 30
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),contractAddress,method,wasm.Raw,params,1,false)
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),contractAddress,method,wasm.Raw,1,params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc, new(big.Int), contractAddress, method, wasmvm.Raw, 1, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
