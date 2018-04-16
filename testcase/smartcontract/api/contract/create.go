@@ -1,11 +1,12 @@
 package contract
 
 import (
+	"math/big"
+	"time"
+
+	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/smartcontract/types"
-	"github.com/ontio/ontology-go-sdk/utils"
-	"time"
-	"math/big"
 )
 
 /*
@@ -30,7 +31,7 @@ func TestContractCreate(ctx *testframework.TestFrameworkContext) bool {
 
 	signer, err := ctx.Wallet.GetDefaultAccount()
 	if err != nil {
-		ctx.LogError("TestGetContract - GetDefaultAccount error:%s", err)
+		ctx.LogError("TestContractCreate - GetDefaultAccount error: %s", err)
 		return false
 	}
 
@@ -45,21 +46,15 @@ func TestContractCreate(ctx *testframework.TestFrameworkContext) bool {
 		"")
 
 	if err != nil {
-		ctx.LogError("TestGetContract DeploySmartContract call code error:%s", err)
-		return false
-	}
-
-	if err != nil {
 		ctx.LogError("TestContractCreate DeploySmartContract error: %s", err)
 		return false
 	}
-	//等待出块
+
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestContractCreate WaitForGenerateBlock error: %s", err)
 		return false
 	}
-
 
 	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
 		new(big.Int),

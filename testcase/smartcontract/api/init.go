@@ -21,8 +21,10 @@ package api
 import (
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/blockchain"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/contract"
+	"github.com/ontio/ontology-test/testcase/smartcontract/api/executionengine"
+	"github.com/ontio/ontology-test/testcase/smartcontract/api/runtime"
+	"github.com/ontio/ontology-test/testcase/smartcontract/api/transaction"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology-test/testcase/smartcontract/api/execution"
 )
 
 func TestSmartContractApi() {
@@ -30,5 +32,11 @@ func TestSmartContractApi() {
 	testframework.TFramework.RegTestCase("TestGetContract", contract.TestGetContract)
 	testframework.TFramework.RegTestCase("TestContractCreate", contract.TestContractCreate)
 	testframework.TFramework.RegTestCase("TestContractDestroy", contract.TestContractDestroy)
-	testframework.TFramework.RegTestCase("TestExecutingScriptHash", execution.TestExecutingScriptHash)
+	testframework.TFramework.RegTestCase("TestCallingScriptHash", executionengine.TestCallingScriptHash)
+	testframework.TFramework.RegTestCase("TestCheckWitness", runtime.TestCheckWitness)
+	testframework.TFramework.RegTestCase("TestRuntimLog", runtime.TestRuntimLog)
+	testframework.TFramework.RegTestCase("TestRuntimeNotify", runtime.TestRuntimeNotify)
+	testframework.TFramework.RegTestCase("TestGetTxHash", transaction.TestGetTxHash)
+	testframework.TFramework.RegTestCase("TestGetTxType", transaction.TestGetTxType)
+
 }

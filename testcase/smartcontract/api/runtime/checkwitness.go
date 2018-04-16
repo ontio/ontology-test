@@ -22,8 +22,6 @@ public class A : SmartContract
     public static bool Main(byte[] input)
     {
         return Runtime.CheckWitness(input);
-		Storage.Put(Storage.CurrentContext, "isowner", );
-        return null;
     }
 }
 */
@@ -52,7 +50,7 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCheckWitness DeploySmartContract error:%s", err)
 		return false
 	}
-	//等待出块
+
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 
 	if err != nil {
@@ -60,36 +58,33 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if !checkWitness(ctx, code, ctx.OntClient.Account1.ProgramHash.ToArray(), true) {
+	checker, err := ctx.Wallet.CreateAccount()
+
+	if err != nil {
+		ctx.LogError("TestCheckWitness - CreateAccount error: %s", err)
 		return false
 	}
-
-	if !checkWitness(ctx, code, ctx.OntClient.Account2.ProgramHash.ToArray(), false) {
+	if !checkWitness(ctx, codeAddr, signer, checker, false) {
+		ctx.LogError("TestCheckWitness - checkwitness should return false.")
 		return false
 	}
 
 	return true
 }
 
-//func checkWitness(ctx *testframework.TestFrameworkContext, code string, input []byte, expect bool) bool {
-func checkWitness(ctx *testframework.TestFrameworkContext, signer account.Account, codeAddress common.Address, input []byte, expect bool) bool {
-	//res, err := ctx.Ont.Rpc.InvokeSmartContract(
-	//	ctx.OntClient.Account1,
-	//	code,
-	//	[]interface{}{input},
-	//)
-	_, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(&signer,
+func checkWitness(ctx *testframework.TestFrameworkContext, codeAddress common.Address, caller, checker *account.Account, expect bool) bool {
+	res, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(caller,
 		new(big.Int),
 		codeAddress,
-		[]interface{}{input})
+		[]interface{}{checker.Address})
 
 	if err != nil {
-		ctx.LogError("CheckWitness error:%s", err)
+		ctx.LogError("TestCheckWitness error: %s", err)
 		return false
 	}
 	err = ctx.AssertToBoolean(res, expect)
 	if err != nil {
-		ctx.LogError("CheckWitness AssertToBoolean error:%s", err)
+		ctx.LogError("TestCheckWitness AssertToBoolean error:%s", err)
 		return false
 	}
 	return true
