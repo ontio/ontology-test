@@ -4,6 +4,9 @@ import (
 	"math/big"
 	"time"
 
+	"math/big"
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"

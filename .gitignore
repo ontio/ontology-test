@@ -1,1 +1,10 @@
-cscope*
+.idea/*
+idea/*
+log/*
+temp/*
+build/
+*.patch
+*.log
+*.rej
+vendor/*
+*.xml

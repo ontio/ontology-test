@@ -19,7 +19,6 @@ package neovm
 
 import (
 	"github.com/ontio/ontology-test/testcase/smartcontract/neovm/deploy_invoke"
-	"github.com/ontio/ontology-test/testcase/smartcontract/neovm/hash"
 	"github.com/ontio/ontology-test/testcase/smartcontract/neovm/utils"
 )
 
@@ -27,5 +26,4 @@ func TestNeoVM() {
 	deploy_invoke.TestDeployInvoke()
 
 	utils.TestUtils()
-	hash.TestHash()
 }
