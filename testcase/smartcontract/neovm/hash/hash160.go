@@ -8,7 +8,7 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/smartcontract/types"
-	"github.com/ontio/ontology/vm/neovm"
+	vutil "github.com/ontio/ontology/vm/wasmvm/util"
 )
 
 func TestHash160(ctx *testframework.TestFrameworkContext) bool {
@@ -59,7 +59,7 @@ func TestHash160(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func hash160(input []byte) []byte {
-	return new(neovm.ECDsaCrypto).Hash160(input)
+	return new(vutil.ECDsaCrypto).Hash160(input)
 }
 
 /*
