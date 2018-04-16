@@ -1,1 +1,14 @@
+<<<<<<< HEAD
 cscope*
+=======
+idea/*
+temp/*
+idea/
+build/
+*.patch
+.idea/
+.log
+*.rej
+vendor/*
+*.xml
+>>>>>>> 86d51efafdf1683a867a80a58a2561eee4dc3a44
