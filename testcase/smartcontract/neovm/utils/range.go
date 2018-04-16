@@ -9,11 +9,6 @@ import (
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/smartcontract/types"
-<<<<<<< HEAD
-=======
-	"math/big"
-	"time"
->>>>>>> 86d51efafdf1683a867a80a58a2561eee4dc3a44
 )
 
 func TestRange(ctx *testframework.TestFrameworkContext) bool {

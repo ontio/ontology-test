@@ -1,11 +1,6 @@
 package deploy_invoke
 
 import (
-<<<<<<< HEAD
-=======
-	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
->>>>>>> 86d51efafdf1683a867a80a58a2561eee4dc3a44
 	"time"
 
 	"github.com/ontio/ontology-test/testframework"
