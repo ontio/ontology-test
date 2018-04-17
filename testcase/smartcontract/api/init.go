@@ -23,6 +23,7 @@ import (
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/contract"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/executionengine"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/runtime"
+	"github.com/ontio/ontology-test/testcase/smartcontract/api/storage"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/transaction"
 	"github.com/ontio/ontology-test/testframework"
 )
@@ -38,5 +39,6 @@ func TestSmartContractApi() {
 	testframework.TFramework.RegTestCase("TestRuntimeNotify", runtime.TestRuntimeNotify)
 	testframework.TFramework.RegTestCase("TestGetTxHash", transaction.TestGetTxHash)
 	testframework.TFramework.RegTestCase("TestGetTxType", transaction.TestGetTxType)
+	testframework.TFramework.RegTestCase("TestStorage", storage.TestStorage)
 
 }
