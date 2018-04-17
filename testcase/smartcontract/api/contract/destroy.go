@@ -4,7 +4,6 @@ import (
 	"math/big"
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/smartcontract/types"
@@ -39,13 +38,18 @@ using System.Numerics;
 
 class OnTest : SmartContract
 {
-    public static byte[] Main(byte[] codeHash)
+    public static bool Main(byte[] codeHash)
     {
-        return Blockchain.GetContract(codeHash).Script;
+        byte[] script = Blockchain.GetContract(codeHash).Script;
+        if (script == null || script.Length == 0)
+        {
+            return false;
+        }
+        return true;
     }
 }
 
-code = 52c56b6c766b00527ac4616c766b00c361681a4e656f2e426c6f636b636861696e2e476574436f6e74726163746168164e656f2e436f6e74726163742e4765745363726970746c766b51527ac46203006c766b51c3616c7566
+code = 54c56b6c766b00527ac4616c766b00c361681a4e656f2e426c6f636b636861696e2e476574436f6e74726163746168164e656f2e436f6e74726163742e4765745363726970746c766b51527ac46c766b51c3640e006c766b51c3c0009c620400516c766b52527ac46c766b52c3640f0061006c766b53527ac4620e00516c766b53527ac46203006c766b53c3616c7566
 */
 
 func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
@@ -95,7 +99,7 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	code = "52c56b6c766b00527ac4616c766b00c361681a4e656f2e426c6f636b636861696e2e476574436f6e74726163746168164e656f2e436f6e74726163742e4765745363726970746c766b51527ac46203006c766b51c3616c7566"
+	code = "54c56b6c766b00527ac4616c766b00c361681a4e656f2e426c6f636b636861696e2e476574436f6e74726163746168164e656f2e436f6e74726163742e4765745363726970746c766b51527ac46c766b51c3640e006c766b51c3c0009c620400516c766b52527ac46c766b52c3640f0061006c766b53527ac4620e00516c766b53527ac46203006c766b53c3616c7566"
 	codeAddressB := utils.GetNeoVMContractAddress(code)
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
@@ -119,12 +123,10 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
 		new(big.Int),
 		codeAddressB,
-		[]interface{}{codeAddressA[:]},
-		sdkcom.NEOVM_TYPE_BYTE_ARRAY,
-	)
+		[]interface{}{codeAddressA[:]})
 
 	if err != nil {
 		ctx.LogError("TestContractDestroy contract should be destroyed。")
