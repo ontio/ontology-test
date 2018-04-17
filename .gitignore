@@ -9,3 +9,4 @@ build/
 vendor/*
 *.xml
 *.iml
+ontology-test
