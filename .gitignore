@@ -10,3 +10,5 @@ vendor/*
 *.xml
 *.iml
 ontology-test
+config_test.json
+wallet.dat
