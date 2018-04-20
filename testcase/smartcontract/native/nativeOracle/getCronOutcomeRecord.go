@@ -39,18 +39,18 @@ func GetCronOutcomeRecord(ctx *testframework.TestFrameworkContext, tx string) in
 	key := append(temp, new(big.Int).SetInt64(1).Bytes()...)
 	value, err := ctx.Ont.Rpc.GetStorage(contractAddress, []byte(key))
 	if err != nil {
-		ctx.LogError("TestGetCronOutcomeRecord GetStorageItem key:%s error:%s", key, err)
+		ctx.LogError("GetCronOutcomeRecord GetStorageItem key:%s error:%s", key, err)
 		return false
 	}
 	if len(value) == 0 {
-		ctx.LogError("TestGetFinalOutcome CronOutcomeRecord is not set!")
+		ctx.LogError("GetCronOutcomeRecord CronOutcomeRecord is not set!")
 		return false
 	}
 
 	result := new(CronOutcomeRecord)
 	err = json.Unmarshal(value, &result)
 	if err != nil {
-		ctx.LogError("TestGetCronOutcomeRecord Unmarshal result error:%s", err)
+		ctx.LogError("GetCronOutcomeRecord Unmarshal result error:%s", err)
 		return false
 	}
 

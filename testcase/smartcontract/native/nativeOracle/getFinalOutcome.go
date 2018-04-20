@@ -33,18 +33,18 @@ func GetFinalOutcome(ctx *testframework.TestFrameworkContext, tx string) interfa
 	key := append([]byte("FinalOutcome"), txHash...)
 	value, err := ctx.Ont.Rpc.GetStorage(contractAddress, []byte(key))
 	if err != nil {
-		ctx.LogError("TestGetFinalOutcome GetStorageItem key:%s error:%s", key, err)
+		ctx.LogError("GetFinalOutcome GetStorageItem key:%s error:%s", key, err)
 		return false
 	}
 	if len(value) == 0 {
-		ctx.LogError("TestGetFinalOutcome FinalOutcome is not set!")
+		ctx.LogError("GetFinalOutcome FinalOutcome is not set!")
 		return false
 	}
 
 	result := new(interface{})
 	err = json.Unmarshal(value, &result)
 	if err != nil {
-		ctx.LogError("TestGetFinalOutcome Unmarshal result error:%s", err)
+		ctx.LogError("GetFinalOutcome Unmarshal result error:%s", err)
 		return false
 	}
 

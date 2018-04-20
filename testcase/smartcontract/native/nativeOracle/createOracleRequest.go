@@ -72,7 +72,7 @@ func CreateOracleRequest(ctx *testframework.TestFrameworkContext) (string, error
 
 	params := &CreateOracleRequestParam{
 		Request:   request,
-		OracleNum: 3,
+		OracleNum: 1,
 		Address:   hex.EncodeToString(user.Address[:]),
 	}
 

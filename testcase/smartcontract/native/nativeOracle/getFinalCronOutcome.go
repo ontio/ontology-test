@@ -35,18 +35,18 @@ func GetFinalCronOutcome(ctx *testframework.TestFrameworkContext, tx string) int
 	key := append(temp, new(big.Int).SetInt64(2).Bytes()...)
 	value, err := ctx.Ont.Rpc.GetStorage(contractAddress, []byte(key))
 	if err != nil {
-		ctx.LogError("TestGetFinalOutcome GetStorageItem key:%s error:%s", key, err)
+		ctx.LogError("GetFinalCronOutcome GetStorageItem key:%s error:%s", key, err)
 		return false
 	}
 	if len(value) == 0 {
-		ctx.LogError("TestGetFinalOutcome FinalOutcome is not set!")
+		ctx.LogError("GetFinalCronOutcome FinalOutcome is not set!")
 		return false
 	}
 
 	result := new(interface{})
 	err = json.Unmarshal(value, &result)
 	if err != nil {
-		ctx.LogError("TestGetFinalOutcome Unmarshal result error:%s", err)
+		ctx.LogError("GetFinalCronOutcome Unmarshal result error:%s", err)
 		return false
 	}
 

@@ -91,13 +91,17 @@ func SetOracleCronOutcome(ctx *testframework.TestFrameworkContext, tx string) bo
 
 	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
-		ctx.LogError("TestInvokeSmartContract GetSmartContractEvent error:%s", err)
+		ctx.LogError("SetOracleCronOutcome GetSmartContractEvent error:%s", err)
+		return false
+	}
+	if events == nil {
+		ctx.LogError("SetOracleCronOutcome invoke excute error")
 		return false
 	}
 
 	states := events[0].States[1]
 
-	ctx.LogInfo("setOracleCronOutcome result is : %+v", states.(bool))
+	ctx.LogInfo("SetOracleCronOutcome result is : %+v", states.(bool))
 
 	return true
 }

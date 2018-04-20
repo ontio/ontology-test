@@ -37,18 +37,18 @@ func GetOutcomeRecord(ctx *testframework.TestFrameworkContext) *OutcomeRecord {
 	key := append([]byte("OutcomeRecord"), txHash...)
 	value, err := ctx.Ont.Rpc.GetStorage(contractAddress, []byte(key))
 	if err != nil {
-		ctx.LogError("TestGetOutcomeRecord GetStorageItem key:%s error:%s", key, err)
+		ctx.LogError("GetOutcomeRecord GetStorageItem key:%s error:%s", key, err)
 		return nil
 	}
 	if len(value) == 0 {
-		ctx.LogError("TestGetFinalOutcome OutcomeRecord is not set!")
+		ctx.LogError("GetOutcomeRecord OutcomeRecord is not set!")
 		return nil
 	}
 
 	result := new(OutcomeRecord)
 	err = json.Unmarshal(value, &result)
 	if err != nil {
-		ctx.LogError("TestGetOutcomeRecord Unmarshal result error:%s", err)
+		ctx.LogError("GetOutcomeRecord Unmarshal result error:%s", err)
 		return nil
 	}
 

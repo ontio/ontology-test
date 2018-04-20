@@ -89,7 +89,7 @@ func ChangeCronView(ctx *testframework.TestFrameworkContext, tx string) bool {
 
 	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
-		ctx.LogError("TestInvokeSmartContract GetSmartContractEvent error:%s", err)
+		ctx.LogError("ChangeCronView GetSmartContractEvent error:%s", err)
 		return false
 	}
 

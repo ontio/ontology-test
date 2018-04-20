@@ -91,7 +91,11 @@ func SetOracleOutcome(ctx *testframework.TestFrameworkContext, tx string) bool {
 
 	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
-		ctx.LogError("TestInvokeSmartContract GetSmartContractEvent error:%s", err)
+		ctx.LogError("SetOracleOutcome GetSmartContractEvent error:%s", err)
+		return false
+	}
+	if events == nil {
+		ctx.LogError("SetOracleOutcome invoke excute error")
 		return false
 	}
 

@@ -25,7 +25,7 @@ import (
 func TestCronOracle(ctx *testframework.TestFrameworkContext) bool {
 	txHash, err := CreateOracleRequest(ctx)
 	if err != nil {
-		ctx.LogError("TestOracle error:%s", err)
+		ctx.LogError("TestOracle CreateOracleRequest error:%s", err)
 		return false
 	}
 
@@ -35,12 +35,8 @@ func TestCronOracle(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	ok = SetOracleCronOutcome(ctx, txHash)
-	if !ok {
-		return false
-	}
-
-	ok = SetOracleCronOutcome(ctx, txHash)
-	if !ok {
+	if ok {
+		ctx.LogError("TestOracle SetOracleCronOutcome 4 times error")
 		return false
 	}
 
@@ -55,12 +51,8 @@ func TestCronOracle(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	ok = SetOracleCronOutcome(ctx, txHash)
-	if !ok {
-		return false
-	}
-
-	ok = SetOracleCronOutcome(ctx, txHash)
-	if !ok {
+	if ok {
+		ctx.LogError("TestOracle SetOracleCronOutcome 4 times error")
 		return false
 	}
 
