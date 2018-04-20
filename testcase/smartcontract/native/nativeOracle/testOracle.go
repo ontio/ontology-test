@@ -36,7 +36,7 @@ func TestOracle(ctx *testframework.TestFrameworkContext) bool {
 
 	ok = SetOracleOutcome(ctx, txHash)
 	if ok {
-		ctx.LogError("TestOracle SetOracleCronOutcome 4 times error")
+		ctx.LogError("TestOracle SetOracleCronOutcome 2 times error")
 		return false
 	}
 
