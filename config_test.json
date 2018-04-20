@@ -3,5 +3,5 @@
   "RestfulAddress":"http://localhost:20334",
   "WebSocketAddress":"http://localhost:20335",
   "WalletFile":"./wallet.dat",
-  "Password":"wangbing"
+  "Password":"passwordtest"
 }
