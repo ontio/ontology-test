@@ -50,20 +50,17 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestAssetContract invokeInit success")
 	notifies, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestAssetContract init invokeInit error:%s", err)
 		return false
 	}
 	ctx.LogInfo("TestAssetContract invoke notify %s", notifies)
-	fmt.Println("============result is===============")
 	bs ,_:= common.HexToBytes(notifies[0].States[0].(string))
-
-	fmt.Printf("+==========%s\n",string(bs))
-
+	if bs == nil{
+		ctx.LogError("TestAssetContract init invokeInit error:%s", err)
+		return false
+	}
 
 	txHash,err = invokeTotalSupply(ctx,admin,address)
 	if err != nil {
@@ -71,19 +68,16 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestAssetContract invokeTotalSupply success")
 	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestAssetContract init invokeTotalSupply error:%s", err)
 		return false
 	}
-	ctx.LogInfo("TestAssetContract invokeTotalSupply notify %s", notifies)
-	fmt.Println("============invokeTotalSupply result is===============")
 	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
-
-	fmt.Printf("+==========%s\n",string(bs))
+	if bs == nil{
+		ctx.LogError("TestAssetContract init invokeTotalSupply error:%s", err)
+		return false
+	}
 
 	txHash,err = invokeBalanceOf(ctx,admin,address,"00000001")
 	if err != nil {
@@ -91,40 +85,34 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestAssetContract invokeBalanceOf success")
 	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
 		return false
 	}
-	ctx.LogInfo("TestAssetContract invokeBalanceOf notify %s", notifies)
-	fmt.Println("============invokeBalanceOf 00000001 result is===============")
+
 	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
-
-	fmt.Printf("+==========%s\n",string(bs))
-
+	if bs == nil{
+		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
+		return false
+	}
 	txHash,err = invokeTransfer(ctx,admin,address,"00000001","00000002",20000)
 	if err != nil {
 		ctx.LogError("TestAssetContract invokeBalanceOf error:%s", err)
 		return false
 	}
 
-
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestAssetContract invokeBalanceOf success")
 	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
 		return false
 	}
-	ctx.LogInfo("TestAssetContract invokeBalanceOf notify %s", notifies)
-	fmt.Println("============invokeTransfer result is===============")
+
 	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
-
-	fmt.Printf("+==========%s\n",string(bs))
-
+	if bs == nil{
+		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
+		return false
+	}
 
 	txHash,err = invokeBalanceOf(ctx,admin,address,"00000001")
 	if err != nil {
@@ -132,19 +120,17 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestAssetContract invokeBalanceOf success")
 	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
 		return false
 	}
-	ctx.LogInfo("TestAssetContract invokeBalanceOf notify %s", notifies)
-	fmt.Println("============00000001 result is===============")
-	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
 
-	fmt.Printf("+==========%s\n",string(bs))
+	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
+	if bs == nil{
+		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
+		return false
+	}
 
 
 	txHash,err = invokeBalanceOf(ctx,admin,address,"00000002")
@@ -153,19 +139,17 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestAssetContract invokeBalanceOf success")
 	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
 		return false
 	}
-	ctx.LogInfo("TestAssetContract invokeBalanceOf notify %s", notifies)
-	fmt.Println("============00000002 result is===============")
+
 	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
-
-	fmt.Printf("+==========%s\n",string(bs))
-
+	if bs == nil{
+		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
+		return false
+	}
 
 	return true
 }

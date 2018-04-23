@@ -47,9 +47,6 @@ func TestCallNativeContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestCallNativeContract invokeTransferOnt success")
 	notifies, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestCallNativeContract init invokeTransferOnt error:%s", err)

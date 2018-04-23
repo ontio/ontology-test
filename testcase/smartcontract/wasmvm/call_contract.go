@@ -37,7 +37,6 @@ func TestCallWasmJsonContract(ctx *testframework.TestFrameworkContext) bool{
 	ctx.LogInfo("TestCallWasmJsonContract deploy TxHash:%x", txHash)
 
 	address,err := GetWasmContractAddress(filePath+"/callContract.wasm")
-	fmt.Printf("TestCallWasmJsonContract address is %s\n ",address.ToHexString())
 	if err != nil {
 		ctx.LogError("TestCallWasmJsonContract GetWasmContractAddress error:%s", err)
 		return false
@@ -47,21 +46,17 @@ func TestCallWasmJsonContract(ctx *testframework.TestFrameworkContext) bool{
 		ctx.LogError("TestCallWasmJsonContract invokeCallContract error:%s", err)
 		return false
 	}
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestCallWasmJsonContract invokeCallContract success")
+
 	notifies, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestCallWasmJsonContract init GetSmartContractEvent error:%s", err)
 		return false
 	}
-	fmt.Println("============result is===============")
 	bs ,_:= common.HexToBytes(notifies[0].States[0].(string))
-
-	fmt.Printf("+==========%s\n",string(bs))
-	fmt.Println("============result is===============")
-	bs ,_= common.HexToBytes(notifies[1].States[0].(string))
-
-	fmt.Printf("+==========%s\n",string(bs))
+	if bs == nil{
+		ctx.LogError("TestAssetContract init invokeTotalSupply error:%s", err)
+		return false
+	}
 
 
 	/*txHash,err = invokeCallOffchainContract(ctx,admin,address)

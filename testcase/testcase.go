@@ -28,4 +28,5 @@ func init() {
 	smartcontract.TestSmartContract()
 	vm.TestVM()
 	http.TestHttp()
+
 }

@@ -34,36 +34,29 @@ func TestCallNativeContractJson(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	ctx.LogInfo("TestCallNativeContractJson deploy TxHash:%x", txHash)
-
 	address ,err := GetWasmContractAddress(filePath + "/" + fileName)
 	if err != nil{
 		ctx.LogError("TestCallNativeContractJson GetWasmContractAddress error:%s", err)
 		return false
 	}
-	txHash,err = invokeTransferOntJson(ctx,admin,address,"TA7xfQvv3h6eGicv4VE4FU6NjBLpFNB9jr",400)
+	txHash,err = invokeTransferOntJson(ctx,admin,address,"TA4hGJWMawMQKRWFQKGcNs9YFn8Efj8zPq",40000)
 	if err != nil {
 		ctx.LogError("TestCallNativeContractJson invokeTotalSupply error:%s", err)
 		return false
 	}
 
-
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestCallNativeContract invokeTransferOnt success")
 	notifies, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestCallNativeContract init invokeTransferOnt error:%s", err)
 		return false
 	}
-	fmt.Printf("TestCallNativeContract invokeTransferOnt notify %v\n", notifies)
-	fmt.Println("============invokeTotalSupply result is===============")
-	fmt.Printf("notifies[0]:%v\n",notifies[0])
-	fmt.Printf("States[0]:%v\n",notifies[0].States[0])
-	fmt.Printf("notifies[1]:%v\n",notifies[1])
-	fmt.Printf("States[0]:%v\n",notifies[1].States[0])
 	bs ,_:= common.HexToBytes(notifies[0].States[0].(string))
+	if bs == nil{
+		ctx.LogError("TestAssetContract init invokeTotalSupply error:%s", err)
+		return false
+	}
 
-	fmt.Printf("+==========%s\n",string(bs))
+
 
 	return true
 }
