@@ -95,6 +95,27 @@ func TestICOContractCollect(ctx *testframework.TestFrameworkContext) bool {
 	fmt.Printf("balance of %s is %s\n","TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY",bs)
 
 
+	txHash,err = invokeICOWithdraw(ctx,admin,address,100)
+	if err != nil {
+		ctx.LogError("TestICOContract invokeICOWithdraw error:%s", err)
+		return false
+	}
+
+	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	if err != nil {
+		ctx.LogError("TestICOContract init invokeICOWithdraw error:%s", err)
+		return false
+	}
+
+	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
+	if bs == nil{
+		ctx.LogError("TestICOContract init invokeICOWithdraw error:%s", err)
+		return false
+	}
+
+	fmt.Printf("invokeICOWithdraw  is %s\n",bs)
+
+
 	return true
 }
 

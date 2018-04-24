@@ -20,14 +20,13 @@ char * MarshalNativeParams(void * args);
 int CheckWitness(char * address);
 char * GetSelfAddress();
 
+
 char * init(){
     char * totalsupply = GetStorage("TCOIN_TOTAL_SUPPLY");
     if (arrayLen(totalsupply) > 0){
         return JsonMashalResult("this contract already initialized!","string",0);
     }else{
         PutStorage("TCOIN_TOTAL_SUPPLY","1000000000");
-        char * selfaddress = GetSelfAddress();
-        PutStorage(selfaddress,"1000000000");
     }
     return JsonMashalResult("init succeed","string",1);
 }
@@ -51,7 +50,7 @@ int transfer(char * from ,char * to, long long amount){
     if(amount <= 0){
         return 0;
     }
-    int witness = Checkwitness(from);
+    int witness = CheckWitness(from);
     if (witness == 0){
         return 0;
     }
@@ -75,20 +74,33 @@ int transfer(char * from ,char * to, long long amount){
     return 1;
 }
 
-int collect(char * from ,long long amount){
-    char * selfaddress = GetSelfAddress();
+int transOnt(char * from ,char * to,long long amount){
 
-    struct Param{
-        char * from;
-        char * to;
-        long long amount;
+    struct State{
+            int ver;
+            char * from;
+            char * to ;
+            long long amount;
+        };
+
+    struct Transfer {
+        int ver;
+        struct State * states
     };
-    struct Param *p =(struct Param *)malloc(sizeof(struct Param));
-    p->from = from;
-    p->to = selfaddress;
-    p->amount = amount;
 
-    char * result = CallContract("ff00000000000000000000000000000000000001","","transfer",p);
+
+    struct State * state = (struct State*)malloc(sizeof(struct State));
+    state->ver = 1;
+    state->amount = amount;
+    state->from = from;
+    state->to = to;
+
+    struct Transfer * transfer =(struct Transfer*)malloc(sizeof(struct Transfer));
+    transfer->ver = 1;
+    transfer->states = state;
+
+    char * args = MarshalNativeParams(transfer);
+    char * result = CallContract("ff00000000000000000000000000000000000001","","transfer",args);
     if (strcmp(result,"true")==0){
         return 1;
     }else{
@@ -135,7 +147,7 @@ char * invoke(char * method,char * args){
         };
 
         struct Param *p = (struct Param *)malloc(sizeof(struct Param));
-        JsonUnmashalInput(p,sizeof(p),args);
+        JsonUnmashalInput(p,sizeof(struct Param),args);
 
         char *result = balanceOf(p->address);
         RuntimeNotify(result);
@@ -150,7 +162,7 @@ char * invoke(char * method,char * args){
         };
 
         struct Param *p = (struct Param *)malloc(sizeof(struct Param));
-        JsonUnmashalInput(p,sizeof(p),args);
+        JsonUnmashalInput(p,sizeof(struct Param),args);
         char * result;
         if(transfer(p->from,p->to,p->amount) > 0){
 
@@ -167,22 +179,58 @@ char * invoke(char * method,char * args){
             long long amount;
         };
         struct Param *p = (struct Param *)malloc(sizeof(struct Param));
-        JsonUnmashalInput(p,sizeof(p),args);
+        JsonUnmashalInput(p,sizeof(struct Param),args);
 
         int rate = 100;
-        int transOnt = collect(p->from,p->amount);
-        int tranCoin ;
-        char * result;
-        if (transOnt == 1){
-            char * seflAddress = GetSelfAddress();
-            tranCoin = transfer(seflAddress,p->from,p->amount * 100);
-            if (tranCoin == 0){
-                result = JsonMashalResult("transfer coin failed","string",0);
+
+        char * seflAddress = GetSelfAddress();
+        ContractLogError(seflAddress);
+        char * store = GetStorage("TCOIN_TOTAL_SUPPLY");
+        long long  totalsupply = Atoi64(store);
+        char * result = "";
+        long long count = rate * p->amount;
+        if (totalsupply >= count){
+            int transOntResult = transOnt(p->from,seflAddress,p->amount);
+            int tranCoin ;
+
+            if (transOntResult == 1){
+                PutStorage("TCOIN_TOTAL_SUPPLY",I64toa(totalsupply - count,10));
+
+                char * toStore = GetStorage(p->from);
+                long long  totalsupply = 0;
+                if (arrayLen(toStore) > 0){
+                    totalsupply = Atoi64(toStore);
+                }
+
+                PutStorage(p->from,I64toa(totalsupply + count,10));
+                result = JsonMashalResult(I64toa(count,10),"int64",10);
             }else{
-                result = JsonMashalResult("transfer coin succeed","string",1);
+                result = JsonMashalResult("transfer ont failed","string",0);
             }
         }else{
-            result = JsonMashalResult("transfer ont failed","string",0);
+            result = JsonMashalResult("not enough supply","string",0);
+        }
+
+        RuntimeNotify(result);
+        return result;
+    }
+     if(strcmp(method,"withdraw") == 0){
+        struct Param{
+            long long amount;
+        };
+        struct Param *p = (struct Param *)malloc(sizeof(struct Param));
+        JsonUnmashalInput(p,sizeof(struct Param),args);
+
+        char * seflAddress = GetSelfAddress();
+        ContractLogError(seflAddress);
+        char * ownerAddress = "TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY";
+        long long cnt = p->amount;
+        int transOntResult = transOnt(seflAddress,ownerAddress,cnt);
+        char * result = "";
+        if (transOntResult ==1){
+            result = JsonMashalResult(I64toa(cnt,10),"1nt64",1);
+        }else{
+            result = JsonMashalResult(I64toa(cnt,10),"1nt64",0);
         }
 
         RuntimeNotify(result);

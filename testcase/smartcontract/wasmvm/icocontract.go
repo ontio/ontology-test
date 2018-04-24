@@ -39,6 +39,7 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 	ctx.LogInfo("TestICOContract deploy TxHash:%x", txHash)
 
 	address ,err := GetWasmContractAddress(filePath + "/icotest.wasm")
+	fmt.Println("b58address is %s\n",address.ToBase58())
 	if err != nil{
 		ctx.LogError("TestICOContract GetWasmContractAddress error:%s", err)
 		return false
@@ -80,6 +81,28 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	fmt.Printf("totalsuplly  is %s\n",bs)
+
+
+	//collect
+	txHash,err = invokeICOCollect(ctx,admin,address,"TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY",300)
+	if err != nil {
+		ctx.LogError("TestICOContract invokeBalanceOf error:%s", err)
+		return false
+	}
+
+	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	if err != nil {
+		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
+		return false
+	}
+
+	bs ,_ = common.HexToBytes(notifies[0].States[0].(string))
+	if bs == nil{
+		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
+		return false
+	}
+
+	fmt.Printf("collect result is %s\n",bs)
 
 
 	txHash,err = invokeICOBalanceOf(ctx,admin,address,"TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY")
@@ -160,7 +183,6 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	fmt.Printf("balance of %s is %s\n","TA4hGJWMawMQKRWFQKGcNs9YFn8Efj8zPq",bs)
-
 	return true
 }
 
@@ -222,6 +244,20 @@ func invokeICOCollect(ctx *testframework.TestFrameworkContext, acc *account.Acco
 	params := make([]interface{},2)
 	params[0] = from
 	params[1] = amount
+
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	//WaitForGenerateBlock
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
+	if err != nil {
+		return common.Uint256{}, fmt.Errorf("WaitForGenerateBlock error:%s", err)
+	}
+	return txHash, nil
+}
+
+func invokeICOWithdraw(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address,amount int64) (common.Uint256, error) {
+	method := "withdraw"
+	params := make([]interface{},1)
+	params[0] = amount
 
 	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
 	//WaitForGenerateBlock
