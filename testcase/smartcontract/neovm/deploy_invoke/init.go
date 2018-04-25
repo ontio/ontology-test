@@ -7,4 +7,5 @@ import (
 func TestDeployInvoke() {
 	testframework.TFramework.RegTestCase("TestDeploySmartContract", TestDeploySmartContract)
 	testframework.TFramework.RegTestCase("TestInvokeSmartContract", TestInvokeSmartContract)
+	testframework.TFramework.RegTestCase("TestDomainSmartContract", TestDomainSmartContract)
 }
