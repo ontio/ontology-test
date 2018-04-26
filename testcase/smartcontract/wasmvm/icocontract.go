@@ -39,7 +39,7 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 	ctx.LogInfo("TestICOContract deploy TxHash:%x", txHash)
 
 	address ,err := GetWasmContractAddress(filePath + "/icotest.wasm")
-	fmt.Println("b58address is %s\n",address.ToBase58())
+	ctx.LogInfo("contract b58address is %s\n",address.ToBase58())
 	if err != nil{
 		ctx.LogError("TestICOContract GetWasmContractAddress error:%s", err)
 		return false
@@ -56,12 +56,15 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract init invokeInit error:%s", err)
 		return false
 	}
-	ctx.LogInfo("TestAssetContract invoke notify %s", notifies)
-	bs ,_:= common.HexToBytes(notifies[0].States[0].(string))
-	if bs == nil{
-		ctx.LogError("TestICOContract init invokeInit error:%s", err)
+	if len(notifies) < 1{
+		ctx.LogError("TestICOContract return notifies count error!")
 		return false
 	}
+	ctx.LogInfo("==========TestICOContract invokeInit ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
+
 
 	txHash,err = invokeICOTotalSupply(ctx,admin,address)
 	if err != nil {
@@ -71,20 +74,45 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 
 	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
-		ctx.LogError("TestICOContract init invokeTotalSupply error:%s", err)
-		return false
-	}
-	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
-	if bs == nil{
-		ctx.LogError("TestICOContract init invokeTotalSupply error:%s", err)
+		ctx.LogError("TestICOContract invokeTotalSupply error:%s", err)
 		return false
 	}
 
-	fmt.Printf("totalsuplly  is %s\n",bs)
+	if len(notifies) < 1{
+		ctx.LogError("TestICOContract invokeTotalSupply return notifies count error!")
+		return false
+	}
+	ctx.LogInfo("==========TestICOContract invokeTotalSupply ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
+
 
 
 	//collect
-	txHash,err = invokeICOCollect(ctx,admin,address,"TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY",300)
+	//suppose the address TA4hGJWMawMQKRWFQKGcNs9YFn8Efj8zPq has enough ont
+	txHash,err = invokeICOCollect(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB",100)
+	if err != nil {
+		ctx.LogError("TestICOContract invokeICOCollect error:%s", err)
+		return false
+	}
+
+	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	if err != nil {
+		ctx.LogError("TestICOContract invokeICOCollect error:%s", err)
+		return false
+	}
+
+	if len(notifies) < 1{
+		ctx.LogError("TestICOContract invokeICOCollect return notifies count error!")
+		return false
+	}
+	ctx.LogInfo("==========TestICOContract invokeICOCollect ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
+
+	txHash,err = invokeICOBalanceOf(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB")
 	if err != nil {
 		ctx.LogError("TestICOContract invokeBalanceOf error:%s", err)
 		return false
@@ -96,14 +124,36 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	bs ,_ = common.HexToBytes(notifies[0].States[0].(string))
-	if bs == nil{
-		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
+	if len(notifies) < 1{
+		ctx.LogError("TestICOContract invokeBalanceOf return notifies count error!")
+		return false
+	}
+	ctx.LogInfo("==========TestICOContract invokeBalanceOf TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
+
+
+	txHash,err = invokeICOTransfer(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY",20)
+	if err != nil {
+		ctx.LogError("TestICOContract invokeICOTransfer error:%s", err)
 		return false
 	}
 
-	fmt.Printf("collect result is %s\n",bs)
+	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	if err != nil {
+		ctx.LogError("TestICOContract init invokeICOTransfer error:%s", err)
+		return false
+	}
 
+	if len(notifies) < 1{
+		ctx.LogError("TestICOContract invokeICOTransfer return notifies count error!")
+		return false
+	}
+	ctx.LogInfo("==========TestICOContract invokeICOTransfer ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
 
 	txHash,err = invokeICOBalanceOf(ctx,admin,address,"TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY")
 	if err != nil {
@@ -116,17 +166,17 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
 		return false
 	}
-
-	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
-	if bs == nil{
-		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
+	if len(notifies) < 1{
+		ctx.LogError("TestICOContract invokeBalanceOf return notifies count error!")
 		return false
 	}
+	ctx.LogInfo("==========TestICOContract invokeBalanceOf TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
 
-	fmt.Printf("balance of %s is %s\n","TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY",bs)
 
-
-	txHash,err = invokeICOTransfer(ctx,admin,address,"TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY","TA4hGJWMawMQKRWFQKGcNs9YFn8Efj8zPq",20)
+	txHash,err = invokeICOBalanceOf(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB")
 	if err != nil {
 		ctx.LogError("TestICOContract invokeBalanceOf error:%s", err)
 		return false
@@ -138,51 +188,15 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	bs ,_ = common.HexToBytes(notifies[0].States[0].(string))
-	if bs == nil{
-		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
+	if len(notifies) < 1{
+		ctx.LogError("TestICOContract invokeBalanceOf return notifies count error!")
 		return false
 	}
-	fmt.Printf("transfer of %s is %s\n","TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY",bs)
-
-	txHash,err = invokeICOBalanceOf(ctx,admin,address,"TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY")
-	if err != nil {
-		ctx.LogError("TestICOContract invokeBalanceOf error:%s", err)
-		return false
+	ctx.LogInfo("==========TestICOContract invokeBalanceOf TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
 	}
 
-	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
-	if err != nil {
-		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
-		return false
-	}
-
-	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
-	if bs == nil{
-		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
-		return false
-	}
-	fmt.Printf("balance of %s is %s\n","TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY",bs)
-
-	txHash,err = invokeICOBalanceOf(ctx,admin,address,"TA4hGJWMawMQKRWFQKGcNs9YFn8Efj8zPq")
-	if err != nil {
-		ctx.LogError("TestICOContract invokeBalanceOf error:%s", err)
-		return false
-	}
-
-	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
-	if err != nil {
-		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
-		return false
-	}
-
-	bs ,_= common.HexToBytes(notifies[0].States[0].(string))
-	if bs == nil{
-		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
-		return false
-	}
-
-	fmt.Printf("balance of %s is %s\n","TA4hGJWMawMQKRWFQKGcNs9YFn8Efj8zPq",bs)
 	return true
 }
 
