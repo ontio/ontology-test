@@ -44,6 +44,7 @@ func TestDomainContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
+	//Register
 	txHash,err = invokeDomainRegister(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","www.letsrock.com")
 	if err != nil {
 		ctx.LogError("TestDomainContract invokeDomainRegister error:%s", err)
@@ -65,6 +66,7 @@ func TestDomainContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
 	}
 
+	//Register
 	txHash,err = invokeDomainRegister(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","www.letsrock2.com")
 	if err != nil {
 		ctx.LogError("TestDomainContract invokeDomainRegister error:%s", err)
@@ -87,7 +89,7 @@ func TestDomainContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 
-
+	//query
 	txHash,err = invokeDomainQuery(ctx,admin,address,"www.letsrock.com")
 	if err != nil {
 		ctx.LogError("TestDomainContract invokeDomainQuery error:%s", err)
@@ -109,6 +111,8 @@ func TestDomainContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
 	}
 
+
+	//transfer
 	txHash,err = invokeDomainTransfer(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","TA8Xe297g4wGj67maMYZFmdfk9i2riVNrC","www.letsrock.com")
 	if err != nil {
 		ctx.LogError("TestDomainContract invokeDomainQuery error:%s", err)
@@ -194,6 +198,52 @@ func TestDomainContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
 	}
 
+	//Register
+	txHash,err = invokeDomainRegister(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","www.goodthings.com")
+	if err != nil {
+		ctx.LogError("TestDomainContract invokeDomainRegister error:%s", err)
+		return false
+	}
+
+	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	if err != nil {
+		ctx.LogError("TestDomainContract invokeDomainRegister error:%s", err)
+		return false
+	}
+
+	if len(notifies) < 1{
+		ctx.LogError("TestDomainContract invokeDomainRegister return notifies count error!")
+		return false
+	}
+	ctx.LogInfo("==========TestDomainContract invokeDomainRegister ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
+
+	//Sell
+	txHash,err = invokeDomainSell(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","www.goodthings.com",100)
+	if err != nil {
+		ctx.LogError("TestDomainContract invokeDomainRegister error:%s", err)
+		return false
+	}
+
+	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	if err != nil {
+		ctx.LogError("TestDomainContract invokeDomainRegister error:%s", err)
+		return false
+	}
+
+	if len(notifies) < 1{
+		ctx.LogError("TestDomainContract invokeDomainRegister return notifies count error!")
+		return false
+	}
+	ctx.LogInfo("==========TestDomainContract invokeDomainRegister ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
+
+
+
 
 	return true
 }
@@ -251,6 +301,39 @@ func invokeDomainDelete(ctx *testframework.TestFrameworkContext, acc *account.Ac
 
 	params := make([]interface{},2)
 	params[0] = addr
+	params[1] = domain
+
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	//WaitForGenerateBlock
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
+	if err != nil {
+		return common.Uint256{}, fmt.Errorf("WaitForGenerateBlock error:%s", err)
+	}
+	return txHash, nil
+}
+
+func invokeDomainSell(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address,from string,domain string,basePrice int64) (common.Uint256, error) {
+	method := "sell"
+
+	params := make([]interface{},3)
+	params[0] = from
+	params[1] = domain
+	params[2] = basePrice
+
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	//WaitForGenerateBlock
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
+	if err != nil {
+		return common.Uint256{}, fmt.Errorf("WaitForGenerateBlock error:%s", err)
+	}
+	return txHash, nil
+}
+
+func invokeDomainDeal(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address,from string,domain string) (common.Uint256, error) {
+	method := "deal"
+
+	params := make([]interface{},2)
+	params[0] = from
 	params[1] = domain
 
 	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)

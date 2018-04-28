@@ -8,7 +8,7 @@ import (
 
 
 func TestICOContractCollect(ctx *testframework.TestFrameworkContext) bool {
-	wasmWallet := "testwallet.dat"
+	wasmWallet := "./test_data/testwallet.dat"
 	wasmWalletPwd := "123456"
 
 	wallet, err := ctx.Ont.OpenWallet(wasmWallet, wasmWalletPwd)

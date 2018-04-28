@@ -41,7 +41,8 @@ func TestCallNativeContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCallNativeContract GetWasmContractAddress error:%s", err)
 		return false
 	}
-	txHash,err = invokeTransferOnt(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","TA8Xe297g4wGj67maMYZFmdfk9i2riVNrC",4000)
+	//trans ont
+	txHash,err = invokeTransferOnt(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","TA8Xe297g4wGj67maMYZFmdfk9i2riVNrC",5000)
 	if err != nil {
 		ctx.LogError("TestCallNativeContract invokeTotalSupply error:%s", err)
 		return false
@@ -53,15 +54,29 @@ func TestCallNativeContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if len(notifies) != 2{
-		ctx.LogError("TestCallNativeContract invokeTransferOnt error:notifies length errors" )
+	ctx.LogInfo("==========TestCallNativeContract TestCallNativeContract ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
+
+	//trans ont
+	txHash,err = invokeTransferOnt(ctx,admin,address,"TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB","TA8aqS3PyDcFG567qa2qJuufHH1M82zVig",5000)
+	if err != nil {
+		ctx.LogError("TestCallNativeContract invokeTotalSupply error:%s", err)
 		return false
 	}
 
-	ctx.LogInfo(fmt.Sprintf("TestCallNativeContract invokeTransferOnt notify %v\n", notifies))
-	ctx.LogInfo("============invokeTotalSupply result is===============")
-	ctx.LogInfo(fmt.Sprintf("notifies[0]:%v\n",notifies[0]))
-	ctx.LogInfo(fmt.Sprintf("notifies[1]:%v\n",notifies[1]))
+	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	if err != nil {
+		ctx.LogError("TestCallNativeContract invokeTransferOnt error:%s", err)
+		return false
+	}
+
+	ctx.LogInfo("==========TestCallNativeContract TestCallNativeContract ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
+
 	return true
 }
 
