@@ -14,7 +14,7 @@ import (
 )
 
 func TestCallWasmJsonContract(ctx *testframework.TestFrameworkContext) bool{
-	wasmWallet := "/home/zhoupw/work/go/src/github.com/ontio/ontology/wallet.dat"
+	wasmWallet := "wallet.dat"
 	wasmWalletPwd := "123456"
 	wallet, err := ctx.Ont.OpenWallet(wasmWallet, wasmWalletPwd)
 	if err != nil {
@@ -41,45 +41,49 @@ func TestCallWasmJsonContract(ctx *testframework.TestFrameworkContext) bool{
 		ctx.LogError("TestCallWasmJsonContract GetWasmContractAddress error:%s", err)
 		return false
 	}
-	txHash,err = invokeCallContract(ctx,admin,address)
+	txHash,err = invokeCallContractAddValue(ctx,admin,address)
 	if err != nil {
-		ctx.LogError("TestCallWasmJsonContract invokeCallContract error:%s", err)
+		ctx.LogError("TestCallWasmJsonContract invokeCallContractAddValue error:%s", err)
 		return false
 	}
 
 	notifies, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
-		ctx.LogError("TestCallWasmJsonContract init GetSmartContractEvent error:%s", err)
-		return false
-	}
-	bs ,_:= common.HexToBytes(notifies[0].States[0].(string))
-	if bs == nil{
-		ctx.LogError("TestAssetContract init invokeTotalSupply error:%s", err)
+		ctx.LogError("TestCallWasmJsonContract invokeCallContractAddValue GetSmartContractEvent error:%s", err)
 		return false
 	}
 
+	if len(notifies) < 1{
+		ctx.LogError("TestWasmJsonContract invokeCallContractAddValue return notifies count error!")
+		return false
+	}
+	ctx.LogInfo("==========TestWasmJsonContract invokeCallContractAddValue ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
 
-	/*txHash,err = invokeCallOffchainContract(ctx,admin,address)
+
+	txHash,err = invokeCallContractGetValue(ctx,admin,address)
 	if err != nil {
-		ctx.LogError("TestCallWasmJsonContract invokeCallContract error:%s", err)
+		ctx.LogError("TestCallWasmJsonContract invokeCallContractGetValue error:%s", err)
 		return false
 	}
-	ctx.LogInfo("invokeContract: %x\n", txHash)
-	ctx.LogInfo("TestCallWasmJsonContract invokeCallContract success")
 
-	notifies, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	notifies, err = ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
-		ctx.LogError("TestCallWasmJsonContract init GetSmartContractEvent error:%s", err)
+		ctx.LogError("TestCallWasmJsonContract invokeCallContractGetValue GetSmartContractEvent error:%s", err)
 		return false
 	}
-	fmt.Println("============result is===============")
-	bs ,_:= common.HexToBytes(notifies[0].States[0].(string))
 
-	fmt.Printf("+==========%s\n",string(bs))
-	fmt.Println("============result is===============")
-	bs ,_= common.HexToBytes(notifies[1].States[0].(string))
+	if len(notifies) < 1{
+		ctx.LogError("TestWasmJsonContract invokeCallContractGetValue return notifies count error!")
+		return false
+	}
+	ctx.LogInfo("==========TestWasmJsonContract invokeCallContractAddValue ============")
+	for i ,n := range notifies{
+		ctx.LogInfo(fmt.Sprintf("notify %d is %v",i, n))
+	}
 
-	fmt.Printf("+==========%s\n",string(bs))*/
 
 
 	return true
@@ -117,7 +121,7 @@ func deployCallWasmJsonContract(ctx *testframework.TestFrameworkContext, signer 
 	return txHash, nil
 }
 
-func invokeCallContract(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address) (common.Uint256, error) {
+func invokeCallContractGetValue(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address) (common.Uint256, error) {
 	method := "getValue"
 	params := make([]interface{},1)
 	params[0] = "TestKey"
@@ -130,11 +134,11 @@ func invokeCallContract(ctx *testframework.TestFrameworkContext, acc *account.Ac
 	return txHash, nil
 }
 
-func invokeCallOffchainContract(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address) (common.Uint256, error) {
-	method := "add"
+func invokeCallContractAddValue(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address) (common.Uint256, error) {
+	method := "putValue"
 	params := make([]interface{},2)
-	params[0] = 40
-	params[1] = 50
+	params[0] = "TestKey"
+	params[1] = "Hello world again!"
 	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
@@ -143,3 +147,4 @@ func invokeCallOffchainContract(ctx *testframework.TestFrameworkContext, acc *ac
 	}
 	return txHash, nil
 }
+
