@@ -12,7 +12,7 @@ Ontology Test Framework is a light-weight test framework for ontology. Integrati
   "RestfulAddress":"http://localhost:20334",
   "WebSocketAddress":"http://localhost:20335",
   "WalletFile":"./wallet.dat",
-  "Password":"wangbing"
+  "Password":"your wallet password"
 }
 ```
 
