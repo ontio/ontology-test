@@ -58,14 +58,15 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	checker, err := ctx.Wallet.CreateAccount()
+	//checker, err := ctx.Wallet.CreateAccount()
+	//
+	//if err != nil {
+	//	ctx.LogError("TestCheckWitness - CreateAccount error: %s", err)
+	//	return false
+	//}
 
-	if err != nil {
-		ctx.LogError("TestCheckWitness - CreateAccount error: %s", err)
-		return false
-	}
-	if !checkWitness(ctx, codeAddr, signer, checker, false) {
-		ctx.LogError("TestCheckWitness - checkwitness should return false.")
+	if !checkWitness(ctx, codeAddr, signer, signer, true) {
+		ctx.LogError("TestCheckWitness - checkwitness should return true.")
 		return false
 	}
 
