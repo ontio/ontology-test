@@ -19,6 +19,7 @@ func TestConcat(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+		0, 0,
 		types.NEOVM,
 		false,
 		code,
