@@ -3,13 +3,12 @@ package executionengine
 import (
 	"time"
 
-	"math/big"
-
+	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/smartcontract/types"
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 )
+
 /*
 using Neo.SmartContract.Framework;
 using Neo.SmartContract.Framework.Services.Neo;
@@ -35,7 +34,10 @@ func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -56,9 +58,10 @@ func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		codeAddress,
 		[]interface{}{},
 		sdkcom.NEOVM_TYPE_BYTE_ARRAY,
@@ -70,7 +73,6 @@ func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 
 	ctx.LogInfo("TestExecutingScriptHash res: %s", res)
 
-
 	err = ctx.AssertToByteArray(res, codeAddress[:])
 	if err != nil {
 		ctx.LogError("AssertToByteArray error:%s", err)
@@ -79,4 +81,3 @@ func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 
 	return true
 }
-

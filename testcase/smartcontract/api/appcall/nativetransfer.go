@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"math/big"
-
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/smartcontract/types"
@@ -112,7 +110,10 @@ func TestCallingContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -133,8 +134,11 @@ func TestCallingContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeAddress,
 		[]interface{}{},
 	)

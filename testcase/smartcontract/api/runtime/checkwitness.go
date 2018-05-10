@@ -1,7 +1,6 @@
 package runtime
 
 import (
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -36,7 +35,10 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -74,8 +76,11 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func checkWitness(ctx *testframework.TestFrameworkContext, codeAddress common.Address, caller, checker *account.Account, expect bool) bool {
-	res, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(caller,
-		new(big.Int),
+	res, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		caller,
+		0,
 		codeAddress,
 		[]interface{}{checker.Address})
 

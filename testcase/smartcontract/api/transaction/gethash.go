@@ -50,7 +50,10 @@ func TestGetTxHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(signer,
+	txHash, err := ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -73,7 +76,10 @@ func TestGetTxHash(ctx *testframework.TestFrameworkContext) bool {
 
 	code = "52c56b6c766b00527ac4616c766b00c361681d4e656f2e426c6f636b636861696e2e4765745472616e73616374696f6e6c766b51527ac46168164e656f2e53746f726167652e476574436f6e74657874067478486173686c766b51c36168174e656f2e5472616e73616374696f6e2e47657448617368615272680f4e656f2e53746f726167652e50757461616c7566"
 	codeAddr := utils.GetNeoVMContractAddress(code)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -89,8 +95,11 @@ func TestGetTxHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeAddr,
 		[]interface{}{txHash.ToArray()})
 

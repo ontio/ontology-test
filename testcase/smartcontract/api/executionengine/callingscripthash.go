@@ -3,8 +3,6 @@ package executionengine
 import (
 	"time"
 
-	"math/big"
-
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/smartcontract/types"
@@ -54,7 +52,10 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		codeA,
@@ -78,7 +79,10 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	codeB := "51c56b61616780d4b6ec4c8987ff7f79af45af88a3139ed10c7d6c766b00527ac46168164e656f2e53746f726167652e476574436f6e746578740a63616c6c5363726970746c766b00c3615272680f4e656f2e53746f726167652e50757461616c7566"
 	codeAddressB := utils.GetNeoVMContractAddress(codeB)
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		codeB,
@@ -99,8 +103,11 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeAddressB,
 		[]interface{}{0})
 

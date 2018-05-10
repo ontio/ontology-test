@@ -1,7 +1,6 @@
 package transaction
 
 import (
-	"math/big"
 	"time"
 
 	"bytes"
@@ -40,7 +39,10 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(signer,
+	txHash, err := ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -55,7 +57,10 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -78,7 +83,10 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 
 	code = "53c56b6c766b00527ac4616c766b00c361681d4e656f2e426c6f636b636861696e2e4765745472616e73616374696f6e6c766b51527ac46168164e656f2e53746f726167652e476574436f6e74657874067478547970656c766b51c36168174e656f2e5472616e73616374696f6e2e47657454797065615272680f4e656f2e53746f726167652e50757461006c766b52527ac46203006c766b52c3616c7566"
 	codeAddr := utils.GetNeoVMContractAddress(code)
-	txHash, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	txHash, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -98,8 +106,11 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeAddr,
 		[]interface{}{txHash.ToArray()})
 

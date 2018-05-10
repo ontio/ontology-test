@@ -19,7 +19,6 @@
 package blockchain
 
 import (
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -63,7 +62,10 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -99,8 +101,11 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 
 	header := block.Header
 	codeHash := utils.GetNeoVMContractAddress(code)
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeHash,
 		[]interface{}{int(height)})
 

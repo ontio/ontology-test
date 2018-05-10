@@ -7,7 +7,6 @@ import (
 	"github.com/ontio/ontology/smartcontract/types"
 
 	"encoding/hex"
-	"math/big"
 
 	"github.com/ontio/ontology-go-sdk/utils"
 )
@@ -57,7 +56,10 @@ func TestGetContract(ctx *testframework.TestFrameworkContext) bool {
 
 	codeA := "53c56b6c766b00527ac4616c766b00c361681a4e656f2e426c6f636b636861696e2e476574436f6e74726163746168164e656f2e436f6e74726163742e4765745363726970746c766b51527ac46168164e656f2e53746f726167652e476574436f6e74657874067363726970746c766b51c3615272680f4e656f2e53746f726167652e50757461006c766b52527ac46203006c766b52c3616c7566"
 	codeAAddr := utils.GetNeoVMContractAddress(codeA)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		codeA,
@@ -74,7 +76,10 @@ func TestGetContract(ctx *testframework.TestFrameworkContext) bool {
 
 	codeB := "51c56b610c48656c6c6f20576f726c64216c766b00527ac46203006c766b00c3616c7566"
 	codeBAddr := utils.GetNeoVMContractAddress(codeB)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		codeB,
@@ -95,8 +100,11 @@ func TestGetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeAAddr,
 		[]interface{}{codeBAddr[:]})
 

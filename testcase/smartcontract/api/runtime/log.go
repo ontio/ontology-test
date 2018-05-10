@@ -1,8 +1,6 @@
 package runtime
 
-
 import (
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -24,8 +22,7 @@ public class HelloWorld : SmartContract
         Runtime.Log(msg);
     }
 }
- */
-
+*/
 
 func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 	code := "51c56b6c766b00527ac4616c766b00c361680f4e656f2e52756e74696d652e4c6f6761616c7566"
@@ -37,7 +34,10 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -55,8 +55,11 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	txHash, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeAddr,
 		[]interface{}{"ontology"})
 
@@ -73,11 +76,10 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 
 	ctx.LogInfo("======events log===== %+v", events)
 
-	return  true
+	return true
 
 	transfer := events[0].States
 	ctx.LogInfo("%+v", transfer)
-
 
 	//notify , ok := res.(map[string]interface{})
 	//if !ok {
@@ -92,4 +94,3 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 	//}
 	return true
 }
-

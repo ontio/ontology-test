@@ -1,7 +1,6 @@
 package runtime
 
 import (
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -38,7 +37,10 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -54,8 +56,11 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	txHash, err := ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeAddr,
 		[]interface{}{},
 	)
@@ -70,7 +75,6 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestRuntimeNotify WaitForGenerateBlock error:%s", err)
 		return false
 	}
-
 
 	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
@@ -102,5 +106,5 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	return  true
+	return true
 }
