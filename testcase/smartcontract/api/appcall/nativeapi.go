@@ -93,7 +93,7 @@ Code := 51c56b6161670100ff000000000000000000000000000000000000010b746f74616c5375
 
 */
 
-func TestNativeTotalSupplyContract(ctx *testframework.TestFrameworkContext) bool {
+func TestNativeTotalSupply(ctx *testframework.TestFrameworkContext) bool {
 	code := "51c56b6161670100ff000000000000000000000000000000000000010b746f74616c537570706c79006c766b00527ac46168164e656f2e53746f726167652e476574436f6e7465787406726573756c746c766b00c3615272680f4e656f2e53746f726167652e50757461616c7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
 	signer, err := ctx.Wallet.GetDefaultAccount()

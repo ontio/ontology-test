@@ -43,5 +43,5 @@ func TestSmartContractApi() {
 	testframework.TFramework.RegTestCase("TestStorage", storage.TestStorage)
 	testframework.TFramework.RegTestCase("TestCallingContract", appcall.TestCallingContract)
 	testframework.TFramework.RegTestCase("TestCallWasamContract", appcall.TestCallWasamContract)
-	testframework.TFramework.RegTestCase("TestNativeTotalSupplyContract", appcall.TestNativeTotalSupplyContract)
+	testframework.TFramework.RegTestCase("TestNativeTotalSupply", appcall.TestNativeTotalSupply)
 }
