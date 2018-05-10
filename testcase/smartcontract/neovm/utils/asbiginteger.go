@@ -19,7 +19,10 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestAsBigInteger GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -57,7 +60,9 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 
 func testAsBigInteger(ctx *testframework.TestFrameworkContext, code common.Address, b *big.Int) bool {
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		code,
 		[]interface{}{b},
 		sdkcom.NEOVM_TYPE_INTEGER,

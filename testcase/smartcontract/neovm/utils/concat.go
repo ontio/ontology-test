@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"math/big"
 	"time"
 
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
@@ -18,8 +17,10 @@ func TestConcat(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestConcat GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
-		0, 0,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -42,7 +43,9 @@ func TestConcat(ctx *testframework.TestFrameworkContext) bool {
 	input1 := "Hello"
 	input2 := "World"
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		codeAddress,
 		[]interface{}{input1, input2},
 		sdkcom.NEOVM_TYPE_BYTE_ARRAY,

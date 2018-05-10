@@ -1,15 +1,15 @@
 package datatype
 
 import (
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/smartcontract/types"
-	"math/big"
-	"time"
 )
 
-func TestInteger(ctx *testframework.TestFrameworkContext)bool{
+func TestInteger(ctx *testframework.TestFrameworkContext) bool {
 	code := "00C56B5A616C7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
 	signer, err := ctx.Wallet.GetDefaultAccount()
@@ -17,7 +17,10 @@ func TestInteger(ctx *testframework.TestFrameworkContext)bool{
 		ctx.LogError("TestInteger GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -38,7 +41,9 @@ func TestInteger(ctx *testframework.TestFrameworkContext)bool{
 		return false
 	}
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		codeAddress,
 		[]interface{}{},
 		sdkcom.NEOVM_TYPE_INTEGER,

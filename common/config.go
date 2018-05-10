@@ -16,7 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- //common use fot ontology-test
+//common use fot ontology-test
 package common
 
 import (
@@ -33,15 +33,15 @@ var DefConfig = NewTestConfig()
 //Config object used by ontology-instance
 type TestConfig struct {
 	//JsonRpcAddress of ontology
-	JsonRpcAddress   string
+	JsonRpcAddress string
 	//RestfulAddress of ontology
-	RestfulAddress   string
+	RestfulAddress string
 	//WebSocketAddress of ontology
 	WebSocketAddress string
 	//WalletFile of test
-	WalletFile       string
+	WalletFile string
 	//The Password of wallet
-	Password         string
+	Password string
 }
 
 //NewTestConfig retuen a TestConfig instance

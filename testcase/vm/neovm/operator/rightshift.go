@@ -1,13 +1,13 @@
 package operator
 
 import (
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/smartcontract/types"
-	"math/big"
-	"time"
 )
 
 func TestOperationRightShift(ctx *testframework.TestFrameworkContext) bool {
@@ -18,7 +18,10 @@ func TestOperationRightShift(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestOperationRightShift GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -60,7 +63,9 @@ func TestOperationRightShift(ctx *testframework.TestFrameworkContext) bool {
 
 func testOperationRightShift(ctx *testframework.TestFrameworkContext, code common.Address, a, b int) bool {
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		code,
 		[]interface{}{a, b},
 		sdkcom.NEOVM_TYPE_INTEGER,
@@ -71,7 +76,7 @@ func testOperationRightShift(ctx *testframework.TestFrameworkContext, code commo
 	}
 	expect := 0
 	if b >= 0 {
-		expect = a>>uint(b)
+		expect = a >> uint(b)
 	}
 	err = ctx.AssertToInt(res, expect)
 	if err != nil {

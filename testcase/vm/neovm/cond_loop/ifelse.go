@@ -1,13 +1,13 @@
 package cond_loop
 
 import (
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
-	"math/big"
-	"time"
 	"github.com/ontio/ontology/common"
+	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestIfElse(ctx *testframework.TestFrameworkContext) bool {
@@ -18,7 +18,10 @@ func TestIfElse(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestIfElse GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -56,7 +59,9 @@ func TestIfElse(ctx *testframework.TestFrameworkContext) bool {
 
 func testIfElse(ctx *testframework.TestFrameworkContext, code common.Address, a, b int) bool {
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		code,
 		[]interface{}{a, b},
 		sdkcom.NEOVM_TYPE_INTEGER,
@@ -65,7 +70,7 @@ func testIfElse(ctx *testframework.TestFrameworkContext, code common.Address, a,
 		ctx.LogError("TestIfElse InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToInt(res, condIfElse(a,b))
+	err = ctx.AssertToInt(res, condIfElse(a, b))
 	if err != nil {
 		ctx.LogError("TestIfElse test %d ifelse %d failed %s", a, b, err)
 		return false

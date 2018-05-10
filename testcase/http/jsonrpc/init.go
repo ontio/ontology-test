@@ -2,7 +2,7 @@ package jsonrpc
 
 import "github.com/ontio/ontology-test/testframework"
 
-func TestRpc(){
+func TestRpc() {
 	testframework.TFramework.RegTestCase("TestGetBlockByHeight", TestGetBlockByHeight)
 	testframework.TFramework.RegTestCase("TestGetBlockByHash", TestGetBlockByHash)
 	testframework.TFramework.RegTestCase("TestGetBalance", TestGetBalance)

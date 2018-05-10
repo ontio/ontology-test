@@ -19,13 +19,13 @@
 package api
 
 import (
+	"github.com/ontio/ontology-test/testcase/smartcontract/api/appcall"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/blockchain"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/contract"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/executionengine"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/runtime"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/storage"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/transaction"
-	"github.com/ontio/ontology-test/testcase/smartcontract/api/appcall"
 	"github.com/ontio/ontology-test/testframework"
 )
 

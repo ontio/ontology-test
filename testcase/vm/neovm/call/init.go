@@ -1,7 +1,7 @@
 package call
 
 import (
-	 "github.com/ontio/ontology-test/testframework"
+	"github.com/ontio/ontology-test/testframework"
 )
 
 func TestCall() {

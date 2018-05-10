@@ -2,6 +2,6 @@ package http
 
 import "github.com/ontio/ontology-test/testcase/http/jsonrpc"
 
-func TestHttp(){
+func TestHttp() {
 	jsonrpc.TestRpc()
 }

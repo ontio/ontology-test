@@ -1,12 +1,12 @@
 package call
 
 import (
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/smartcontract/types"
-	"math/big"
-	"time"
 )
 
 func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
@@ -23,7 +23,10 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 	//After fix of compiler, wo won't need reverse.
 	ctx.LogInfo("CodeA Address:%x, R:%x", codeAddressA, utils.BytesReverse(codeAddressA[:]))
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		codeA,
@@ -46,7 +49,10 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 
 	codeB := "52c56b6c766b00527ac4616c766b00c3616780711163a4da8a8e37fd469a37e6cc04d37df3696c766b51527ac46203006c766b51c3616c7566"
 	codeAddressB := utils.GetNeoVMContractAddress(codeB)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		codeB,
@@ -69,7 +75,9 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 
 	input := 12
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		codeAddressB,
 		[]interface{}{input},
 		sdkcom.NEOVM_TYPE_INTEGER,
@@ -107,7 +115,7 @@ SmartContractB
 
 using Neo.SmartContract.Framework;
 using Neo.SmartContract.Framework.Services.Neo;
-using System.Numerics;
+usingtestcase/smartcontract/native/transfer.go System.Numerics;
 
 public class B : SmartContract
 {

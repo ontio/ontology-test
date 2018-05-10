@@ -1,7 +1,6 @@
 package contract
 
 import (
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -108,7 +107,10 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 	code = "54c56b6c766b00527ac4616c766b00c361681a4e656f2e426c6f636b636861696e2e476574436f6e74726163746168164e656f2e436f6e74726163742e4765745363726970746c766b51527ac46c766b51c3640e006c766b51c3c0009c620400516c766b52527ac46c766b52c3640f0061006c766b53527ac4620e00516c766b53527ac46203006c766b53c3616c7566"
 	codeAddressB := utils.GetNeoVMContractAddress(code)
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		code,
@@ -129,8 +131,11 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer,
-		new(big.Int),
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0,
+		0,
+		signer,
+		0,
 		codeAddressB,
 		[]interface{}{codeAddressA[:]})
 

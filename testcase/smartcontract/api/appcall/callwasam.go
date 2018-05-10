@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -245,7 +244,15 @@ func callAdd(ctx *testframework.TestFrameworkContext, acc *account.Account, addr
 	params := make([]interface{}, 2)
 	params[0] = 20
 	params[1] = 30
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc, new(big.Int), address, method, wasmvm.Json, 1, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(
+		0,
+		0,
+		acc,
+		0,
+		address,
+		method,
+		wasmvm.Json,
+		params)
 
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

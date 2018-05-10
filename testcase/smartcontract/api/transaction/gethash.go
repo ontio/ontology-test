@@ -1,7 +1,6 @@
 package transaction
 
 import (
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-go-sdk/utils"

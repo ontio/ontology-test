@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"math/big"
 	"time"
 
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
@@ -19,7 +18,10 @@ func TestRange(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestRange GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -57,7 +59,9 @@ func TestRange(ctx *testframework.TestFrameworkContext) bool {
 
 func testRange(ctx *testframework.TestFrameworkContext, code common.Address, b []byte, start, count int) bool {
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		code,
 		[]interface{}{b, start, count},
 		sdkcom.NEOVM_TYPE_BYTE_ARRAY,

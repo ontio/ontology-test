@@ -19,7 +19,10 @@ func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestAsByteArrayBigInteger GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -57,7 +60,9 @@ func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
 
 func testAsArray_BigInteger(ctx *testframework.TestFrameworkContext, code common.Address, input *big.Int) bool {
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		code,
 		[]interface{}{input},
 		sdkcom.NEOVM_TYPE_BYTE_ARRAY,

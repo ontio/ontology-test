@@ -1,13 +1,13 @@
 package datatype
 
 import (
+	"time"
+
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/smartcontract/types"
-	"math/big"
-	"time"
 )
 
 func TestByteArray(ctx *testframework.TestFrameworkContext) bool {
@@ -18,7 +18,10 @@ func TestByteArray(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestByteArray GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -53,7 +56,9 @@ func TestByteArray(ctx *testframework.TestFrameworkContext) bool {
 
 func testByteArray(ctx *testframework.TestFrameworkContext, code common.Address, arg1, arg2 []byte, expect bool) bool {
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		code,
 		[]interface{}{arg1, arg2},
 		sdkcom.NEOVM_TYPE_BOOL,

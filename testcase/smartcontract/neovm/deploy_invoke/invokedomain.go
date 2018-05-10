@@ -1,7 +1,6 @@
 package deploy_invoke
 
 import (
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -109,7 +108,10 @@ func TestDomainSmartContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		true,
 		contractCode,
@@ -131,7 +133,12 @@ func TestDomainSmartContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(signer, new(big.Int), contractCodeAddress, []interface{}{"Register", []interface{}{[]byte("ont.io"), []byte("onchain")}})
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
+		0, 0,
+		signer,
+		0,
+		contractCodeAddress,
+		[]interface{}{"Register", []interface{}{[]byte("ont.io"), []byte("onchain")}})
 	if err != nil {
 		ctx.LogError("TestDomainSmartContract InvokeNeoVMSmartContract error: %s", err)
 	}

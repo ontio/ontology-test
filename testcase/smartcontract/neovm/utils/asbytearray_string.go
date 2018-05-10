@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"math/big"
 	"time"
 
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
@@ -18,7 +17,10 @@ func TestAsByteArrayString(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestAsByteArrayString GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
+		signer,
 		types.NEOVM,
 		false,
 		code,
@@ -41,7 +43,9 @@ func TestAsByteArrayString(ctx *testframework.TestFrameworkContext) bool {
 
 	input := "Hello World"
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		new(big.Int),
+		0,
+		0,
+		0,
 		codeAddress,
 		[]interface{}{input},
 		sdkcom.NEOVM_TYPE_BYTE_ARRAY,

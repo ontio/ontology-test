@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"math/big"
 	"time"
 
 	"github.com/ontio/ontology-test/testframework"
@@ -73,7 +72,15 @@ func invokeContract(ctx *testframework.TestFrameworkContext, acc *account.Accoun
 	params[0] = 20
 	params[1] = 30
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc, new(big.Int), address, method, wasmvm.Json, 1, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(
+		0,
+		0,
+		acc,
+		0,
+		address,
+		method,
+		wasmvm.Json,
+		params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -92,6 +99,8 @@ func deployWasmJsonContract(ctx *testframework.TestFrameworkContext, signer *acc
 	codeHash := common.ToHexString(code)
 
 	txHash, err := ctx.Ont.Rpc.DeploySmartContract(
+		0,
+		0,
 		signer,
 		types.WASMVM,
 		true,

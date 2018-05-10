@@ -63,7 +63,7 @@ func TestOntTransfer(ctx *testframework.TestFrameworkContext) bool {
 	ctx.LogInfo("userBalanceBefore %d", userBalanceBefore.Ont)
 
 	amount := uint64(100)
-	_, err = ctx.Ont.Rpc.Transfer(0, 0, "ONT", admin, user, amount)
+	_, err = ctx.Ont.Rpc.Transfer(0, 0, "ONT", admin, user.Address, amount)
 	if err != nil {
 		ctx.LogError("Rpc.Transfer error:%s", err)
 		return false
