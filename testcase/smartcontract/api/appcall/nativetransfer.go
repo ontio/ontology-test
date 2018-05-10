@@ -12,35 +12,35 @@ import (
 )
 
 //package main
+//
 //import (
 //"bytes"
-//"math/big"
 //
 //"encoding/hex"
 //"fmt"
 //
 //"github.com/ontio/ontology/common"
-//"github.com/ontio/ontology/smartcontract/service/native/states"
+//"github.com/ontio/ontology/smartcontract/service/native/ont"
 //scstates "github.com/ontio/ontology/smartcontract/states"
 //)
-
+//
 //func main() {
-//  //from is ontology bookkeeper wallet base58 address
-//  //to is any other wallet base58 address
-
+//	//from is ontology bookkeeper wallet base58 address
+//	//to is any other wallet base58 address
+//
 //	from, _ := common.AddressFromBase58("TA51jyVtocZ3aZjCvxCpBABP7u1HGaF7VR")
 //	to, _ := common.AddressFromBase58("TA9AFxE1aW6YX4nSSxymr6ghi2HyPwhQ3Z")
 //
-//	state := &states.State{
+//	state := &ont.State{
 //		Version: 1,
 //		From:    from,
 //		To:      to,
-//		Value:   big.NewInt(1234),
+//		Value:   1234,
 //	}
 //
-//	transfer := &states.Transfers{
+//	transfer := &ont.Transfers{
 //		Version: 1,
-//		States:  []*states.State{state},
+//		States:  []*ont.State{state},
 //	}
 //
 //	bf := new(bytes.Buffer)

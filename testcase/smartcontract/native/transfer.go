@@ -63,8 +63,8 @@ func TestOntTransfer(ctx *testframework.TestFrameworkContext) bool {
 	}
 	ctx.LogInfo("userBalanceBefore %d", userBalanceBefore.Ont.Int64())
 
-	amount := new(big.Int).SetInt64(100)
-	_, err = ctx.Ont.Rpc.Transfer("ONT", admin, user, amount)
+	amount := 100
+	_, err = ctx.Ont.Rpc.Transfer("ONT", admin, user, 100)
 	if err != nil {
 		ctx.LogError("Rpc.Transfer error:%s", err)
 		return false
@@ -93,14 +93,14 @@ func TestOntTransfer(ctx *testframework.TestFrameworkContext) bool {
 	ctx.LogInfo("userBalanceAfter :%d", userBalanceAfter.Ont.Int64())
 
 	//Assert admin balance
-	adminRes := new(big.Int).Sub(adminBalanceBefore.Ont, amount)
+	adminRes := new(big.Int).Sub(adminBalanceBefore.Ont, big.NewInt(int64(amount)))
 	if adminRes.Cmp(adminBalanceAfter.Ont) != 0 {
 		ctx.LogError("TestOntTransfer failed. Admin balance after transfer %d != %d", adminBalanceAfter.Ont.Int64(), adminRes.Int64())
 		return false
 	}
 
 	//Assert user balance
-	userRes := new(big.Int).Add(userBalanceBefore.Ont, amount)
+	userRes := new(big.Int).Add(userBalanceBefore.Ont, big.NewInt(int64(amount)))
 	if userRes.Cmp(userBalanceAfter.Ont) != 0 {
 		ctx.LogError("TestOntTransfer failed. User balance after transfer %d != %d", userBalanceAfter.Ont.Int64(), userRes.Int64())
 		return false
