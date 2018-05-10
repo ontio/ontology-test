@@ -13,7 +13,9 @@ func TestDeploySmartContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestDeploySmartContract GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(
+		0, 0,
+		signer,
 		types.NEOVM,
 		true,
 		contractCode,

@@ -20,7 +20,6 @@ package native
 
 import (
 	"github.com/ontio/ontology-test/testframework"
-	"math/big"
 	"time"
 )
 
@@ -50,27 +49,27 @@ func TestOntTransfer(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if adminBalanceBefore.Ont.Cmp(new(big.Int)) == 0 {
+	if adminBalanceBefore.Ont == 0 {
 		ctx.LogWarn("TestOntTransfer failed. Balance of admin is 0")
 		return false
 	}
-	ctx.LogInfo("adminBalanceBefore %d", adminBalanceBefore.Ont.Int64())
+	ctx.LogInfo("adminBalanceBefore %d", adminBalanceBefore.Ont)
 
 	userBalanceBefore, err := ctx.Ont.Rpc.GetBalance(user.Address)
 	if err != nil {
 		ctx.LogError("Rpc.GetBalance error:%s", err)
 		return false
 	}
-	ctx.LogInfo("userBalanceBefore %d", userBalanceBefore.Ont.Int64())
+	ctx.LogInfo("userBalanceBefore %d", userBalanceBefore.Ont)
 
-	amount := 100
-	_, err = ctx.Ont.Rpc.Transfer("ONT", admin, user, 100)
+	amount := uint64(100)
+	_, err = ctx.Ont.Rpc.Transfer(0, 0, "ONT", admin, user, amount)
 	if err != nil {
 		ctx.LogError("Rpc.Transfer error:%s", err)
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second,1)
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("WaitForGenerateBlock error:%s", err)
 		return false
@@ -83,26 +82,26 @@ func TestOntTransfer(ctx *testframework.TestFrameworkContext) bool {
 			return false
 		}
 	}
-	ctx.LogInfo("adminBalanceAfter :%d", adminBalanceAfter.Ont.Int64())
+	ctx.LogInfo("adminBalanceAfter :%d", adminBalanceAfter.Ont)
 
 	userBalanceAfter, err := ctx.Ont.Rpc.GetBalance(user.Address)
 	if err != nil {
 		ctx.LogError("Rpc.GetBalance error:%s", err)
 		return false
 	}
-	ctx.LogInfo("userBalanceAfter :%d", userBalanceAfter.Ont.Int64())
+	ctx.LogInfo("userBalanceAfter :%d", userBalanceAfter.Ont)
 
 	//Assert admin balance
-	adminRes := new(big.Int).Sub(adminBalanceBefore.Ont, big.NewInt(int64(amount)))
-	if adminRes.Cmp(adminBalanceAfter.Ont) != 0 {
-		ctx.LogError("TestOntTransfer failed. Admin balance after transfer %d != %d", adminBalanceAfter.Ont.Int64(), adminRes.Int64())
+	adminRes := adminBalanceBefore.Ont - amount
+	if adminRes != adminBalanceAfter.Ont {
+		ctx.LogError("TestOntTransfer failed. Admin balance after transfer %d != %d", adminBalanceAfter.Ont, adminRes)
 		return false
 	}
 
 	//Assert user balance
-	userRes := new(big.Int).Add(userBalanceBefore.Ont, big.NewInt(int64(amount)))
-	if userRes.Cmp(userBalanceAfter.Ont) != 0 {
-		ctx.LogError("TestOntTransfer failed. User balance after transfer %d != %d", userBalanceAfter.Ont.Int64(), userRes.Int64())
+	userRes := userBalanceBefore.Ont + amount
+	if userRes != userBalanceAfter.Ont {
+		ctx.LogError("TestOntTransfer failed. User balance after transfer %d != %d", userBalanceAfter.Ont, userRes)
 		return false
 	}
 	return true
