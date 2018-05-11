@@ -19,12 +19,14 @@ package testcase
 
 import (
 	"github.com/ontio/ontology-test/testcase/smartcontract"
+	"github.com/ontio/ontology-test/testcase/vm"
+	"github.com/ontio/ontology-test/testcase/http"
 )
 
 //TestCase list
 func init() {
 	smartcontract.TestSmartContract()
-	//vm.TestVM()
-	//http.TestHttp()
+	vm.TestVM()
+	http.TestHttp()
 
 }
