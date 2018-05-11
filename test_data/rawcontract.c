@@ -1,15 +1,4 @@
-void JsonUnmashalInput(void * addr,int size,char * arg);
-char * JsonMashalResult(void * val,char * types);
-int strcmp(char *a,char *b);
-int arrayLen(char *a);
-void * malloc(int size);
-void RuntimeNotify(char * message);
-void PutStorage(char * key,char *value);
-char * GetStorage(char * key);
-void DeleteStorage(char * key);
-int ReadInt32Param(char *addr);
-char * ReadStringParam(char *addr);
-
+#include "ont.h"
 
 int add(int a, int b ){
         return a + b;

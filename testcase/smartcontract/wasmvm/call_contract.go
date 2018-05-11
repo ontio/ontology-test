@@ -9,7 +9,6 @@ import (
 	"errors"
 	"github.com/ontio/ontology/smartcontract/types"
 	"time"
-	"math/big"
 	"github.com/ontio/ontology/smartcontract/service/wasmvm"
 )
 
@@ -98,7 +97,7 @@ func deployCallWasmJsonContract(ctx *testframework.TestFrameworkContext, signer 
 
 	codeHash := common.ToHexString(code)
 
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(
+	txHash, err := ctx.Ont.Rpc.DeploySmartContract(0,0,
 		signer,
 		types.WASMVM,
 		true,
@@ -125,7 +124,7 @@ func invokeCallContractGetValue(ctx *testframework.TestFrameworkContext, acc *ac
 	method := "getValue"
 	params := make([]interface{},1)
 	params[0] = "TestKey"
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,1,address,method, wasmvm.Json,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -139,7 +138,7 @@ func invokeCallContractAddValue(ctx *testframework.TestFrameworkContext, acc *ac
 	params := make([]interface{},2)
 	params[0] = "TestKey"
 	params[1] = "Hello world again!"
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,1,address,method, wasmvm.Json,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

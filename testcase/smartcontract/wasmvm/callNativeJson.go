@@ -4,7 +4,6 @@ import (
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common"
-	"math/big"
 	"github.com/ontio/ontology/smartcontract/service/wasmvm"
 	"time"
 	"fmt"
@@ -67,7 +66,7 @@ func invokeTransferOntJson(ctx *testframework.TestFrameworkContext, acc *account
 	params[0] = to
 	params[1] = amount
 
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,1,address,method, wasmvm.Json,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
-	"math/big"
 	"github.com/ontio/ontology/smartcontract/service/wasmvm"
 	"time"
 )
@@ -157,7 +156,7 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 
 func invokeInit(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address) (common.Uint256, error) {
 	method := "init"
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,nil)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,byte(1),address,method, wasmvm.Json,nil)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -168,7 +167,7 @@ func invokeInit(ctx *testframework.TestFrameworkContext, acc *account.Account,ad
 
 func invokeTotalSupply(ctx *testframework.TestFrameworkContext, acc *account.Account,address common.Address) (common.Uint256, error) {
 	method := "totalSupply"
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,nil)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,byte(1),address,method, wasmvm.Json,nil)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -182,7 +181,7 @@ func invokeBalanceOf(ctx *testframework.TestFrameworkContext, acc *account.Accou
 	params := make([]interface{},1)
 	params[0] = accountaddress
 
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,byte(1),address,method, wasmvm.Json,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -198,7 +197,7 @@ func invokeTransfer(ctx *testframework.TestFrameworkContext, acc *account.Accoun
 	params[1] = to
 	params[2] = amount
 
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,1,address,method, wasmvm.Json,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

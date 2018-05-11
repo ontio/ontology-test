@@ -22,4 +22,9 @@ func TestWasmVM() {
 	testframework.TFramework.RegTestCase("TestCallNeoContract", TestCallNeoContract)
 	//test blockapi
 	testframework.TFramework.RegTestCase("TestBlockApi", TestBlockApi)
+
+	//test headerapi
+	testframework.TFramework.RegTestCase("TestBlockApi", TestHeaderApi)
+	//test transactionapi
+	testframework.TFramework.RegTestCase("TestTransactionApi", TestTransactionApi)
 }

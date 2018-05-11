@@ -4,7 +4,6 @@ import (
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common"
-	"math/big"
 	"github.com/ontio/ontology/smartcontract/service/wasmvm"
 	"time"
 	"fmt"
@@ -96,7 +95,7 @@ func invokePut(ctx *testframework.TestFrameworkContext, acc *account.Account,add
 	params[0] = key
 	params[1] = value
 
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,1,address,method, wasmvm.Json,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -109,7 +108,7 @@ func invokeGet(ctx *testframework.TestFrameworkContext, acc *account.Account,add
 	params := make([]interface{},1)
 	params[0] = key
 
-	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(acc,new(big.Int),address,method, wasmvm.Json,1,params)
+	txHash,err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0,0,acc,1,address,method, wasmvm.Json,params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -126,7 +125,7 @@ func deployNeoContract(ctx *testframework.TestFrameworkContext) bool{
 		ctx.LogError("TestDeploySmartContract GetDefaultAccount erro`r:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(0,0,signer,
 		types.NEOVM,
 		true,
 		neocontractCode,

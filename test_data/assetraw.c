@@ -1,21 +1,4 @@
-void JsonUnmashalInput(void * addr,int size,char * arg);
-char * JsonMashalResult(void * val,char * types);
-int strcmp(char *a,char *b);
-int arrayLen(char *a);
-void * malloc(int size);
-void RuntimeNotify(char * message);
-void PutStorage(char * key,char *value);
-char * GetStorage(char * key);
-void DeleteStorage(char * key);
-long long Atoi64(char * str);
-char * I64toa(long long amount,int radix);
-long Atoi(char * str);
-char * Itoa(int a);
-void ContractLogError(char *str);
-int ReadInt32Param(char *addr);
-long long ReadInt64Param(char *addr);
-char * ReadStringParam(char *addr);
-
+#include "ont.h"
 
 char * init(){
     char * totalsupply = GetStorage("TCOIN_TOTAL_SUPPLY");
