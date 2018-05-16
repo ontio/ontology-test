@@ -149,7 +149,7 @@ const (
 )
 
 func TestCallWasamContract(ctx *testframework.TestFrameworkContext) bool {
-	admin, err := ctx.Wallet.GetDefaultAccount()
+	admin, err := ctx.GetDefaultAccount()
 
 	if err != nil {
 		ctx.LogError("TestCallWasamContract - GetDefaultAccount error: %s", err)
@@ -177,7 +177,7 @@ func TestCallWasamContract(ctx *testframework.TestFrameworkContext) bool {
 
 	code := "51c56b61616701009004e629d5df8306405ce2c9074feb9a2d8d47ef03616464447b22506172616d73223a5b7b2274797065223a22696e74222c2276616c7565223a223230227d2c7b2274797065223a22696e74222c2276616c7565223a223330227d5d7d6c766b00527ac46168164e656f2e53746f726167652e476574436f6e7465787406726573756c746c766b00c3615272680f4e656f2e53746f726167652e50757461616c7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
 		ctx.LogError("TestCallWasamContract - GetDefaultAccount error: %s", err)

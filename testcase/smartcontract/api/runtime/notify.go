@@ -30,7 +30,7 @@ public class HelloWorld : SmartContract
 func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 	code := "00c56b61610568656c6c6f05776f726c64617c066e6f7469667953c168124e656f2e52756e74696d652e4e6f7469667961616c7566"
 	codeAddr := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
 		ctx.LogError("TestRuntimeNotify - GetDefaultAccount error: %s", err)

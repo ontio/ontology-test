@@ -13,7 +13,7 @@ import (
 func TestAsString(ctx *testframework.TestFrameworkContext) bool {
 	code := "51C56B6C766B00527AC46C766B00C3616C7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestAsString GetDefaultAccount error:%s", err)
 		return false

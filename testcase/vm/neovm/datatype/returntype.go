@@ -13,7 +13,7 @@ import (
 func TestReturnType(ctx *testframework.TestFrameworkContext) bool {
 	code := "55c56b6c766b00527ac46c766b51527ac46c766b52527ac46153c56c766b53527ac46c766b53c3006c766b00c3c46c766b53c3516c766b51c3c46c766b53c3526c766b52c3c46c766b53c36c766b54527ac46203006c766b54c3616c7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestReturnType GetDefaultAccount error:%s", err)
 		return false

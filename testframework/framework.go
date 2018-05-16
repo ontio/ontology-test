@@ -23,7 +23,7 @@ import (
 	"fmt"
 	log4 "github.com/alecthomas/log4go"
 	sdk "github.com/ontio/ontology-go-sdk"
-	wa "github.com/ontio/ontology-go-sdk/wallet"
+	"github.com/ontio/ontology/account"
 	"reflect"
 	"time"
 )
@@ -49,7 +49,7 @@ type TestFramework struct {
 	//OntologySdk object
 	ont *sdk.OntologySdk
 	//OntWallet object
-	wallet *wa.OntWallet
+	wallet account.Client
 }
 
 //NewTestFramework return a TestFramework instance
@@ -121,7 +121,7 @@ func (this *TestFramework) SetOntSdk(ont *sdk.OntologySdk) {
 }
 
 //SetWallet wallet instance to test framework
-func (this *TestFramework) SetWallet(wallet *wa.OntWallet) {
+func (this *TestFramework) SetWallet(wallet account.Client) {
 	this.wallet = wallet
 }
 

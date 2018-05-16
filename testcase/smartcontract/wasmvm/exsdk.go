@@ -1,16 +1,17 @@
 package wasmvm
 
 import (
+	"errors"
+	"fmt"
+	"github.com/ontio/ontology-go-sdk/utils"
+	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/smartcontract/types"
-	"errors"
-	"fmt"
-	"github.com/ontio/ontology-test/testframework"
-	"time"
-	"github.com/ontio/ontology-go-sdk/utils"
 	"io/ioutil"
+	"time"
 )
+
 /* move to go sdk
 func InvokeWasmVMContract(ctx *testframework.TestFrameworkContext,
 	siger*account.Account,
@@ -130,7 +131,7 @@ func buildWasmContractParam(params []interface{},paramType wasm.ParamType)([]byt
 }
 */
 
-func DeployWasmJsonContract(ctx *testframework.TestFrameworkContext, signer *account.Account,wasmfile string,contractName string,version string) (common.Uint256, error){
+func DeployWasmJsonContract(ctx *testframework.TestFrameworkContext, signer *account.Account, wasmfile string, contractName string, version string) (common.Uint256, error) {
 
 	code, err := ioutil.ReadFile(wasmfile)
 	if err != nil {
@@ -139,7 +140,7 @@ func DeployWasmJsonContract(ctx *testframework.TestFrameworkContext, signer *acc
 
 	codeHash := common.ToHexString(code)
 
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(0,0,
+	txHash, err := ctx.Ont.Rpc.DeploySmartContract(0, 0,
 		signer,
 		types.WASMVM,
 		true,
@@ -164,12 +165,12 @@ func DeployWasmJsonContract(ctx *testframework.TestFrameworkContext, signer *acc
 	return txHash, nil
 }
 
-func GetWasmContractAddress(path string) (common.Address,error){
+func GetWasmContractAddress(path string) (common.Address, error) {
 	code, err := ioutil.ReadFile(path)
 	if err != nil {
 		return common.Address{}, errors.New("")
 	}
 
 	codeHash := common.ToHexString(code)
-	return  utils.GetContractAddress(codeHash,types.WASMVM),nil
+	return utils.GetContractAddress(codeHash, types.WASMVM), nil
 }

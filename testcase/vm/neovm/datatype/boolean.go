@@ -12,7 +12,7 @@ import (
 func TestBoolean(ctx *testframework.TestFrameworkContext) bool {
 	code := "00C56B51616C7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestReturnType GetDefaultAccount error:%s", err)
 		return false

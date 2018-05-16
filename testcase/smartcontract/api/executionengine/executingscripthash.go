@@ -27,7 +27,7 @@ public class A : SmartContract
 func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	code := "51c56b6161682b53797374656d2e457865637574696f6e456e67696e652e47657443616c6c696e67536372697074486173686c766b00527ac46203006c766b00c3616c7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
 		ctx.LogError("TestExecutingScriptHash - GetDefaultAccount error: %s", err)

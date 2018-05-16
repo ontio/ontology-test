@@ -13,7 +13,7 @@ import (
 func TestOperationSelfAdd(ctx *testframework.TestFrameworkContext) bool {
 	code := "51C56B6C766B00527AC46C766B00C35193766A00527AC4616C7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestOperationSelfAdd GetDefaultAccount error:%s", err)
 		return false

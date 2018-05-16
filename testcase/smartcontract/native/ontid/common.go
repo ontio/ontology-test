@@ -73,8 +73,8 @@ func InvokeContract(ctx *testframework.TestFrameworkContext, contract *states.Co
 		ctx.LogError("make transactions error: %s", err)
 		return false, nil
 	}
-	user, _ := ctx.Wallet.GetDefaultAccount()
-	err = sdkcom.SignTransaction(user.Scheme().Name(), tx, user)
+	user, _ := ctx.GetDefaultAccount()
+	err = sdkcom.SignTransaction(tx, user)
 	if err != nil {
 		ctx.LogError("sign transaction error: %s", err)
 		return false, nil

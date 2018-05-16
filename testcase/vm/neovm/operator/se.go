@@ -13,7 +13,7 @@ import (
 func TestOperationSmallerEqual(ctx *testframework.TestFrameworkContext) bool {
 	code := "52C56B6C766B00527AC46C766B51527AC46C766B00C36C766B51C3A0009C616C7566"
 	codeAddress := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestOperationSmallerEqual GetDefaultAccount error:%s", err)
 		return false

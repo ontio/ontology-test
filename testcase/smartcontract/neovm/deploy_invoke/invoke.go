@@ -6,7 +6,7 @@ import (
 )
 
 func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract GetDefaultAccount error:%s", err)
 		return false

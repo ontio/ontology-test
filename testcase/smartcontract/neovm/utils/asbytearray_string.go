@@ -12,7 +12,7 @@ import (
 func TestAsByteArrayString(ctx *testframework.TestFrameworkContext) bool {
 	code := "51C56B6C766B00527AC46C766B00C3616C756600"
 	codeAddress := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestAsByteArrayString GetDefaultAccount error:%s", err)
 		return false

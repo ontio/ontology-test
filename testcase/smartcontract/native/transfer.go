@@ -25,21 +25,14 @@ import (
 
 //TestOntTransfer test native transfer case
 func TestOntTransfer(ctx *testframework.TestFrameworkContext) bool {
-	admin, err := ctx.Wallet.GetDefaultAccount()
+	admin, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("Wallet.GetDefaultAccount error:%s", err)
 		return false
 	}
-
-	wallet, err := ctx.Ont.CreateWallet("./wallet_test.dat", "wangbing")
+	user, err := ctx.NewAccount()
 	if err != nil {
-		ctx.LogError("CreateWallet ./wallet_test.dat error:%s", err)
-		return false
-	}
-
-	user, err := wallet.GetDefaultAccount()
-	if err != nil {
-		ctx.LogError("Wallet.CreateAccount error:%s", err)
+		ctx.LogError("Wallet.NewAccount error:%s", err)
 		return false
 	}
 

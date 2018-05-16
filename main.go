@@ -38,7 +38,7 @@ var (
 
 func init() {
 	flag.StringVar(&TestConfig, "cfg", "./config_test.json", "Config of ontology-test")
-	flag.StringVar(&LogConfig, "lfg", "./log4go.xml", "Log config of ontology-test")
+	flag.StringVar(&LogConfig, "lfg", "./log/log4go.xml", "Log config of ontology-test")
 	flag.StringVar(&TestCases, "t", "", "Test case to run. use ',' to split test case")
 	flag.Parse()
 }
@@ -46,7 +46,7 @@ func init() {
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	log4.LoadConfiguration(LogConfig)
-	log.Init() //init log module in ontology
+	log.InitLog(1) //init log module in ontology
 	defer time.Sleep(time.Second)
 
 	err := common.DefConfig.Init(TestConfig)
@@ -58,7 +58,7 @@ func main() {
 	ontSdk := sdk.NewOntologySdk()
 	ontSdk.Rpc.SetAddress(common.DefConfig.JsonRpcAddress)
 
-	wallet, err := ontSdk.OpenOrCreateWallet(common.DefConfig.WalletFile, common.DefConfig.Password)
+	wallet, err := ontSdk.OpenOrCreateWallet(common.DefConfig.WalletFile)
 	if err != nil {
 		log4.Error("OpenOrCreateWallet %s error:%s", common.DefConfig.WalletFile, err)
 		return

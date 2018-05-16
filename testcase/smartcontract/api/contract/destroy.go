@@ -55,7 +55,7 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 	code := "00c56b616168144e656f2e436f6e74726163742e44657374726f7961616c7566"
 	codeAddressA := utils.GetNeoVMContractAddress(code)
 
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestGetContract - GetDefaultAccount error:%s", err)
 		return false

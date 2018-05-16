@@ -1,7 +1,6 @@
 package native
 
 import (
-	"DNA/errors"
 	"bytes"
 	"encoding/hex"
 	"fmt"
@@ -10,11 +9,12 @@ import (
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/core/genesis"
+	"github.com/ontio/ontology/errors"
 	"github.com/ontio/ontology/smartcontract/service/native/auth"
+	"github.com/ontio/ontology/smartcontract/service/native/utils"
 	cstates "github.com/ontio/ontology/smartcontract/states"
 	vmtypes "github.com/ontio/ontology/smartcontract/types"
 	"time"
-	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
 
 var (
@@ -28,7 +28,7 @@ var (
 )
 
 func TestAuthContract(ctx *testframework.TestFrameworkContext) bool {
-	user, err := ctx.Wallet.GetDefaultAccount()
+	user, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError(err)
 		return false
@@ -70,7 +70,7 @@ func sendTestTx(ctx *testframework.TestFrameworkContext, user *account.Account, 
 	}
 	//prepare tx
 	invokeTx := sdkcomm.NewInvokeTransaction(0, 0, vmtypes.Native, buf.Bytes())
-	if err := sdkcomm.SignTransaction(user.SigScheme.Name(), invokeTx, user); err != nil {
+	if err := sdkcomm.SignTransaction(invokeTx, user); err != nil {
 		return false, fmt.Errorf("SignTransaction error:%s", err)
 	}
 	if _, err := ctx.Ont.Rpc.SendRawTransaction(invokeTx); err != nil {
@@ -280,7 +280,7 @@ func TestDelegate(ctx *testframework.TestFrameworkContext, user *account.Account
 	return true, nil
 }
 
-func TestWithdraw(ctx *testframework.TestFrameworkContext, user *account.Account) (bool, error)  {
+func TestWithdraw(ctx *testframework.TestFrameworkContext, user *account.Account) (bool, error) {
 	param := &auth.DelegateParam{
 		ContractAddr: genesis.OntContractAddress[:],
 		From:         p1,

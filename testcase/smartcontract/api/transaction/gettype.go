@@ -32,7 +32,7 @@ public class A : SmartContract
 
 func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 	code := "51c56b610c48656c6c6f20576f726c64216c766b00527ac46203006c766b00c3616c7566"
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
 		ctx.LogError("TestGetTxType - GetDefaultAccount error: %s", err)

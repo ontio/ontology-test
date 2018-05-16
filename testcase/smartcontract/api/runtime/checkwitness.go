@@ -28,7 +28,7 @@ public class A : SmartContract
 func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 	code := "52c56b6c766b00527ac4616c766b00c36168184e656f2e52756e74696d652e436865636b5769746e6573736c766b51527ac46203006c766b51c3616c7566"
 	codeAddr := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
 		ctx.LogError("TestCheckWitness - GetDefaultAccount error: %s", err)

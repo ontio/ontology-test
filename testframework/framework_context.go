@@ -23,20 +23,23 @@ import (
 	"encoding/hex"
 	"fmt"
 	log4 "github.com/alecthomas/log4go"
+	"github.com/ontio/ontology-crypto/keypair"
+	s "github.com/ontio/ontology-crypto/signature"
 	sdk "github.com/ontio/ontology-go-sdk"
-	"github.com/ontio/ontology-go-sdk/wallet"
+	"github.com/ontio/ontology-test/common"
+	"github.com/ontio/ontology/account"
 	"math/big"
 )
 
 //TestFrameworkContext is the context for test case
 type TestFrameworkContext struct {
-	Ont       *sdk.OntologySdk  //sdk to ontology
-	Wallet    *wallet.OntWallet // wallet instance
+	Ont       *sdk.OntologySdk //sdk to ontology
+	Wallet    account.Client   // wallet instance
 	failNowCh chan interface{}
 }
 
 //NewTestFrameworkContext return a TestFrameworkContext instance
-func NewTestFrameworkContext(ont *sdk.OntologySdk, wal *wallet.OntWallet, failNowCh chan interface{}) *TestFrameworkContext {
+func NewTestFrameworkContext(ont *sdk.OntologySdk, wal account.Client, failNowCh chan interface{}) *TestFrameworkContext {
 	return &TestFrameworkContext{
 		Ont:       ont,
 		Wallet:    wal,
@@ -57,6 +60,29 @@ func (this *TestFrameworkContext) LogError(arg0 interface{}, args ...interface{}
 //LogWarn log warning info in test case
 func (this *TestFrameworkContext) LogWarn(arg0 interface{}, args ...interface{}) {
 	log4.Warn(arg0, args...)
+}
+
+func (this *TestFrameworkContext) GetDefaultAccount() (*account.Account, error) {
+	return this.Wallet.GetDefaultAccount([]byte(common.DefConfig.Password))
+}
+
+func (this *TestFrameworkContext) GetAccount(addr string) (*account.Account, error) {
+	acc, err := this.Wallet.GetAccountByAddress(addr, []byte(common.DefConfig.Password))
+	if err != nil {
+		return nil, err
+	}
+	if acc != nil {
+		return acc, nil
+	}
+	return this.Wallet.GetAccountByLabel(addr, []byte(common.DefConfig.Password))
+}
+
+func (this *TestFrameworkContext) NewAccount(label ...string) (*account.Account, error) {
+	label_tag := ""
+	if len(label) > 0 {
+		label_tag = label[0]
+	}
+	return this.Wallet.NewAccount(label_tag, keypair.PK_ECDSA, keypair.P256, s.SHA256withECDSA, []byte(common.DefConfig.Password))
 }
 
 //FailNow will stop test, and skip all haven't not test case

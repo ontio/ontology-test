@@ -57,7 +57,7 @@ func genID() {
 }
 
 func registerID(ctx *testframework.TestFrameworkContext) bool {
-	user, err := ctx.Wallet.GetDefaultAccount()
+	user, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("Wallet.CreateAccount error:%s", err)
 		return false
@@ -82,7 +82,7 @@ func registerID(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func addKey(ctx *testframework.TestFrameworkContext) bool {
-	user, _ := ctx.Wallet.GetDefaultAccount()
+	user, _ := ctx.GetDefaultAccount()
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
 	_, p, _ := keypair.GenerateKeyPair(keypair.PK_ECDSA, keypair.P256)
@@ -139,7 +139,7 @@ func queryDDO(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testRecovery(ctx *testframework.TestFrameworkContext) bool {
-	user, _ := ctx.Wallet.GetDefaultAccount()
+	user, _ := ctx.GetDefaultAccount()
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
 	pubs := []keypair.PublicKey{user.PublicKey}
@@ -199,7 +199,7 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
-	user, _ := ctx.Wallet.GetDefaultAccount()
+	user, _ := ctx.GetDefaultAccount()
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
 	var buf bytes.Buffer
@@ -228,7 +228,7 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testAttr(ctx *testframework.TestFrameworkContext) bool {
-	user, _ := ctx.Wallet.GetDefaultAccount()
+	user, _ := ctx.GetDefaultAccount()
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
 	var buf bytes.Buffer

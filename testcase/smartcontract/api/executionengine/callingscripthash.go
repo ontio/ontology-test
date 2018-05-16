@@ -45,7 +45,7 @@ Code := 51c56b616167624c902239566a0b7dd4a59dcf38ab57aa36a6706c766b00527ac4616816
 func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	codeA := "51c56b6161682b53797374656d2e457865637574696f6e456e67696e652e47657443616c6c696e67536372697074486173686c766b00527ac46203006c766b00c3616c7566"
 	codeAddressA := utils.GetNeoVMContractAddress(codeA)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
 		ctx.LogError("TestCallingScriptHash - GetDefaultAccount error: %s", err)

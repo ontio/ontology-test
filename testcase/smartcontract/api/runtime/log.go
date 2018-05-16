@@ -27,7 +27,7 @@ public class HelloWorld : SmartContract
 func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 	code := "51c56b6c766b00527ac4616c766b00c361680f4e656f2e52756e74696d652e4c6f6761616c7566"
 	codeAddr := utils.GetNeoVMContractAddress(code)
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
 		ctx.LogError("TestRuntimLog - GetDefaultAccount error: %s", err)

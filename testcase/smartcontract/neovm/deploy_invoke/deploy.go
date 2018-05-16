@@ -8,7 +8,7 @@ import (
 )
 
 func TestDeploySmartContract(ctx *testframework.TestFrameworkContext) bool {
-	signer, err := ctx.Wallet.GetDefaultAccount()
+	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestDeploySmartContract GetDefaultAccount error:%s", err)
 		return false
