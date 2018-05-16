@@ -3,5 +3,5 @@
   "WebSocketAddress":"http://localhost:20335",
   "JsonRpcAddress":"http://localhost:20336",
   "WalletFile":"./wallet.dat",
-  "Password":"123"
+  "Password":"123456"
 }
