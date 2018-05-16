@@ -1,7 +1,7 @@
 {
-  "JsonRpcAddress":"http://localhost:20336",
   "RestfulAddress":"http://localhost:20334",
   "WebSocketAddress":"http://localhost:20335",
+  "JsonRpcAddress":"http://localhost:20336",
   "WalletFile":"./wallet.dat",
   "Password":"123456"
 }
