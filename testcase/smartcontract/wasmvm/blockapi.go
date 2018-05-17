@@ -116,7 +116,8 @@ func TestBlockApi(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	ret := &Result{}
-	s := notifies.Notify[0].States[0].(string)
+	s := notifies.Notify[0].States.([]interface{})[0].(string)
+
 	err = json.Unmarshal([]byte(s), ret)
 	if err != nil {
 		fmt.Printf("error is %s\n", err.Error())
@@ -150,7 +151,8 @@ func TestBlockApi(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 	ret = &Result{}
-	s = notifies.Notify[0].States[0].(string)
+	s = notifies.Notify[0].States.([]interface{})[0].(string)
+
 	err = json.Unmarshal([]byte(s), ret)
 	if err != nil {
 		fmt.Printf("error is %s\n", err.Error())

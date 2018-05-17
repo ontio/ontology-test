@@ -85,7 +85,7 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestRuntimeNotify contract invoke failed, state:0")
 		return false
 	}
-	notify := events.Notify[0].States
+	notify := events.Notify[0].States.([]interface{})
 
 	name, _ := ctx.ConvertToHexString(notify[0])
 

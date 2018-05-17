@@ -45,7 +45,8 @@ func TestCallNativeContractJson(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCallNativeContract contract invoke failed state:0")
 		return false
 	}
-	bs, _ := common.HexToBytes(notifies.Notify[0].States[0].(string))
+
+	bs, _ := common.HexToBytes(notifies.Notify[0].States.([]interface{})[0].(string))
 	if bs == nil {
 		ctx.LogError("TestAssetContract init invokeTotalSupply error:%s", err)
 		return false

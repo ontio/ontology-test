@@ -42,9 +42,13 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestAssetContract init invokeInit error:%s", err)
 		return false
 	}
+	if notifies.State == 0 {
+		 ctx.LogError("TestAssetContract init invokeInit failed")
+		 return false
+	}
 	ctx.LogInfo("TestAssetContract invoke notify %s", notifies)
-	notify := notifies.Notify
-	bs, _ := common.HexToBytes(notify[0].States[0].(string))
+	notify := notifies.Notify[0].States.([]interface{})
+	bs, _ := common.HexToBytes(notify[0].(string))
 	if bs == nil {
 		ctx.LogError("TestAssetContract init invokeInit error:%s", err)
 		return false
@@ -61,7 +65,12 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestAssetContract init invokeTotalSupply error:%s", err)
 		return false
 	}
-	bs, _ = common.HexToBytes(notify[0].States[0].(string))
+	if notifies.State == 0 {
+		ctx.LogError("TestAssetContract init invokeTotalSupply failed")
+		return false
+	}
+	notify = notifies.Notify[0].States.([]interface{})
+	bs, _ = common.HexToBytes(notify[0].(string))
 	if bs == nil {
 		ctx.LogError("TestAssetContract init invokeTotalSupply error:%s", err)
 		return false
@@ -79,7 +88,7 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	bs, _ = common.HexToBytes(notify[0].States[0].(string))
+	bs, _ = common.HexToBytes(notify[0].(string))
 	if bs == nil {
 		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
 		return false
@@ -96,7 +105,7 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	bs, _ = common.HexToBytes(notify[0].States[0].(string))
+	bs, _ = common.HexToBytes(notify[0].(string))
 	if bs == nil {
 		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
 		return false
@@ -114,7 +123,7 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	bs, _ = common.HexToBytes(notify[0].States[0].(string))
+	bs, _ = common.HexToBytes(notify[0].(string))
 	if bs == nil {
 		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
 		return false
@@ -132,7 +141,7 @@ func TestAssetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	bs, _ = common.HexToBytes(notify[0].States[0].(string))
+	bs, _ = common.HexToBytes(notify[0].(string))
 	if bs == nil {
 		ctx.LogError("TestAssetContract init invokeBalanceOf error:%s", err)
 		return false

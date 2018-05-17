@@ -50,7 +50,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 	notify := events.Notify[0]
 	ctx.LogInfo("%+v", notify)
 
-	invokeState := notify.States
+	invokeState := notify.States.([]interface{})
 	//Event name
 	name, _ := ctx.ConvertToHexString(invokeState[0])
 	err = ctx.AssertToString(name, "transfer")
