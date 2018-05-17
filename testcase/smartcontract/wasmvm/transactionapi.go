@@ -43,13 +43,16 @@ func TestTransactionApi(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestTransactionApi getTransactionType GetSmartContractEvent error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestTransactionApi getTransactionType invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestTransactionApi getTransactionType return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestTransactionApi getTransactionType ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -64,13 +67,16 @@ func TestTransactionApi(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestTransactionApi getTransactionAttributes GetSmartContractEvent error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestTransactionApi getTransactionAttributes invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestTransactionApi getTransactionAttributes return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestTransactionApi getTransactionAttributes ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 

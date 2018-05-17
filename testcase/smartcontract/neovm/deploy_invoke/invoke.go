@@ -43,11 +43,16 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestInvokeSmartContract GetSmartContractEvent error:%s", err)
 		return false
 	}
-	transfer := events[0].States
-	ctx.LogInfo("%+v", transfer)
+	if events.State == 0 {
+		ctx.LogError("TestInvokeSmartContract failed invoked exec state return 0")
+		return false
+	}
+	notify := events.Notify[0]
+	ctx.LogInfo("%+v", notify)
 
+	invokeState := notify.States
 	//Event name
-	name, _ := ctx.ConvertToHexString(transfer[0])
+	name, _ := ctx.ConvertToHexString(invokeState[0])
 	err = ctx.AssertToString(name, "transfer")
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract failed AssertToString:%s", err)
@@ -55,7 +60,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	//key of event
-	key, _ := ctx.ConvertToHexString(transfer[1])
+	key, _ := ctx.ConvertToHexString(invokeState[1])
 	err = ctx.AssertToString(key, "hello")
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract failed AssertToString %s ", err)
@@ -63,7 +68,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	//value of event
-	value, _ := ctx.ConvertToHexString(transfer[2])
+	value, _ := ctx.ConvertToHexString(invokeState[2])
 	err = ctx.AssertToString(value, "world")
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract failed AssertToString %s ", err)
@@ -71,7 +76,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	//amount of event
-	amount, _ := ctx.ConvertToBigInt(transfer[3])
+	amount, _ := ctx.ConvertToBigInt(invokeState[3])
 	err = ctx.AssertToInt(amount, 123)
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract failed AssertToInt %s ", err)

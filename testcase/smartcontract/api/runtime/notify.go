@@ -81,8 +81,11 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestRuntimeNotify GetSmartContractEvent error:%s", err)
 		return false
 	}
-
-	notify := events[0].States
+	if events.State == 0 {
+		ctx.LogError("TestRuntimeNotify contract invoke failed, state:0")
+		return false
+	}
+	notify := events.Notify[0].States
 
 	name, _ := ctx.ConvertToHexString(notify[0])
 

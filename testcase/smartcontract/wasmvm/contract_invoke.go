@@ -46,13 +46,16 @@ func TestWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestWasmJsonContract init GetSmartContractEvent error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestCallWasmJsonContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract callAdd return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract callAdd ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -67,13 +70,16 @@ func TestWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestWasmJsonContract callconcat GetSmartContractEvent error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestCallWasmJsonContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract callconcat return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract callconcat ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -88,12 +94,12 @@ func TestWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestWasmJsonContract invokeAddStorage GetSmartContractEvent error:%s", err)
 		return false
 	}
-	if len(notifies) < 1 {
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract invokeAddStorage return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract invokeAddStorage ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -108,12 +114,16 @@ func TestWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestWasmJsonContract callGetStorage GetSmartContractEvent error:%s", err)
 		return false
 	}
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestCallWasmJsonContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract callGetStorage return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract callGetStorage ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -128,12 +138,16 @@ func TestWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestWasmJsonContract callDeleteStorage GetSmartContractEvent error:%s", err)
 		return false
 	}
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestCallWasmJsonContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract callDeleteStorage return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract callDeleteStorage ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -148,12 +162,16 @@ func TestWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestWasmJsonContract callGetStorage GetSmartContractEvent error:%s", err)
 		return false
 	}
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestCallWasmJsonContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract callGetStorage return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract callGetStorage ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -168,12 +186,16 @@ func TestWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestWasmJsonContract callSumarray GetSmartContractEvent error:%s", err)
 		return false
 	}
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestCallWasmJsonContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract callSumarray return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract callSumarray ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 

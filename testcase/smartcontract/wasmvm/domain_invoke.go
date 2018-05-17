@@ -29,13 +29,16 @@ func TestDomainContract_Invoke(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestDomainContract invokeDomainCurrentPrice error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestDomainContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestDomainContract invokeDomainCurrentPrice return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestDomainContract invokeDomainCurrentPrice ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -51,13 +54,16 @@ func TestDomainContract_Invoke(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestDomainContract invokeDomainQuery error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestDomainContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestDomainContract invokeDomainQuery return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestICOContract invokeDomainQuery ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -73,13 +79,16 @@ func TestDomainContract_Invoke(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestDomainContract invokeDomainBuy error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestDomainContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestDomainContract invokeDomainBuy return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestDomainContract invokeDomainBuy ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -95,13 +104,16 @@ func TestDomainContract_Invoke(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestDomainContract invokeDomainCurrentPrice error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestDomainContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestDomainContract invokeDomainCurrentPrice return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestDomainContract invokeDomainCurrentPrice ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 

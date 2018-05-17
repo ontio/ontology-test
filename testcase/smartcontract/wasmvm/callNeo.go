@@ -51,9 +51,12 @@ func TestCallNeoContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCallNeoContract invokePut error:%s", err)
 		return false
 	}
-
+	if notifies.State == 0 {
+		ctx.LogError("TestCallNeoContract contract invoke failed state:0")
+		return false
+	}
 	ctx.LogInfo("==========TestCallNeoContract invokePut ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -68,9 +71,12 @@ func TestCallNeoContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCallNeoContract invokeGet error:%s", err)
 		return false
 	}
-
+	if notifies.State == 0 {
+		ctx.LogError("TestCallNeoContract contract invoke failed state:0")
+		return false
+	}
 	ctx.LogInfo("==========TestCallNeoContract invokeGet ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 

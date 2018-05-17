@@ -43,12 +43,16 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract init invokeInit error:%s", err)
 		return false
 	}
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestICOContract contract invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestICOContract return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestICOContract invokeInit ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -63,13 +67,16 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract invokeTotalSupply error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestICOContract invokeTotalSupply invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestICOContract invokeTotalSupply return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestICOContract invokeTotalSupply ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -86,13 +93,16 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract invokeICOCollect error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestICOContract invokeICOCollect invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestICOContract invokeICOCollect return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestICOContract invokeICOCollect ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -107,13 +117,16 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestICOContract init invokeBalanceOf invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestICOContract invokeBalanceOf return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestICOContract invokeBalanceOf TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -128,13 +141,16 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract init invokeICOTransfer error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestICOContract init invokeICOTransfer invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestICOContract invokeICOTransfer return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestICOContract invokeICOTransfer ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -149,12 +165,16 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
 		return false
 	}
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestICOContract init invokeBalanceOf invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestICOContract invokeBalanceOf return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestICOContract invokeBalanceOf TA4ieHoEDmRmARQo6bVBayqPuvN51rd6wY============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -169,13 +189,16 @@ func TestICOContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestICOContract init invokeBalanceOf error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestICOContract init invokeBalanceOf invoke failed, state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestICOContract invokeBalanceOf return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestICOContract invokeBalanceOf TA4tBPFEn7Amutm7QWTBYesEHE5sbWZKsB============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 

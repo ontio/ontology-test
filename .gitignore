@@ -1,13 +1,11 @@
 .idea/*
 idea/*
-log/*
 temp/*
 build/
 *.patch
 *.log
 *.rej
 vendor/*
-*.xml
 *.iml
 ontology-test
 config_test.json

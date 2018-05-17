@@ -40,8 +40,12 @@ func sendTx(ctx *testframework.TestFrameworkContext, invokeTx *types.Transaction
 		return false
 	}
 
-	if len(events) > 0 {
-		states := events[0].States
+	if events.State == 0{
+		ctx.LogError("ontio contract invoke failed, state:0")
+		return false
+	}
+	if len(events.Notify) > 0 {
+		states := events.Notify[0].States
 		ctx.LogInfo("result is : %+v", states)
 		return true
 	} else {

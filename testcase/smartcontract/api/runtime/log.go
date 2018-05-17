@@ -78,8 +78,8 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 
 	return true
 
-	transfer := events[0].States
-	ctx.LogInfo("%+v", transfer)
+	//transfer := events[0].States
+	//ctx.LogInfo("%+v", transfer)
 
 	//notify , ok := res.(map[string]interface{})
 	//if !ok {

@@ -43,13 +43,16 @@ func TestCallWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCallWasmJsonContract invokeCallContractAddValue GetSmartContractEvent error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestCallWasmJsonContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract invokeCallContractAddValue return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract invokeCallContractAddValue ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
@@ -64,13 +67,16 @@ func TestCallWasmJsonContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCallWasmJsonContract invokeCallContractGetValue GetSmartContractEvent error:%s", err)
 		return false
 	}
-
-	if len(notifies) < 1 {
+	if notifies.State == 0 {
+		ctx.LogError("TestCallWasmJsonContract contract invoke failed state:0")
+		return false
+	}
+	if len(notifies.Notify) < 1 {
 		ctx.LogError("TestWasmJsonContract invokeCallContractGetValue return notifies count error!")
 		return false
 	}
 	ctx.LogInfo("==========TestWasmJsonContract invokeCallContractAddValue ============")
-	for i, n := range notifies {
+	for i, n := range notifies.Notify {
 		ctx.LogInfo(fmt.Sprintf("notify %d is %v", i, n))
 	}
 
