@@ -61,7 +61,7 @@ func invokeTransferOntJson(ctx *testframework.TestFrameworkContext, acc *account
 	params[0] = to
 	params[1] = amount
 
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

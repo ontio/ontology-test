@@ -129,7 +129,7 @@ func (this *TestFramework) SetWallet(wallet account.Client) {
 func (this *TestFramework) onTestStart() {
 	version, _ := this.ont.Rpc.GetVersion()
 	log4.Info("\t\t\t===============================================================")
-	log4.Info("\t\t\t-------Ontology Test Start Version:%d", version)
+	log4.Info("\t\t\t-------Ontology Test Start Version:%s", version)
 	log4.Info("\t\t\t===============================================================")
 	log4.Info("")
 	this.startTime = time.Now()

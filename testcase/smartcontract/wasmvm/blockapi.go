@@ -309,7 +309,7 @@ func TestBlockApi(ctx *testframework.TestFrameworkContext) bool {
 
 func callGetHeaderHash(ctx *testframework.TestFrameworkContext, acc *account.Account, address common.Address) (common.Uint256, error) {
 	method := "getCurrentHeadHash"
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, nil)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, nil)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -321,7 +321,7 @@ func callGetHeaderHash(ctx *testframework.TestFrameworkContext, acc *account.Acc
 func callGetHeaderHeight(ctx *testframework.TestFrameworkContext, acc *account.Account, address common.Address) (common.Uint256, error) {
 	method := "getCurrentHeaderHeight"
 
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, nil)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, nil)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -332,7 +332,7 @@ func callGetHeaderHeight(ctx *testframework.TestFrameworkContext, acc *account.A
 func callGetBlockHash(ctx *testframework.TestFrameworkContext, acc *account.Account, address common.Address) (common.Uint256, error) {
 	method := "getCurrentBlockHash"
 
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, nil)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, nil)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -344,7 +344,7 @@ func callGetBlockHash(ctx *testframework.TestFrameworkContext, acc *account.Acco
 func callGetBlockHeight(ctx *testframework.TestFrameworkContext, acc *account.Account, address common.Address) (common.Uint256, error) {
 	method := "getCurrentBlockHeight"
 
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, nil)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, nil)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -358,7 +358,7 @@ func callGetTransByHash(ctx *testframework.TestFrameworkContext, acc *account.Ac
 	params[0] = hash
 
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -372,7 +372,7 @@ func callGetTransCount(ctx *testframework.TestFrameworkContext, acc *account.Acc
 	params[0] = hash
 
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -387,7 +387,7 @@ func callGetTransCountByHeight(ctx *testframework.TestFrameworkContext, acc *acc
 	params[0] = height
 
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -402,7 +402,7 @@ func callGetTransactionsByHash(ctx *testframework.TestFrameworkContext, acc *acc
 	params[0] = hash
 
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -417,7 +417,7 @@ func callGetTransactionsByHeight(ctx *testframework.TestFrameworkContext, acc *a
 	params[0] = height
 
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

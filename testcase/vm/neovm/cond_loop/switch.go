@@ -18,9 +18,7 @@ func TestSwitch(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestArray GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(
-		0,
-		0,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		types.NEOVM,
 		false,

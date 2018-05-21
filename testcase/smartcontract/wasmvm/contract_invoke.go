@@ -208,7 +208,7 @@ func callAdd(ctx *testframework.TestFrameworkContext, acc *account.Account, addr
 	params[0] = 20
 	params[1] = 30
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -223,7 +223,7 @@ func callAddStorage(ctx *testframework.TestFrameworkContext, acc *account.Accoun
 	params[0] = "TestKey"
 	params[1] = "Hello World"
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -238,7 +238,7 @@ func callconcat(ctx *testframework.TestFrameworkContext, acc *account.Account, a
 	params[0] = "TestKey"
 	params[1] = "Hello World"
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -251,7 +251,7 @@ func callGetStorage(ctx *testframework.TestFrameworkContext, acc *account.Accoun
 	method := "getStorage"
 	params := make([]interface{}, 1)
 	params[0] = "TestKey"
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -263,7 +263,7 @@ func callDeleteStorage(ctx *testframework.TestFrameworkContext, acc *account.Acc
 	method := "deleteStorage"
 	params := make([]interface{}, 1)
 	params[0] = "TestKey"
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -279,7 +279,7 @@ func callSumarray(ctx *testframework.TestFrameworkContext, acc *account.Account,
 	params[1] = []int{5, 6, 7, 8}
 
 	//txHash,err := InvokeWasmVMContract(ctx,acc,new(big.Int),address,method,wasm.Json,params,1,false)
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -297,7 +297,7 @@ func deployWasmJsonContract(ctx *testframework.TestFrameworkContext, signer *acc
 
 	codeHash := common.ToHexString(code)
 
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(0, 0,
+	txHash, err := ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		types.WASMVM,
 		true,

@@ -42,6 +42,10 @@ type TestConfig struct {
 	WalletFile string
 	//The Password of wallet
 	Password string
+	//Gas Price of transaction
+	GasPrice uint64
+	//Gas Limit of transaction
+	GasLimit uint64
 }
 
 //NewTestConfig retuen a TestConfig instance

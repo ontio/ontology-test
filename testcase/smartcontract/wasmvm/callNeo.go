@@ -90,7 +90,7 @@ func invokePut(ctx *testframework.TestFrameworkContext, acc *account.Account, ad
 	params[0] = key
 	params[1] = value
 
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -103,7 +103,7 @@ func invokeGet(ctx *testframework.TestFrameworkContext, acc *account.Account, ad
 	params := make([]interface{}, 1)
 	params[0] = key
 
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, address, method, wasmvm.Json, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, address, method, wasmvm.Json, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -120,7 +120,7 @@ func deployNeoContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestDeploySmartContract GetDefaultAccount erro`r:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(0, 0, signer,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), signer,
 		types.NEOVM,
 		true,
 		neocontractCode,

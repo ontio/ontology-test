@@ -159,7 +159,7 @@ func callRawContractAdd(ctx *testframework.TestFrameworkContext, acc *account.Ac
 	params := make([]interface{}, 2)
 	params[0] = 20
 	params[1] = 30
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, contractAddress, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, contractAddress, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -173,7 +173,7 @@ func callRawContractAddStorage(ctx *testframework.TestFrameworkContext, acc *acc
 	params := make([]interface{}, 2)
 	params[0] = "TestKey"
 	params[1] = "Hello World"
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, contractAddress, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, contractAddress, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -186,7 +186,7 @@ func callRawContractGetStorage(ctx *testframework.TestFrameworkContext, acc *acc
 	method := "getStorage"
 	params := make([]interface{}, 1)
 	params[0] = "TestKey"
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, contractAddress, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, contractAddress, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {
@@ -199,7 +199,7 @@ func callRawContractDeleteStorage(ctx *testframework.TestFrameworkContext, acc *
 	method := "deleteStorage"
 	params := make([]interface{}, 1)
 	params[0] = "TestKey"
-	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(0, 0, acc, 1, contractAddress, method, wasmvm.Raw, params)
+	txHash, err := ctx.Ont.Rpc.InvokeWasmVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 1, contractAddress, method, wasmvm.Raw, params)
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30 * time.Second)
 	if err != nil {

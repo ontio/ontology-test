@@ -110,9 +110,7 @@ func TestCallingContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(
-		0,
-		0,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		types.NEOVM,
 		true,
@@ -134,9 +132,7 @@ func TestCallingContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
-		0,
-		0,
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		0,
 		codeAddress,

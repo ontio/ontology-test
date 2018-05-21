@@ -23,9 +23,7 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 	//After fix of compiler, wo won't need reverse.
 	ctx.LogInfo("CodeA Address:%x, R:%x", codeAddressA, utils.BytesReverse(codeAddressA[:]))
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(
-		0,
-		0,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		types.NEOVM,
 		false,
@@ -49,9 +47,7 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 
 	codeB := "52c56b6c766b00527ac4616c766b00c3616780711163a4da8a8e37fd469a37e6cc04d37df3696c766b51527ac46203006c766b51c3616c7566"
 	codeAddressB := utils.GetNeoVMContractAddress(codeB)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(
-		0,
-		0,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		types.NEOVM,
 		false,

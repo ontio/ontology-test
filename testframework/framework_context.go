@@ -94,6 +94,14 @@ func (this *TestFrameworkContext) FailNow() {
 	}
 }
 
+func (this *TestFrameworkContext)GetGasPrice()uint64{
+	return common.DefConfig.GasPrice
+}
+
+func (this *TestFrameworkContext)GetGasLimit()uint64{
+	return common.DefConfig.GasLimit
+}
+
 //AssertToInt compare with int, if not equal, return error
 func (this *TestFrameworkContext) AssertToInt(value interface{}, expect int) error {
 	v, ok := value.(*big.Int)

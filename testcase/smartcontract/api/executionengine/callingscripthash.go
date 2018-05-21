@@ -52,9 +52,7 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(
-		0,
-		0,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		types.NEOVM,
 		true,
@@ -79,9 +77,7 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	codeB := "51c56b61616780d4b6ec4c8987ff7f79af45af88a3139ed10c7d6c766b00527ac46168164e656f2e53746f726167652e476574436f6e746578740a63616c6c5363726970746c766b00c3615272680f4e656f2e53746f726167652e50757461616c7566"
 	codeAddressB := utils.GetNeoVMContractAddress(codeB)
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(
-		0,
-		0,
+	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		types.NEOVM,
 		true,
@@ -103,9 +99,7 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(
-		0,
-		0,
+	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		0,
 		codeAddressB,

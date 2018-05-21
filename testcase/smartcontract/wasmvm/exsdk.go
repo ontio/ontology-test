@@ -140,7 +140,7 @@ func DeployWasmJsonContract(ctx *testframework.TestFrameworkContext, signer *acc
 
 	codeHash := common.ToHexString(code)
 
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(0, 0,
+	txHash, err := ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		types.WASMVM,
 		true,
