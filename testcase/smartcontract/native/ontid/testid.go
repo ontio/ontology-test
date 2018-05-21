@@ -231,34 +231,27 @@ func testAttr(ctx *testframework.TestFrameworkContext) bool {
 	user, _ := ctx.GetDefaultAccount()
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
+	var attr bytes.Buffer
+	serialization.WriteVarBytes(&attr, []byte("attr1"))
+	serialization.WriteVarBytes(&attr, []byte{1})
+	serialization.WriteVarBytes(&attr, []byte{0x01, 0x02})
+	serialization.WriteVarBytes(&attr, []byte("attr2"))
+	serialization.WriteVarBytes(&attr, []byte{2})
+	serialization.WriteVarBytes(&attr, []byte("abcd"))
+
 	var buf bytes.Buffer
 	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, []byte("attr1"))
-	serialization.WriteVarBytes(&buf, []byte{1})
-	serialization.WriteVarBytes(&buf, []byte{0x01, 0x02})
+	serialization.WriteVarBytes(&buf, attr.Bytes())
 	serialization.WriteVarBytes(&buf, pub)
 	args := buf.Bytes()
 
 	c := &states.Contract{
 		Address: genesis.OntIDContractAddress,
-		Method:  "addAttribute",
+		Method:  "addAttributes",
 		Args:    args,
 	}
 
 	ok, _ := InvokeContract(ctx, c, false)
-	if !ok {
-		return false
-	}
-
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, []byte("attr2"))
-	serialization.WriteVarBytes(&buf, []byte{2})
-	serialization.WriteVarBytes(&buf, []byte("abcd"))
-	serialization.WriteVarBytes(&buf, pub)
-	args = buf.Bytes()
-	c.Args = args
-	ok, _ = InvokeContract(ctx, c, false)
 	if !ok {
 		return false
 	}
