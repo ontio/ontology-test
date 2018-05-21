@@ -74,9 +74,7 @@ func TestOperationDivide(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationDivide(ctx *testframework.TestFrameworkContext, code common.Address, a, b int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{a, b},
@@ -95,9 +93,7 @@ func testOperationDivide(ctx *testframework.TestFrameworkContext, code common.Ad
 }
 
 func testOperationDivideFail(ctx *testframework.TestFrameworkContext, code common.Address, a, b int) bool {
-	_, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	_, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{a, b},

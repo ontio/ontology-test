@@ -66,9 +66,7 @@ func TestOperationLeftShift(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationLeftShift(ctx *testframework.TestFrameworkContext, code common.Address, a int, b int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{a, b},

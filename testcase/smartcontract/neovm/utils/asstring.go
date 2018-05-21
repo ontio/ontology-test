@@ -53,9 +53,7 @@ func TestAsString(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testAsString(ctx *testframework.TestFrameworkContext, code common.Address, input []byte) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{input},

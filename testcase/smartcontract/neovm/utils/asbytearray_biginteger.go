@@ -59,9 +59,7 @@ func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testAsArray_BigInteger(ctx *testframework.TestFrameworkContext, code common.Address, input *big.Int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{input},

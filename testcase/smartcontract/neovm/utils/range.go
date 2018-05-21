@@ -58,9 +58,7 @@ func TestRange(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testRange(ctx *testframework.TestFrameworkContext, code common.Address, b []byte, start, count int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{b, start, count},

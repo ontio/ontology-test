@@ -74,9 +74,7 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	input := 12
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		codeAddressB,
 		[]interface{}{input},

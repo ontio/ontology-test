@@ -54,9 +54,7 @@ func TestOperationSelfSub(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationSelfSub(ctx *testframework.TestFrameworkContext, code common.Address, a int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{a},

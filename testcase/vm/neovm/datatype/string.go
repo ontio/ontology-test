@@ -40,9 +40,7 @@ func TestString(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestString WaitForGenerateBlock error:%s", err)
 		return false
 	}
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		codeAddress,
 		[]interface{}{},

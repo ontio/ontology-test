@@ -55,9 +55,7 @@ func TestByteArray(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testByteArray(ctx *testframework.TestFrameworkContext, code common.Address, arg1, arg2 []byte, expect bool) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{arg1, arg2},

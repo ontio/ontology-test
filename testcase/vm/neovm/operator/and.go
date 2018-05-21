@@ -62,9 +62,7 @@ func TestOperationAnd(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationAnd(ctx *testframework.TestFrameworkContext, codeAddress common.Address, a, b bool) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		codeAddress,
 		[]interface{}{a, b},

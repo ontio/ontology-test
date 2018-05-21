@@ -63,9 +63,7 @@ func TestOperationLarger(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationLarger(ctx *testframework.TestFrameworkContext, codeAddress common.Address, a, b int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		codeAddress,
 		[]interface{}{a, b},

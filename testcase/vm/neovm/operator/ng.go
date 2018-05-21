@@ -54,9 +54,7 @@ func TestOperationNegative(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationNegative(ctx *testframework.TestFrameworkContext, code common.Address, a bool) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{a},

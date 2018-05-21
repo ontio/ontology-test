@@ -59,9 +59,7 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testAsBigInteger(ctx *testframework.TestFrameworkContext, code common.Address, b *big.Int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContract(
-		0,
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
 		0,
 		code,
 		[]interface{}{b},
