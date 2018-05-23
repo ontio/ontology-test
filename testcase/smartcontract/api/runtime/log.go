@@ -46,7 +46,7 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 		"")
 
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 2)
 
 	if err != nil {
 		ctx.LogError("TestRuntimLog WaitForGenerateBlock error:%s", err)

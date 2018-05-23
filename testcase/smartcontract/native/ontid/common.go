@@ -6,6 +6,7 @@ import (
 	"time"
 
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
+	"github.com/ontio/ontology-test/common"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/smartcontract/states"
@@ -18,7 +19,7 @@ func makeTx(contract *states.Contract) (*types.Transaction, error) {
 		return nil, errors.New("Serialize contract error: " + err.Error())
 	}
 
-	return sdkcom.NewInvokeTransaction(0, 0, vmtypes.Native, buf.Bytes()), nil
+	return sdkcom.NewInvokeTransaction(common.DefConfig.GasPrice, common.DefConfig.GasLimit, vmtypes.Native, buf.Bytes()), nil
 }
 
 func sendTx(ctx *testframework.TestFrameworkContext, invokeTx *types.Transaction) bool {
@@ -40,7 +41,7 @@ func sendTx(ctx *testframework.TestFrameworkContext, invokeTx *types.Transaction
 		return false
 	}
 
-	if events.State == 0{
+	if events.State == 0 {
 		ctx.LogError("ontio contract invoke failed, state:0")
 		return false
 	}

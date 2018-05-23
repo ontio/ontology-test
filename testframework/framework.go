@@ -128,9 +128,9 @@ func (this *TestFramework) SetWallet(wallet account.Client) {
 //onTestStart invoke at the beginning of test
 func (this *TestFramework) onTestStart() {
 	version, _ := this.ont.Rpc.GetVersion()
-	log4.Info("\t\t\t===============================================================")
-	log4.Info("\t\t\t-------Ontology Test Start Version:%s", version)
-	log4.Info("\t\t\t===============================================================")
+	log4.Info("===============================================================")
+	log4.Info("-------Ontology Test Start Version:%s", version)
+	log4.Info("===============================================================")
 	log4.Info("")
 	this.startTime = time.Now()
 }
@@ -158,35 +158,35 @@ func (this *TestFramework) onTestFinish(testCaseList []TestCase) {
 	succCount := len(successList)
 	failedCount := len(failedList)
 
-	log4.Info("\t\t===============================================================")
-	log4.Info("\t\tOntology Test Finish Total:%v Success:%v Failed:%v Skip:%v TimeCost:%.2f s.",
+	log4.Info("===============================================================")
+	log4.Info("Ontology Test Finish Total:%v Success:%v Failed:%v Skip:%v TimeCost:%.2f s.",
 		len(this.testCases),
 		succCount,
 		failedCount,
 		len(this.testCases)-succCount-failedCount,
 		time.Now().Sub(this.startTime).Seconds())
 	if succCount > 0 {
-		log4.Info("\t\t---------------------------------------------------------------")
-		log4.Info("\t\t\tSuccess list:")
+		log4.Info("---------------------------------------------------------------")
+		log4.Info("Success list:")
 		for i, succCase := range successList {
-			log4.Info("\t\t\t%d.\t%s", i+1, succCase)
+			log4.Info("%d.\t%s", i+1, succCase)
 		}
 	}
 	if failedCount > 0 {
-		log4.Info("\t\t---------------------------------------------------------------")
-		log4.Info("\t\t\tFail list:")
+		log4.Info("---------------------------------------------------------------")
+		log4.Info("Fail list:")
 		for i, failCase := range failedList {
-			log4.Info("\t\t\t%d.\t%s", i+1, failCase)
+			log4.Info("%d.\t%s", i+1, failCase)
 		}
 	}
 	if len(skipList) > 0 {
-		log4.Info("\t\t---------------------------------------------------------------")
-		log4.Info("\t\t\tSkip list:")
+		log4.Info("---------------------------------------------------------------")
+		log4.Info("Skip list:")
 		for i, failCase := range skipList {
-			log4.Info("\t\t\t%d.\t%s", i+1, failCase)
+			log4.Info("%d.\t%s", i+1, failCase)
 		}
 	}
-	log4.Info("\t\t===============================================================")
+	log4.Info("===============================================================")
 }
 
 //onTestFailNow invoke when context.FailNow() was be called

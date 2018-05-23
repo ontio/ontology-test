@@ -7,6 +7,7 @@ import (
 	"github.com/ontio/ontology-crypto/keypair"
 	sdkcomm "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/testframework"
+	"github.com/ontio/ontology-test/common"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/core/genesis"
 	"github.com/ontio/ontology/errors"
@@ -69,7 +70,7 @@ func sendTestTx(ctx *testframework.TestFrameworkContext, user *account.Account, 
 		return false, fmt.Errorf("Serialize contract error:%s", err)
 	}
 	//prepare tx
-	invokeTx := sdkcomm.NewInvokeTransaction(0, 0, vmtypes.Native, buf.Bytes())
+	invokeTx := sdkcomm.NewInvokeTransaction(common.DefConfig.GasPrice, common.DefConfig.GasLimit, vmtypes.Native, buf.Bytes())
 	if err := sdkcomm.SignTransaction(invokeTx, user); err != nil {
 		return false, fmt.Errorf("SignTransaction error:%s", err)
 	}
