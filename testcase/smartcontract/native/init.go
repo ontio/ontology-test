@@ -6,6 +6,7 @@ import (
 )
 
 func TestNative() {
+	testframework.TFramework.RegTestCase("TestGlobalParam", TestGlobalParam)
 	testframework.TFramework.RegTestCase("TestOntTransfer", TestOntTransfer)
 	ontid.TestNativeOntID()
 }
