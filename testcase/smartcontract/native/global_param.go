@@ -3,7 +3,6 @@ package native
 import (
 	"bytes"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-test/testframework"
@@ -21,8 +20,27 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("Wallet.GetDefaultAccount error:%s", err)
 		return false
 	}
+	// init global params
+	initParms := new(global_params.Params)
+	initParms.SetParam(&global_params.Param{"init-key", "init-value"})
+	setParam(originAdmin, ctx.Ont, initParms)
+	// query init param, should cause error, because not create snapshot
+	_, err = getParam(&global_params.ParamNameList{"init-key"}, ctx.Ont)
+	if err == nil {
+		ctx.LogError("Get global params error, the value should not take effect!")
+		return false
+	}
+	// create snapshot of init params
+	createSnapshot(originAdmin, ctx.Ont)
+	// query init param, should not cause error
+	_, err = getParam(&global_params.ParamNameList{"init-key"}, ctx.Ont)
+	if err != nil {
+		ctx.LogError("Get global params error: %s!", err)
+		return false
+	}
+
 	// origin admin set and get global params, should not cause error
-	globalParams, err := testGetAndSet(originAdmin, ctx.Ont, "originAdmin0", global_params.GLOBAL_PARAM)
+	globalParams, err := testGetAndSet(originAdmin, ctx.Ont, "originAdmin0", *initParms)
 	if err != nil {
 		ctx.LogError("Origin admin operate global params error:%s", err)
 		return false
@@ -77,91 +95,95 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
-func testGetAndSet(account *account.Account, ontSdk *sdk.OntologySdk, keyword string, initParam map[string]string,
-) (map[string]string, error) {
+func testGetAndSet(account *account.Account, ontSdk *sdk.OntologySdk, keyword string, initParams global_params.Params,
+) (global_params.Params, error) {
 	// read original param
 	paramNameList := new(global_params.ParamNameList)
-	for k, _ := range initParam {
-		(*paramNameList) = append(*paramNameList, k)
+	for _, param := range initParams {
+		(*paramNameList) = append(*paramNameList, param.Key)
 	}
 	queriedParams, err := getParam(paramNameList, ontSdk)
 	if err != nil {
-		return initParam, fmt.Errorf("query param failed: %s", err)
+		return initParams, fmt.Errorf("query param failed: %s", err)
 	}
 	// compare to original param
-	if len(*queriedParams) != len(initParam) {
-		return initParam, fmt.Errorf("query param failed: init param not equals genesis init param!")
+	if len(*queriedParams) != len(initParams) {
+		return initParams, fmt.Errorf("query param failed: init param not equals genesis init param!")
 	}
-	for k, v := range initParam {
-		if (*queriedParams)[k] != v {
-			return initParam, fmt.Errorf("query param failed: init param not equals genesis init param!")
+	for index, param := range initParams {
+		if (*queriedParams)[index].Key != param.Key || (*queriedParams)[index].Value != param.Value {
+			return initParams, fmt.Errorf("query param failed: init param not equals genesis init param!")
 		}
 	}
 
-	// set param
-	bf := new(bytes.Buffer)
+	// set global param
 	newParams := new(global_params.Params)
-	*newParams = make(map[string]string)
 	for i := 0; i < 3; i++ {
 		key := "test-key-" + keyword + "-" + strconv.Itoa(i)
 		value := "test-value-" + keyword + "-" + strconv.Itoa(i)
 		(*paramNameList) = append(*paramNameList, key)
-		(*newParams)[key] = value
+		newParams.SetParam(&global_params.Param{key, value})
 	}
-	newParams.Serialize(bf)
-	_, err = ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, genesis.ParamContractAddress,
-		"setGlobalParam", bf.Bytes())
-	if err != nil {
-		return initParam, fmt.Errorf("set param failed: %s", err)
-	}
-	ontSdk.Rpc.WaitForGenerateBlock(30 * time.Second, 1)
+	setParam(account, ontSdk, newParams)
 
-	// create snapshot
-	_, err = ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, genesis.ParamContractAddress,
-		"createSnapshot", []byte{})
-	if err != nil {
-		return initParam, fmt.Errorf("create snapshot failed: %s", err)
-	}
-	ontSdk.Rpc.WaitForGenerateBlock(30 * time.Second, 1)
+	// create Snapshot
+	createSnapshot(account, ontSdk)
 
 	// read param
 	queriedParams, err = getParam(paramNameList, ontSdk)
 	if err != nil {
 		// snapshot has been created, so return the new params
-		return initParam, fmt.Errorf("query param failed: %s", err)
+		return initParams, fmt.Errorf("query param failed: %s", err)
 	}
 
-	// append init params to new params
-	for k, v := range initParam {
-		(*newParams)[k] = v
+	// update new params bt init params
+	for _, v := range initParams {
+		newParams.SetParam(v)
 	}
-	for k, _ := range *newParams {
-		if _, ok := (*queriedParams)[k]; !ok {
-			return *newParams, fmt.Errorf("set param failed: the new param take effect immediately!")
+	if len(*newParams) != len(*queriedParams) {
+		return *newParams, fmt.Errorf("set param failed, the new param isn't effective!")
+	}
+	for _, param := range *newParams {
+		if index, _ := queriedParams.GetParam(param.Key); index < 0 {
+			return *newParams, fmt.Errorf("set param failed: the new param isn't effective!")
 		}
 	}
 	return *queriedParams, err
 }
 
-func transferAdmin(orignAdmin *account.Account, newAdminAddress common.Address, ontSdk *sdk.OntologySdk)  {
+func setParam(account *account.Account, ontSdk *sdk.OntologySdk, params *global_params.Params) {
+	bf := new(bytes.Buffer)
+	params.Serialize(bf)
+	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, genesis.ParamContractAddress,
+		"setGlobalParam", bf.Bytes())
+	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+}
+
+func createSnapshot(account *account.Account, ontSdk *sdk.OntologySdk) {
+	// create snapshot
+	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, genesis.ParamContractAddress,
+		"createSnapshot", []byte{})
+	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+}
+
+func transferAdmin(orignAdmin *account.Account, newAdminAddress common.Address, ontSdk *sdk.OntologySdk) {
 	var destinationAdmin global_params.Admin
 	copy(destinationAdmin[:], newAdminAddress[:])
 	adminBuffer := new(bytes.Buffer)
 	destinationAdmin.Serialize(adminBuffer)
 	ontSdk.Rpc.InvokeNativeContract(0, 0, orignAdmin, 0, genesis.ParamContractAddress,
 		"transferAdmin", adminBuffer.Bytes())
-	ontSdk.Rpc.WaitForGenerateBlock(30 * time.Second, 1)
+	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
-func accpetAdmin(newAdmin *account.Account, ontSdk *sdk.OntologySdk) error {
+func accpetAdmin(newAdmin *account.Account, ontSdk *sdk.OntologySdk) {
 	var destinationAdmin global_params.Admin
 	copy(destinationAdmin[:], newAdmin.Address[:])
 	adminBuffer := new(bytes.Buffer)
 	destinationAdmin.Serialize(adminBuffer)
-	_, err := ontSdk.Rpc.InvokeNativeContract(0, 0, newAdmin, 0, genesis.ParamContractAddress,
+	ontSdk.Rpc.InvokeNativeContract(0, 0, newAdmin, 0, genesis.ParamContractAddress,
 		"acceptAdmin", adminBuffer.Bytes())
-	ontSdk.Rpc.WaitForGenerateBlock(30 * time.Second, 1)
-	return err
+	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func getParam(paramNameList *global_params.ParamNameList, ontSdk *sdk.OntologySdk) (*global_params.Params, error) {
@@ -177,9 +199,9 @@ func getParam(paramNameList *global_params.ParamNameList, ontSdk *sdk.OntologySd
 	if err != nil {
 		err = fmt.Errorf("get param error: decode result error!")
 	}
-	err = json.Unmarshal(data, queriedParams)
+	err = queriedParams.Deserialize(bytes.NewBuffer([]byte(data)))
 	if err != nil {
-		err = fmt.Errorf("get param error: unmarshal result error!")
+		err = fmt.Errorf("get param error: deserialize result error!")
 	}
-	return queriedParams, nil
+	return queriedParams, err
 }
