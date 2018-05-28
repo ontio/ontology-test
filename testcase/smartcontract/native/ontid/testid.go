@@ -123,10 +123,12 @@ func keyStateArg(i uint32) []byte {
 }
 
 func queryDDO(ctx *testframework.TestFrameworkContext) bool {
+	var buf bytes.Buffer
+	serialization.WriteVarBytes(&buf, []byte(test_id))
 	c := &states.Contract{
 		Address: nautil.OntIDContractAddress,
 		Method:  "getDDO",
-		Args:    []byte(test_id),
+		Args:    buf.Bytes(),
 	}
 	ok, _ := InvokeContract(ctx, c, false)
 	if !ok {
@@ -152,7 +154,8 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 
 	var buf bytes.Buffer
 	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, addr0[:])
+	addr0.Serialize(&buf)
+	//serialization.WriteVarBytes(&buf, addr0[:])
 	serialization.WriteVarBytes(&buf, pub)
 	args := buf.Bytes()
 
@@ -169,8 +172,10 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 
 	buf.Reset()
 	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, addr1[:])
-	serialization.WriteVarBytes(&buf, addr0[:])
+	addr1.Serialize(&buf)
+	addr0.Serialize(&buf)
+	//serialization.WriteVarBytes(&buf, addr1[:])
+	//serialization.WriteVarBytes(&buf, addr0[:])
 	args = buf.Bytes()
 
 	c.Method = "changeRecovery"
@@ -202,23 +207,20 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
 	var buf bytes.Buffer
+	serialization.WriteVarBytes(&buf, []byte(test_id))
+	serialization.WriteVarBytes(&buf, pub)
+	serialization.WriteVarUint(&buf, 2)
 	serialization.WriteVarBytes(&buf, []byte("attr0"))
 	serialization.WriteVarBytes(&buf, []byte{0})
 	serialization.WriteVarBytes(&buf, []byte{1})
 	serialization.WriteVarBytes(&buf, []byte("attr1"))
 	serialization.WriteVarBytes(&buf, []byte{1})
 	serialization.WriteVarBytes(&buf, []byte{0, 1})
-	attrs := buf.Bytes()
-
-	var buf1 bytes.Buffer
-	serialization.WriteVarBytes(&buf1, []byte(test_id))
-	serialization.WriteVarBytes(&buf1, pub)
-	serialization.WriteVarBytes(&buf1, attrs)
 
 	c := &states.Contract{
 		Address: nautil.OntIDContractAddress,
 		Method:  "regIDWithAttributes",
-		Args:    buf1.Bytes(),
+		Args:    buf.Bytes(),
 	}
 
 	ok, _ := InvokeContract(ctx, c, false)
@@ -230,17 +232,15 @@ func testAttr(ctx *testframework.TestFrameworkContext) bool {
 	user, _ := ctx.GetDefaultAccount()
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
-	var attr bytes.Buffer
-	serialization.WriteVarBytes(&attr, []byte("attr1"))
-	serialization.WriteVarBytes(&attr, []byte{1})
-	serialization.WriteVarBytes(&attr, []byte{0x01, 0x02})
-	serialization.WriteVarBytes(&attr, []byte("attr2"))
-	serialization.WriteVarBytes(&attr, []byte{2})
-	serialization.WriteVarBytes(&attr, []byte("abcd"))
-
 	var buf bytes.Buffer
 	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, attr.Bytes())
+	serialization.WriteVarUint(&buf, 2)
+	serialization.WriteVarBytes(&buf, []byte("attr1"))
+	serialization.WriteVarBytes(&buf, []byte{1})
+	serialization.WriteVarBytes(&buf, []byte{0x01, 0x02})
+	serialization.WriteVarBytes(&buf, []byte("attr2"))
+	serialization.WriteVarBytes(&buf, []byte{2})
+	serialization.WriteVarBytes(&buf, []byte("abcd"))
 	serialization.WriteVarBytes(&buf, pub)
 	args := buf.Bytes()
 
