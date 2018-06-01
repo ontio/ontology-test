@@ -3,16 +3,15 @@ package ontid
 import (
 	"bytes"
 	"crypto/rand"
-	"math/big"
-
 	"github.com/ontio/ontology-crypto/keypair"
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common/serialization"
-	"github.com/ontio/ontology/core/genesis"
 	"github.com/ontio/ontology/core/types"
+	nautil "github.com/ontio/ontology/smartcontract/service/native/utils"
 	"github.com/ontio/ontology/smartcontract/states"
+	"math/big"
 )
 
 var test_id = "did:ont:abcd1234"
@@ -70,7 +69,7 @@ func registerID(ctx *testframework.TestFrameworkContext) bool {
 	serialization.WriteVarBytes(buf, pub)
 	args := buf.Bytes()
 
-	caddr := genesis.OntIDContractAddress
+	caddr := nautil.OntIDContractAddress
 	inv := &states.Contract{
 		Address: caddr,
 		Method:  "regIDWithPublicKey",
@@ -95,7 +94,7 @@ func addKey(ctx *testframework.TestFrameworkContext) bool {
 	args := buf.Bytes()
 
 	c := &states.Contract{
-		Address: genesis.OntIDContractAddress,
+		Address: nautil.OntIDContractAddress,
 		Method:  "addKey",
 		Args:    args,
 	}
@@ -125,7 +124,7 @@ func keyStateArg(i uint32) []byte {
 
 func queryDDO(ctx *testframework.TestFrameworkContext) bool {
 	c := &states.Contract{
-		Address: genesis.OntIDContractAddress,
+		Address: nautil.OntIDContractAddress,
 		Method:  "getDDO",
 		Args:    []byte(test_id),
 	}
@@ -158,7 +157,7 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 	args := buf.Bytes()
 
 	c := &states.Contract{
-		Address: genesis.OntIDContractAddress,
+		Address: nautil.OntIDContractAddress,
 		Method:  "addRecovery",
 		Args:    args,
 	}
@@ -217,7 +216,7 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 	serialization.WriteVarBytes(&buf1, attrs)
 
 	c := &states.Contract{
-		Address: genesis.OntIDContractAddress,
+		Address: nautil.OntIDContractAddress,
 		Method:  "regIDWithAttributes",
 		Args:    buf1.Bytes(),
 	}
@@ -246,7 +245,7 @@ func testAttr(ctx *testframework.TestFrameworkContext) bool {
 	args := buf.Bytes()
 
 	c := &states.Contract{
-		Address: genesis.OntIDContractAddress,
+		Address: nautil.OntIDContractAddress,
 		Method:  "addAttributes",
 		Args:    args,
 	}
