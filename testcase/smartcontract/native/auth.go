@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	"time"
+
 	"github.com/ontio/ontology-crypto/keypair"
 	sdkcomm "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/common"
@@ -12,14 +14,12 @@ import (
 	"github.com/ontio/ontology/errors"
 	"github.com/ontio/ontology/smartcontract/service/native/auth"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
-	nautil "github.com/ontio/ontology/smartcontract/service/native/utils"
 	cstates "github.com/ontio/ontology/smartcontract/states"
 	vmtypes "github.com/ontio/ontology/smartcontract/types"
-	"time"
 )
 
 var (
-	contractAddress = nautil.AuthContractAddress
+	contractAddress = utils.AuthContractAddress
 	adminOntID      = keypair.SerializePublicKey(account.NewAccount("SHA256withECDSA").PublicKey)
 	newAdminOntID   = keypair.SerializePublicKey(account.NewAccount("SHA256withECDSA").PublicKey)
 	p1              = keypair.SerializePublicKey(account.NewAccount("SHA256withECDSA").PublicKey)
@@ -106,7 +106,7 @@ func TestInitContractAdmin(ctx *testframework.TestFrameworkContext, user *accoun
 	}
 
 	//check result
-	key, err := auth.PackKeys([]byte{}, [][]byte{nautil.OntContractAddress[:], auth.Admin})
+	key, err := auth.PackKeys([]byte{}, [][]byte{utils.OntContractAddress[:], auth.Admin})
 	if err != nil {
 		return false, err
 	}
@@ -125,7 +125,7 @@ func TestInitContractAdmin(ctx *testframework.TestFrameworkContext, user *accoun
 func TestAssignFuncsToRole(ctx *testframework.TestFrameworkContext, user *account.Account) (bool, error) {
 	//prepare invoke param
 	param := &auth.FuncsToRoleParam{
-		ContractAddr: nautil.OntContractAddress[:],
+		ContractAddr: utils.OntContractAddress[:],
 		AdminOntID:   newAdminOntID,
 		Role:         []byte("role"),
 		FuncNames:    []string{"init", "transfer"},
@@ -145,8 +145,8 @@ func TestAssignFuncsToRole(ctx *testframework.TestFrameworkContext, user *accoun
 		return false, nil
 	}
 
-	roleF, err := auth.PackKeys([]byte{}, [][]byte{nautil.OntContractAddress[:], auth.RoleF, []byte("role")})
-	//roleF = append(genesis.AuthContractAddress[:], roleF...)
+	roleF, err := auth.PackKeys([]byte{}, [][]byte{utils.OntContractAddress[:], auth.RoleF, []byte("role")})
+	//roleF = append(utils.AuthContractAddress[:], roleF...)
 	q, err := ctx.Ont.Rpc.GetStorage(contractAddress, roleF)
 
 	if err != nil {
@@ -171,7 +171,7 @@ func TestAssignFuncsToRole(ctx *testframework.TestFrameworkContext, user *accoun
 func TestAssignOntIDsToRole(ctx *testframework.TestFrameworkContext, user *account.Account) (bool, error) {
 
 	param := &auth.OntIDsToRoleParam{
-		ContractAddr: nautil.OntContractAddress[:],
+		ContractAddr: utils.OntContractAddress[:],
 		AdminOntID:   adminOntID,
 		Role:         []byte("role"),
 		Persons:      [][]byte{p1, p2},
@@ -189,8 +189,8 @@ func TestAssignOntIDsToRole(ctx *testframework.TestFrameworkContext, user *accou
 	if !ret {
 		return false, errors.NewErr("send test transaction failed")
 	}
-	roleP, err := auth.PackKeys([]byte{}, [][]byte{nautil.OntContractAddress[:], auth.RoleP, []byte("role")})
-	//roleF = append(genesis.AuthContractAddress[:], roleF...)
+	roleP, err := auth.PackKeys([]byte{}, [][]byte{utils.OntContractAddress[:], auth.RoleP, []byte("role")})
+	//roleF = append(utils.AuthContractAddress[:], roleF...)
 	q, err := ctx.Ont.Rpc.GetStorage(contractAddress, roleP)
 
 	if err != nil {
@@ -217,7 +217,7 @@ func TestAssignOntIDsToRole(ctx *testframework.TestFrameworkContext, user *accou
 func TestDelegate(ctx *testframework.TestFrameworkContext, user *account.Account) (bool, error) {
 
 	param := &auth.DelegateParam{
-		ContractAddr: nautil.OntContractAddress[:],
+		ContractAddr: utils.OntContractAddress[:],
 		From:         p1,
 		To:           p3,
 		Role:         []byte("role"),
@@ -238,7 +238,7 @@ func TestDelegate(ctx *testframework.TestFrameworkContext, user *account.Account
 		return false, errors.NewErr("send test transaction failed")
 	}
 	param = &auth.DelegateParam{
-		ContractAddr: nautil.OntContractAddress[:],
+		ContractAddr: utils.OntContractAddress[:],
 		From:         p3,
 		To:           p4,
 		Role:         []byte("role"),
@@ -258,8 +258,8 @@ func TestDelegate(ctx *testframework.TestFrameworkContext, user *account.Account
 	if !ret {
 		return false, errors.NewErr("send test transaction failed")
 	}
-	roleP, err := auth.PackKeys([]byte{}, [][]byte{nautil.OntContractAddress[:], auth.RoleP, []byte("role")})
-	//roleF = append(genesis.AuthContractAddress[:], roleF...)
+	roleP, err := auth.PackKeys([]byte{}, [][]byte{utils.OntContractAddress[:], auth.RoleP, []byte("role")})
+	//roleF = append(utils.AuthContractAddress[:], roleF...)
 	q, err := ctx.Ont.Rpc.GetStorage(contractAddress, roleP)
 	ctx.LogInfo("after delegate")
 	if err != nil {
@@ -283,7 +283,7 @@ func TestDelegate(ctx *testframework.TestFrameworkContext, user *account.Account
 
 func TestWithdraw(ctx *testframework.TestFrameworkContext, user *account.Account) (bool, error) {
 	param := &auth.DelegateParam{
-		ContractAddr: nautil.OntContractAddress[:],
+		ContractAddr: utils.OntContractAddress[:],
 		From:         p1,
 		To:           p3,
 		Role:         []byte("role"),
@@ -303,8 +303,8 @@ func TestWithdraw(ctx *testframework.TestFrameworkContext, user *account.Account
 	if !ret {
 		return false, errors.NewErr("send test transaction failed")
 	}
-	roleP, err := auth.PackKeys([]byte{}, [][]byte{nautil.OntContractAddress[:], auth.RoleP, []byte("role")})
-	//roleF = append(genesis.AuthContractAddress[:], roleF...)
+	roleP, err := auth.PackKeys([]byte{}, [][]byte{utils.OntContractAddress[:], auth.RoleP, []byte("role")})
+	//roleF = append(utils.AuthContractAddress[:], roleF...)
 	q, err := ctx.Ont.Rpc.GetStorage(contractAddress, roleP)
 	ctx.LogInfo("after withdraw")
 	if err != nil {
