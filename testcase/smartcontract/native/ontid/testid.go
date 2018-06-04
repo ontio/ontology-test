@@ -3,6 +3,9 @@ package ontid
 import (
 	"bytes"
 	"crypto/rand"
+	"crypto/sha256"
+
+	base58 "github.com/itchyny/base58-go"
 	"github.com/ontio/ontology-crypto/keypair"
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/testframework"
@@ -10,13 +13,13 @@ import (
 	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
 	"github.com/ontio/ontology/smartcontract/states"
-	"math/big"
 )
 
 var test_id = "did:ont:abcd1234"
 
 func TestID(ctx *testframework.TestFrameworkContext) bool {
 	genID()
+	ctx.LogInfo("ID: %s", test_id)
 	if !registerID(ctx) {
 		ctx.LogError("register ID failed")
 		return false
@@ -49,9 +52,15 @@ func TestAttr(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func genID() {
-	max, _ := new(big.Int).SetString("FFFFFFFFFFFFFFFF", 16)
-	r, _ := rand.Int(rand.Reader, max)
-	test_id = "did:ont:" + r.String()
+	buf := make([]byte, 32)
+	rand.Read(buf)
+	h := sha256.Sum256(buf)
+	data := append([]byte{41}, h[:20]...)
+	checksum := sha256.Sum256(data)
+	checksum = sha256.Sum256(checksum[:])
+	data = append(data, checksum[0:4]...)
+	b, _ := base58.BitcoinEncoding.Encode(data)
+	test_id = "did:ont:" + string(b)
 }
 
 func registerID(ctx *testframework.TestFrameworkContext) bool {
