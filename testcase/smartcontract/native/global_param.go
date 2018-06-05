@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	"strconv"
+	"time"
+
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/core/genesis"
 	"github.com/ontio/ontology/smartcontract/service/native/global_params"
-	"strconv"
-	"time"
+	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
 
 func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
@@ -154,14 +155,14 @@ func testGetAndSet(account *account.Account, ontSdk *sdk.OntologySdk, keyword st
 func setParam(account *account.Account, ontSdk *sdk.OntologySdk, params *global_params.Params) {
 	bf := new(bytes.Buffer)
 	params.Serialize(bf)
-	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, genesis.ParamContractAddress,
+	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, utils.ParamContractAddress,
 		"setGlobalParam", bf.Bytes())
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func createSnapshot(account *account.Account, ontSdk *sdk.OntologySdk) {
 	// create snapshot
-	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, genesis.ParamContractAddress,
+	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, utils.ParamContractAddress,
 		"createSnapshot", []byte{})
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
@@ -171,7 +172,7 @@ func transferAdmin(orignAdmin *account.Account, newAdminAddress common.Address, 
 	copy(destinationAdmin[:], newAdminAddress[:])
 	adminBuffer := new(bytes.Buffer)
 	destinationAdmin.Serialize(adminBuffer)
-	ontSdk.Rpc.InvokeNativeContract(0, 0, orignAdmin, 0, genesis.ParamContractAddress,
+	ontSdk.Rpc.InvokeNativeContract(0, 0, orignAdmin, 0, utils.ParamContractAddress,
 		"transferAdmin", adminBuffer.Bytes())
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
@@ -181,7 +182,7 @@ func accpetAdmin(newAdmin *account.Account, ontSdk *sdk.OntologySdk) {
 	copy(destinationAdmin[:], newAdmin.Address[:])
 	adminBuffer := new(bytes.Buffer)
 	destinationAdmin.Serialize(adminBuffer)
-	ontSdk.Rpc.InvokeNativeContract(0, 0, newAdmin, 0, genesis.ParamContractAddress,
+	ontSdk.Rpc.InvokeNativeContract(0, 0, newAdmin, 0, utils.ParamContractAddress,
 		"acceptAdmin", adminBuffer.Bytes())
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
@@ -189,7 +190,7 @@ func accpetAdmin(newAdmin *account.Account, ontSdk *sdk.OntologySdk) {
 func getParam(paramNameList *global_params.ParamNameList, ontSdk *sdk.OntologySdk) (*global_params.Params, error) {
 	bf := new(bytes.Buffer)
 	paramNameList.Serialize(bf)
-	result, err := ontSdk.Rpc.PrepareInvokeNativeSmartContract(0, genesis.ParamContractAddress,
+	result, err := ontSdk.Rpc.PrepareInvokeNativeSmartContract(0, utils.ParamContractAddress,
 		"getGlobalParam", bf.Bytes())
 	if err != nil {
 		return nil, err
