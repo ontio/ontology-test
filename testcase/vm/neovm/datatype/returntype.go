@@ -48,7 +48,7 @@ func testReturnType(ctx *testframework.TestFrameworkContext, code common.Address
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{args[0], args[1], arg3},
-		sdkcom.NEOVM_TYPE_ARRAY,
+		[]interface{}{sdkcom.NEOVM_TYPE_INTEGER, sdkcom.NEOVM_TYPE_INTEGER, sdkcom.NEOVM_TYPE_BYTE_ARRAY},
 	)
 	if err != nil {
 		ctx.LogError("TestReturnType InvokeSmartContract error:%s", err)
