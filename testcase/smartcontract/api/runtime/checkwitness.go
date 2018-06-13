@@ -7,7 +7,6 @@ import (
 	"github.com/ontio/ontology-crypto/signature"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 /*
@@ -35,7 +34,7 @@ code = 53c56b6c766b00527ac4616c766b00c36168184e656f2e52756e74696d652e436865636b5
 
 func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 	code := "53c56b6c766b00527ac4616c766b00c36168184e656f2e52756e74696d652e436865636b5769746e6573736c766b51527ac46c766b51c36c766b52527ac46c766b52c3643f00616168164e656f2e53746f726167652e476574436f6e7465787406726573756c740474727565615272680f4e656f2e53746f726167652e50757461616168164e656f2e53746f726167652e476574436f6e7465787406726573756c740474727565615272680f4e656f2e53746f726167652e50757461616c7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
@@ -45,7 +44,6 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
 		true,
 		code,
 		"",
@@ -75,7 +73,6 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		0,
 		codeAddress,
 		[]interface{}{checker.Address[:]})
 	if err != nil {

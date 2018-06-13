@@ -10,7 +10,6 @@ import (
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/smartcontract/states"
-	vmtypes "github.com/ontio/ontology/smartcontract/types"
 )
 
 func makeTx(contract *states.Contract) (*types.Transaction, error) {
@@ -19,7 +18,7 @@ func makeTx(contract *states.Contract) (*types.Transaction, error) {
 		return nil, errors.New("Serialize contract error: " + err.Error())
 	}
 
-	return sdkcom.NewInvokeTransaction(common.DefConfig.GasPrice, common.DefConfig.GasLimit, vmtypes.Native, buf.Bytes()), nil
+	return sdkcom.NewInvokeTransaction(common.DefConfig.GasPrice, common.DefConfig.GasLimit, buf.Bytes()), nil
 }
 
 func sendTx(ctx *testframework.TestFrameworkContext, invokeTx *types.Transaction) bool {

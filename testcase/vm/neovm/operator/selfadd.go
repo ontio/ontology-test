@@ -7,12 +7,11 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestOperationSelfAdd(ctx *testframework.TestFrameworkContext) bool {
 	code := "51C56B6C766B00527AC46C766B00C35193766A00527AC4616C7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestOperationSelfAdd GetDefaultAccount error:%s", err)
@@ -20,7 +19,7 @@ func TestOperationSelfAdd(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		false,
 		code,
 		"TestOperationSelfAdd",
@@ -56,8 +55,7 @@ func TestOperationSelfAdd(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationSelfAdd(ctx *testframework.TestFrameworkContext, code common.Address, a int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{a},
 		sdkcom.NEOVM_TYPE_INTEGER,

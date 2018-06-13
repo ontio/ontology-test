@@ -6,7 +6,6 @@ import (
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
@@ -17,7 +16,7 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	codeA := "52c56b6c766b00527ac4616c766b00c36c766b51527ac46203006c766b51c3616c7566"
-	codeAddressA := utils.GetNeoVMContractAddress(codeA)
+	codeAddressA, _ := utils.GetContractAddress(codeA)
 
 	//Because of compiler will reverse of the address, so the we need to reverse the address of called contract.
 	//After fix of compiler, wo won't need reverse.
@@ -25,7 +24,7 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		false,
 		codeA,
 		"TestCallContractStaticA",
@@ -46,10 +45,9 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	codeB := "52c56b6c766b00527ac4616c766b00c3616780711163a4da8a8e37fd469a37e6cc04d37df3696c766b51527ac46203006c766b51c3616c7566"
-	codeAddressB := utils.GetNeoVMContractAddress(codeB)
+	codeAddressB, _ := utils.GetContractAddress(codeB)
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
 		false,
 		codeB,
 		"TestCallContractStaticB",
@@ -70,8 +68,7 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	input := 12
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		codeAddressB,
 		[]interface{}{input},
 		sdkcom.NEOVM_TYPE_INTEGER,

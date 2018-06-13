@@ -7,12 +7,11 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestReturnType(ctx *testframework.TestFrameworkContext) bool {
 	code := "55c56b6c766b00527ac46c766b51527ac46c766b52527ac46153c56c766b53527ac46c766b53c3006c766b00c3c46c766b53c3516c766b51c3c46c766b53c3526c766b52c3c46c766b53c36c766b54527ac46203006c766b54c3616c7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestReturnType GetDefaultAccount error:%s", err)
@@ -20,7 +19,7 @@ func TestReturnType(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		false,
 		code,
 		"TestReturnType",
@@ -46,8 +45,7 @@ func TestReturnType(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testReturnType(ctx *testframework.TestFrameworkContext, code common.Address, args []int, arg3 []byte) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{args[0], args[1], arg3},
 		sdkcom.NEOVM_TYPE_ARRAY,

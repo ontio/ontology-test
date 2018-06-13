@@ -8,12 +8,11 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 	code := "52c56b6c766b00527ac4616c766b00c36c766b51527ac46203006c766b51c3616c7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestAsBigInteger GetDefaultAccount error:%s", err)
@@ -21,7 +20,6 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
 		false,
 		code,
 		"TestAsBigInteger",
@@ -57,8 +55,7 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testAsBigInteger(ctx *testframework.TestFrameworkContext, code common.Address, b *big.Int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{b},
 		sdkcom.NEOVM_TYPE_INTEGER,

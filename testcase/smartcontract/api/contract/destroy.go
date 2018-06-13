@@ -5,7 +5,6 @@ import (
 
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 /*
@@ -53,7 +52,7 @@ code = 54c56b6c766b00527ac4616c766b00c361681a4e656f2e426c6f636b636861696e2e47657
 
 func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 	code := "00c56b616168144e656f2e436f6e74726163742e44657374726f7961616c7566"
-	codeAddressA := utils.GetNeoVMContractAddress(code)
+	codeAddressA, _ := utils.GetContractAddress(code)
 
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
@@ -63,7 +62,7 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		true,
 		code,
 		"TestContractDestroy",
@@ -85,7 +84,6 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		0,
 		codeAddressA,
 		[]interface{}{0})
 
@@ -101,11 +99,11 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	code = "54c56b6c766b00527ac4616c766b00c361681a4e656f2e426c6f636b636861696e2e476574436f6e74726163746168164e656f2e436f6e74726163742e4765745363726970746c766b51527ac46c766b51c3640e006c766b51c3c0009c620400516c766b52527ac46c766b52c3640f0061006c766b53527ac4620e00516c766b53527ac46203006c766b53c3616c7566"
-	codeAddressB := utils.GetNeoVMContractAddress(code)
+	codeAddressB, _ := utils.GetContractAddress(code)
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		true,
 		code,
 		"TestContractDestroy",
@@ -127,7 +125,6 @@ func TestContractDestroy(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		0,
 		codeAddressB,
 		[]interface{}{codeAddressA[:]})
 

@@ -7,12 +7,11 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestOperationDivide(ctx *testframework.TestFrameworkContext) bool {
 	code := "52C56B6C766B00527AC46C766B51527AC46C766B00C36C766B51C396616C7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestOperationDivide GetDefaultAccount error:%s", err)
@@ -20,7 +19,7 @@ func TestOperationDivide(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		false,
 		code,
 		"TestOperationDivide",
@@ -72,8 +71,7 @@ func TestOperationDivide(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationDivide(ctx *testframework.TestFrameworkContext, code common.Address, a, b int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{a, b},
 		sdkcom.NEOVM_TYPE_INTEGER,
@@ -91,8 +89,7 @@ func testOperationDivide(ctx *testframework.TestFrameworkContext, code common.Ad
 }
 
 func testOperationDivideFail(ctx *testframework.TestFrameworkContext, code common.Address, a, b int) bool {
-	_, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	_, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{a, b},
 		sdkcom.NEOVM_TYPE_INTEGER,

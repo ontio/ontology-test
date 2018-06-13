@@ -6,7 +6,6 @@ import (
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 /*
@@ -26,7 +25,7 @@ public class A : SmartContract
 
 func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	code := "51c56b6161682b53797374656d2e457865637574696f6e456e67696e652e47657443616c6c696e67536372697074486173686c766b00527ac46203006c766b00c3616c7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
@@ -36,7 +35,6 @@ func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
 		true,
 		code,
 		"TestExecutingScriptHash",
@@ -56,8 +54,7 @@ func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		codeAddress,
 		[]interface{}{},
 		sdkcom.NEOVM_TYPE_BYTE_ARRAY,

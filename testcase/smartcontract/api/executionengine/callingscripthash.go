@@ -5,7 +5,6 @@ import (
 
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 /*
@@ -44,7 +43,7 @@ Code := 51c56b616167624c902239566a0b7dd4a59dcf38ab57aa36a6706c766b00527ac4616816
 
 func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	codeA := "51c56b6161682b53797374656d2e457865637574696f6e456e67696e652e47657443616c6c696e67536372697074486173686c766b00527ac46203006c766b00c3616c7566"
-	codeAddressA := utils.GetNeoVMContractAddress(codeA)
+	codeAddressA, _ := utils.GetContractAddress(codeA)
 	signer, err := ctx.GetDefaultAccount()
 
 	if err != nil {
@@ -54,7 +53,7 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		true,
 		codeA,
 		"TestCallingScriptHash",
@@ -75,11 +74,11 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	codeB := "51c56b61616780d4b6ec4c8987ff7f79af45af88a3139ed10c7d6c766b00527ac46168164e656f2e53746f726167652e476574436f6e746578740a63616c6c5363726970746c766b00c3615272680f4e656f2e53746f726167652e50757461616c7566"
-	codeAddressB := utils.GetNeoVMContractAddress(codeB)
+	codeAddressB, _ := utils.GetContractAddress(codeB)
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		true,
 		codeB,
 		"TestCallingScriptHash",
@@ -101,7 +100,6 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		0,
 		codeAddressB,
 		[]interface{}{0})
 

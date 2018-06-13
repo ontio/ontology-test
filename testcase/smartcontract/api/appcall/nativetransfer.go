@@ -6,7 +6,6 @@ import (
 
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 //package main
@@ -100,7 +99,7 @@ Code := 53c56b6161670100ff00000000000000000000000000000000000001087472616e736665
 
 func TestCallingContract(ctx *testframework.TestFrameworkContext) bool {
 	code := "53c56b6161670100ff00000000000000000000000000000000000001087472616e736665722e010101011918a99197a5afef816bdc357fd00c6b4a9a8901e1dea4e3ec2f0bd1d1584b7979b3f973ed65520204d26c766b00527ac46c766b00c36c766b51527ac46c766b51c3644200616168164e656f2e53746f726167652e476574436f6e7465787406726573756c740474727565615272680f4e656f2e53746f726167652e5075746161624000616168164e656f2e53746f726167652e476574436f6e7465787406726573756c740566616c7365615272680f4e656f2e53746f726167652e50757461616c766b00c36c766b52527ac46203006c766b52c3616c7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 
 	fmt.Printf("code Address:%v\n", codeAddress)
@@ -112,7 +111,7 @@ func TestCallingContract(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		true,
 		code,
 		"TestCallingContract",
@@ -134,7 +133,6 @@ func TestCallingContract(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		0,
 		codeAddress,
 		[]interface{}{},
 	)

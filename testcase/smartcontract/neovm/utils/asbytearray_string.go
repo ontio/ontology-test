@@ -6,12 +6,11 @@ import (
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestAsByteArrayString(ctx *testframework.TestFrameworkContext) bool {
 	code := "51C56B6C766B00527AC46C766B00C3616C756600"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestAsByteArrayString GetDefaultAccount error:%s", err)
@@ -19,7 +18,6 @@ func TestAsByteArrayString(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
 		false,
 		code,
 		"TestAsByteArrayString",
@@ -40,8 +38,7 @@ func TestAsByteArrayString(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	input := "Hello World"
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		codeAddress,
 		[]interface{}{input},
 		sdkcom.NEOVM_TYPE_BYTE_ARRAY,

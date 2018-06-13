@@ -5,7 +5,6 @@ import (
 
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 /*
@@ -30,7 +29,7 @@ code 51c56b616168164e656f2e53746f726167652e476574436f6e74657874026b3102763161527
 
 func TestStorage(ctx *testframework.TestFrameworkContext) bool {
 	code := "51c56b616168164e656f2e53746f726167652e476574436f6e74657874026b31027631615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e74657874026b31617c680f4e656f2e53746f726167652e4765746c766b00527ac46168164e656f2e53746f726167652e476574436f6e74657874026b326c766b00c3615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e74657874026b33027633615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e74657874026b33617c68124e656f2e53746f726167652e44656c65746561616c7566"
-	codeAddr := utils.GetNeoVMContractAddress(code)
+	codeAddr, _ := utils.GetContractAddress(code)
 
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
@@ -40,7 +39,6 @@ func TestStorage(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
 		true,
 		code,
 		"TestStorage",
@@ -62,7 +60,6 @@ func TestStorage(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		0,
 		codeAddr,
 		[]interface{}{0})
 

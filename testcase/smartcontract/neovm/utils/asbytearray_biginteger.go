@@ -8,12 +8,11 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
 	code := "51C56B6C766B00527AC46C766B00C3616C7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestAsByteArrayBigInteger GetDefaultAccount error:%s", err)
@@ -21,7 +20,6 @@ func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
 		false,
 		code,
 		"TestAsByteArrayBigInteger",
@@ -57,8 +55,7 @@ func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testAsArray_BigInteger(ctx *testframework.TestFrameworkContext, code common.Address, input *big.Int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{input},
 		sdkcom.NEOVM_TYPE_BYTE_ARRAY,
@@ -67,7 +64,7 @@ func testAsArray_BigInteger(ctx *testframework.TestFrameworkContext, code common
 		ctx.LogError("TestAsByteArrayBigInteger InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToByteArray(res, utils.ConvertBigIntegerToBytes(input))
+	err = ctx.AssertToByteArray(res, input.Bytes())
 
 	if err != nil {
 		ctx.LogError("TestAsByteArrayBigInteger test failed %s", err)

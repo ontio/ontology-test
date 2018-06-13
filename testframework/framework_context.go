@@ -94,11 +94,11 @@ func (this *TestFrameworkContext) FailNow() {
 	}
 }
 
-func (this *TestFrameworkContext)GetGasPrice()uint64{
+func (this *TestFrameworkContext) GetGasPrice() uint64 {
 	return common.DefConfig.GasPrice
 }
 
-func (this *TestFrameworkContext)GetGasLimit()uint64{
+func (this *TestFrameworkContext) GetGasLimit() uint64 {
 	return common.DefConfig.GasLimit
 }
 

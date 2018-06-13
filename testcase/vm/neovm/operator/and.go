@@ -7,12 +7,11 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestOperationAnd(ctx *testframework.TestFrameworkContext) bool {
 	code := "52C56B6C766B00527AC46C766B51527AC46C766B00C3640C006C766B51C3616C756600616C7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestOperationAnd GetDefaultAccount error:%s", err)
@@ -20,7 +19,7 @@ func TestOperationAnd(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		false,
 		code,
 		"TestOperationAnd",
@@ -60,8 +59,7 @@ func TestOperationAnd(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationAnd(ctx *testframework.TestFrameworkContext, codeAddress common.Address, a, b bool) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		codeAddress,
 		[]interface{}{a, b},
 		sdkcom.NEOVM_TYPE_BOOL,

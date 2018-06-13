@@ -7,12 +7,11 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestFor(ctx *testframework.TestFrameworkContext) bool {
 	code := "53C56B6C766B00527AC4006C766B51527AC4006C766B52527AC46223006C766B51C36C766B52C3936C766B51527AC46C766B52C351936C766B52527AC46C766B52C36C766B00C39F63D5FF6C766B51C3616C7566"
-	codeAddress := utils.GetNeoVMContractAddress(code)
+	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestFor GetDefaultAccount error:%s", err)
@@ -20,7 +19,7 @@ func TestFor(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		false,
 		code,
 		"TestFor",
@@ -56,8 +55,7 @@ func TestFor(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testFor(ctx *testframework.TestFrameworkContext, code common.Address, a int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMSmartContractWithRes(
-		0,
+	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{a},
 		sdkcom.NEOVM_TYPE_INTEGER,

@@ -6,7 +6,6 @@ import (
 	"github.com/ontio/ontology-crypto/keypair"
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common/serialization"
 	"github.com/ontio/ontology/core/types"
 	nautil "github.com/ontio/ontology/smartcontract/service/native/utils"
@@ -181,18 +180,12 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError(err)
 		return false
 	}
-	var ac []*account.Account
-	for _, v := range pubs {
-		ac = append(ac, &account.Account{PublicKey: v})
-	}
-	ac[0].PrivateKey = user.PrivateKey
 
-	err = sdkcom.MultiSignTransaction("SHA256withECDSA", tx, 1, ac)
+	err = sdkcom.MultiSignToTransaction(tx, 1, pubs, user)
 	if err != nil {
-		ctx.LogError("SignTransaction error: %s", err)
+		ctx.LogError("MultiSignToTransaction error: %s", err)
 		return false
 	}
-
 	ok = sendTx(ctx, tx)
 	return ok
 }

@@ -23,7 +23,6 @@ import (
 
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 	vtypes "github.com/ontio/ontology/vm/neovm/types"
 )
 
@@ -64,7 +63,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
+
 		true,
 		code,
 		"TestGetBlock",
@@ -98,10 +97,9 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	header := block.Header
-	codeHash := utils.GetNeoVMContractAddress(code)
+	codeHash, _ := utils.GetContractAddress(code)
 	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		0,
 		codeHash,
 		[]interface{}{int(height)})
 

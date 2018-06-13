@@ -9,7 +9,7 @@ var contractCode = "51c56b616168164e656f2e53746f726167652e476574436f6e7465787405
 	"66b00527ac46203006c766b00c3616c7566"
 
 //Address of smart contract
-var contractCodeAddress = utils.GetNeoVMContractAddress(contractCode)
+var contractCodeAddress, _ = utils.GetContractAddress(contractCode)
 
 /*
    using Neo.SmartContract.Framework;

@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/smartcontract/types"
 )
 
 func TestDeploySmartContract(ctx *testframework.TestFrameworkContext) bool {
@@ -15,7 +14,6 @@ func TestDeploySmartContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-		types.NEOVM,
 		true,
 		contractCode,
 		"TestDeploySmartContract",
