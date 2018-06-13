@@ -168,40 +168,40 @@ func testGetAndSet(account *account.Account, ontSdk *sdk.OntologySdk, keyword st
 }
 
 func transferAdmin(orignAdmin *account.Account, newAdminAddress common.Address, ontSdk *sdk.OntologySdk) {
-	ontSdk.Rpc.InvokeNativeContract(0, 0, orignAdmin, 0, utils.ParamContractAddress,
-		"transferAdmin", []interface{}{newAdminAddress})
+	ontSdk.Rpc.InvokeNativeContract(0, 10000, orignAdmin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+		utils.ParamContractAddress, "transferAdmin", []interface{}{newAdminAddress})
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func acceptAdmin(newAdmin *account.Account, ontSdk *sdk.OntologySdk) {
-	ontSdk.Rpc.InvokeNativeContract(0, 0, newAdmin, 0, utils.ParamContractAddress,
-		"acceptAdmin", []interface{}{newAdmin.Address})
+	ontSdk.Rpc.InvokeNativeContract(0, 10000, newAdmin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+		utils.ParamContractAddress, "acceptAdmin", []interface{}{newAdmin.Address})
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func setOperator(admin *account.Account, newOperator common.Address, ontSdk *sdk.OntologySdk) {
-	ontSdk.Rpc.InvokeNativeContract(0, 0, admin, 0, utils.ParamContractAddress,
-		"setOperator", []interface{}{newOperator})
+	ontSdk.Rpc.InvokeNativeContract(0, 10000, admin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+		utils.ParamContractAddress, "setOperator", []interface{}{newOperator})
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func setParam(account *account.Account, ontSdk *sdk.OntologySdk, params *global_params.Params) {
-	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, utils.ParamContractAddress,
-		"setGlobalParam", []interface{}{*params})
+	ontSdk.Rpc.InvokeNativeContract(0, 10000, account, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+		utils.ParamContractAddress, "setGlobalParam", []interface{}{*params})
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func createSnapshot(account *account.Account, ontSdk *sdk.OntologySdk) {
 	// create snapshot
-	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, utils.ParamContractAddress,
-		"createSnapshot", nil)
+	ontSdk.Rpc.InvokeNativeContract(0, 10000, account, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+		utils.ParamContractAddress, "createSnapshot", []interface{}{})
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func getParam(paramNameList *global_params.ParamNameList, ontSdk *sdk.OntologySdk) (*global_params.Params, error) {
-	tx, err := ontSdk.Rpc.NewNativeInvokeTransaction(0, 0, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+	tx, err := ontSdk.Rpc.NewNativeInvokeTransaction(0, 10000, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
 		utils.ParamContractAddress, "getGlobalParam", []interface{}{*paramNameList})
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	result, err := ontSdk.Rpc.PrepareInvokeContract(tx)
