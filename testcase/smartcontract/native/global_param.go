@@ -21,10 +21,18 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("Wallet.GetDefaultAccount error:%s", err)
 		return false
 	}
-	// init global params
-	initParms := new(global_params.Params)
+	initKey := "gasPrice"
+	// query init parmas
+	initParms, err := getParam(&global_params.ParamNameList{initKey}, ctx.Ont)
+	if err != nil {
+		ctx.LogError("Get global params error, the value should initialize in genesis!")
+		return false
+	}
+	// add a global params
 	initParms.SetParam(&global_params.Param{"init-key", "init-value"})
-	setParam(originAdmin, ctx.Ont, initParms)
+	// origin admin is origin operator
+	originOperator := originAdmin
+	setParam(originOperator, ctx.Ont, initParms)
 	// query init param, should cause error, because not create snapshot
 	_, err = getParam(&global_params.ParamNameList{"init-key"}, ctx.Ont)
 	if err == nil {
@@ -32,65 +40,72 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	// create snapshot of init params
-	createSnapshot(originAdmin, ctx.Ont)
+	createSnapshot(originOperator, ctx.Ont)
 	// query init param, should not cause error
-	_, err = getParam(&global_params.ParamNameList{"init-key"}, ctx.Ont)
+	initParms, err = getParam(&global_params.ParamNameList{initKey, "init-key"}, ctx.Ont)
 	if err != nil {
 		ctx.LogError("Get global params error: %s!", err)
 		return false
 	}
-
 	// origin admin set and get global params, should not cause error
-	globalParams, err := testGetAndSet(originAdmin, ctx.Ont, "originAdmin0", *initParms)
+	globalParams, err := testGetAndSet(originOperator, ctx.Ont, "originOperator0", *initParms)
 	if err != nil {
-		ctx.LogError("Origin admin operate global params error:%s", err)
+		ctx.LogError("Origin operator operate global params error:%s", err)
 		return false
 	}
-	newAdmin, err := ctx.NewAccount()
+	newOperator, err := ctx.NewAccount()
 	if err != nil {
 		ctx.LogError("Wallet.NewAccount error:%s", err)
 		return false
 	}
-	// new admin set and get global params, should cause error, because of no permission
-	globalParams, err = testGetAndSet(newAdmin, ctx.Ont, "newAdmin0", globalParams)
+	// new operator set and get global params, should cause error, because  he is not operator
+	globalParams, err = testGetAndSet(newOperator, ctx.Ont, "newOperator0", globalParams)
 	if err == nil {
-		ctx.LogError("New admin operate global params error, should not be authorized!")
+		ctx.LogError("New operator operate global params error, should not be authorized!")
 		return false
 	}
-	// new admin accept permission
-	accpetAdmin(newAdmin, ctx.Ont)
-	// new admin set and get global params, should cause error, origin admin doesn't transfer
-	globalParams, err = testGetAndSet(newAdmin, ctx.Ont, "newAdmin1", globalParams)
-	if err == nil {
-		ctx.LogError("New admin operate global params error, should not be authorized!")
+	// set newOperator as operator
+	setOperator(originAdmin, newOperator.Address, ctx.Ont)
+	// newOperator set and get global params, should not cause error, because he is operator
+	globalParams, err = testGetAndSet(newOperator, ctx.Ont, "newOperator0", globalParams)
+	if err != nil {
+		ctx.LogError("New operator operate global params error: ", err)
 		return false
 	}
-	// origin admin transfer permission to new admin
+	// originOperator set and get global param, should cause error, because he is not operator
+	globalParams, err = testGetAndSet(originOperator, ctx.Ont, "originOperator1", globalParams)
+	if err == nil {
+		ctx.LogError("Origin operator operate global params error:, should not be authorized!")
+		return false
+	}
+	// transfer admin to newOperator
+	newAdmin := newOperator
 	transferAdmin(originAdmin, newAdmin.Address, ctx.Ont)
-	// origin admin set and get global params, should not cause error, because new admin doesn't accept permission
-	globalParams, err = testGetAndSet(originAdmin, ctx.Ont, "originAdmin1", globalParams)
-	if err != nil {
-		ctx.LogError("Origin admin operate global params error: %s", err)
-		return false
-	}
-	// new admin set and get global params, should cause error, because new admin doesn't accept permission
-	globalParams, err = testGetAndSet(newAdmin, ctx.Ont, "newAdmin2", globalParams)
+	// new admin set originOperator as current operator, should not success, because new admin does not accept
+	setOperator(newAdmin, originOperator.Address, ctx.Ont)
+	// originOperator operate global params, should cause error, because newAdmin is not admin
+	// and he's setOperator is not effective
+	globalParams, err = testGetAndSet(originOperator, ctx.Ont, "originOperator1", globalParams)
 	if err == nil {
-		ctx.LogError("New admin operate global params error, should not be authorized!")
+		ctx.LogError("Origin operator operate global params error, should not be authorized!")
 		return false
 	}
 	// new admin accept permission
-	accpetAdmin(newAdmin, ctx.Ont)
-	// origin admin set and get global params, should cause error, beacause he doesn't have permission
-	globalParams, err = testGetAndSet(originAdmin, ctx.Ont, "originAdmin2", globalParams)
-	if err == nil {
-		ctx.LogError("Origin admin operate global params error, should not be authorized!")
+	acceptAdmin(newAdmin, ctx.Ont)
+	// new admin set originOperator as current operator
+	setOperator(newAdmin, originOperator.Address, ctx.Ont)
+	// originOperator operate global params, should not cause error
+	globalParams, err = testGetAndSet(originOperator, ctx.Ont, "originOperator1", globalParams)
+	if err != nil {
+		ctx.LogError("Origin operator operate global params error: ", err)
 		return false
 	}
-	// new admin set and get global params, should not cause error
-	globalParams, err = testGetAndSet(newAdmin, ctx.Ont, "newAdmin3", globalParams)
-	if err != nil {
-		ctx.LogError("New admin operate global params error: %s", err)
+	// origin admin setOperator, should not success
+	setOperator(originAdmin, newOperator.Address, ctx.Ont)
+	// newOperator set and get global params, should cause error
+	globalParams, err = testGetAndSet(newOperator, ctx.Ont, "newOperator1", globalParams)
+	if err == nil {
+		ctx.LogError("New operator operate global params error, should not be authorized!")
 		return false
 	}
 	return true
@@ -137,7 +152,7 @@ func testGetAndSet(account *account.Account, ontSdk *sdk.OntologySdk, keyword st
 		return initParams, fmt.Errorf("query param failed: %s", err)
 	}
 
-	// update new params bt init params
+	// update new params by init params
 	for _, v := range initParams {
 		newParams.SetParam(v)
 	}
@@ -152,46 +167,44 @@ func testGetAndSet(account *account.Account, ontSdk *sdk.OntologySdk, keyword st
 	return *queriedParams, err
 }
 
+func transferAdmin(orignAdmin *account.Account, newAdminAddress common.Address, ontSdk *sdk.OntologySdk) {
+	ontSdk.Rpc.InvokeNativeContract(0, 0, orignAdmin, 0, utils.ParamContractAddress,
+		"transferAdmin", []interface{}{newAdminAddress})
+	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+}
+
+func acceptAdmin(newAdmin *account.Account, ontSdk *sdk.OntologySdk) {
+	ontSdk.Rpc.InvokeNativeContract(0, 0, newAdmin, 0, utils.ParamContractAddress,
+		"acceptAdmin", []interface{}{newAdmin.Address})
+	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+}
+
+func setOperator(admin *account.Account, newOperator common.Address, ontSdk *sdk.OntologySdk) {
+	ontSdk.Rpc.InvokeNativeContract(0, 0, admin, 0, utils.ParamContractAddress,
+		"setOperator", []interface{}{newOperator})
+	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+}
+
 func setParam(account *account.Account, ontSdk *sdk.OntologySdk, params *global_params.Params) {
-	bf := new(bytes.Buffer)
-	params.Serialize(bf)
 	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, utils.ParamContractAddress,
-		"setGlobalParam", bf.Bytes())
+		"setGlobalParam", []interface{}{*params})
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func createSnapshot(account *account.Account, ontSdk *sdk.OntologySdk) {
 	// create snapshot
 	ontSdk.Rpc.InvokeNativeContract(0, 0, account, 0, utils.ParamContractAddress,
-		"createSnapshot", []byte{})
-	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
-}
-
-func transferAdmin(orignAdmin *account.Account, newAdminAddress common.Address, ontSdk *sdk.OntologySdk) {
-	var destinationAdmin global_params.Admin
-	copy(destinationAdmin[:], newAdminAddress[:])
-	adminBuffer := new(bytes.Buffer)
-	destinationAdmin.Serialize(adminBuffer)
-	ontSdk.Rpc.InvokeNativeContract(0, 0, orignAdmin, 0, utils.ParamContractAddress,
-		"transferAdmin", adminBuffer.Bytes())
-	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
-}
-
-func accpetAdmin(newAdmin *account.Account, ontSdk *sdk.OntologySdk) {
-	var destinationAdmin global_params.Admin
-	copy(destinationAdmin[:], newAdmin.Address[:])
-	adminBuffer := new(bytes.Buffer)
-	destinationAdmin.Serialize(adminBuffer)
-	ontSdk.Rpc.InvokeNativeContract(0, 0, newAdmin, 0, utils.ParamContractAddress,
-		"acceptAdmin", adminBuffer.Bytes())
+		"createSnapshot", nil)
 	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
 func getParam(paramNameList *global_params.ParamNameList, ontSdk *sdk.OntologySdk) (*global_params.Params, error) {
-	bf := new(bytes.Buffer)
-	paramNameList.Serialize(bf)
-	result, err := ontSdk.Rpc.PrepareInvokeNativeSmartContract(0, utils.ParamContractAddress,
-		"getGlobalParam", bf.Bytes())
+	tx, err := ontSdk.Rpc.NewNativeInvokeTransaction(0, 0, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+		utils.ParamContractAddress, "getGlobalParam", []interface{}{*paramNameList})
+	if err != nil{
+		return nil, err
+	}
+	result, err := ontSdk.Rpc.PrepareInvokeContract(tx)
 	if err != nil {
 		return nil, err
 	}
