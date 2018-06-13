@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"crypto/rand"
 	"crypto/sha256"
+	"fmt"
+	"math/big"
 
 	base58 "github.com/itchyny/base58-go"
 	"github.com/ontio/ontology-crypto/keypair"
@@ -55,11 +57,14 @@ func genID() {
 	buf := make([]byte, 32)
 	rand.Read(buf)
 	h := sha256.Sum256(buf)
-	data := append([]byte{41}, h[:20]...)
+	data := append([]byte{0x41}, h[:20]...)
 	checksum := sha256.Sum256(data)
 	checksum = sha256.Sum256(checksum[:])
 	data = append(data, checksum[0:4]...)
-	b, _ := base58.BitcoinEncoding.Encode(data)
+	b, err := base58.BitcoinEncoding.Encode([]byte(new(big.Int).SetBytes(data).String()))
+	if err != nil {
+		fmt.Println(err)
+	}
 	test_id = "did:ont:" + string(b)
 }
 
@@ -210,7 +215,8 @@ func addKey(ctx *testframework.TestFrameworkContext) bool {
 func keyStateArg(i uint64) []byte {
 	var buf bytes.Buffer
 	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarUint(&buf, i)
+	//serialization.WriteVarUint(&buf, i)
+	utils.WriteVarUint(&buf, i)
 	return buf.Bytes()
 }
 
@@ -309,7 +315,8 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 	var buf bytes.Buffer
 	serialization.WriteVarBytes(&buf, nil)
 	serialization.WriteVarBytes(&buf, pub)
-	serialization.WriteVarUint(&buf, 1)
+	//serialization.WriteVarUint(&buf, 1)
+	utils.WriteVarUint(&buf, 1)
 	serialization.WriteVarBytes(&buf, []byte("attr0"))
 	serialization.WriteVarBytes(&buf, []byte{0})
 	serialization.WriteVarBytes(&buf, []byte{1})
@@ -323,7 +330,8 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 	buf.Reset()
 	serialization.WriteVarBytes(&buf, []byte(test_id))
 	serialization.WriteVarBytes(&buf, nil)
-	serialization.WriteVarUint(&buf, 1)
+	//serialization.WriteVarUint(&buf, 1)
+	utils.WriteVarUint(&buf, 1)
 	serialization.WriteVarBytes(&buf, []byte("attr0"))
 	serialization.WriteVarBytes(&buf, []byte{0})
 	serialization.WriteVarBytes(&buf, []byte{1})
@@ -337,7 +345,8 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 	buf.Reset()
 	serialization.WriteVarBytes(&buf, []byte(test_id))
 	serialization.WriteVarBytes(&buf, pub)
-	serialization.WriteVarUint(&buf, 2)
+	//serialization.WriteVarUint(&buf, 2)
+	utils.WriteVarUint(&buf, 2)
 	serialization.WriteVarBytes(&buf, []byte("attr0"))
 	serialization.WriteVarBytes(&buf, []byte{0})
 	serialization.WriteVarBytes(&buf, []byte{1})
@@ -368,7 +377,8 @@ func testAttr(ctx *testframework.TestFrameworkContext) bool {
 
 	var buf bytes.Buffer
 	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarUint(&buf, 2)
+	//serialization.WriteVarUint(&buf, 2)
+	utils.WriteVarUint(&buf, 2)
 	serialization.WriteVarBytes(&buf, []byte("attr1"))
 	serialization.WriteVarBytes(&buf, []byte{1})
 	serialization.WriteVarBytes(&buf, []byte{0x01, 0x02})
