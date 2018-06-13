@@ -63,7 +63,7 @@ func testReturnType(ctx *testframework.TestFrameworkContext, code common.Address
 		return false
 	}
 
-	r1, err := utils.ParseNeoVMSmartContractReturnTypeInteger(rt[0])
+	r1, err := utils.ParseNeoVMContractReturnTypeInteger(rt[0])
 	if err != nil {
 		ctx.LogError("TestReturnType ParseNeoVMSmartContractReturnTypeInteger:%s error:%s", rt[0], err)
 		return false
@@ -74,7 +74,7 @@ func testReturnType(ctx *testframework.TestFrameworkContext, code common.Address
 		return false
 	}
 
-	r2, err := utils.ParseNeoVMSmartContractReturnTypeInteger(rt[1])
+	r2, err := utils.ParseNeoVMContractReturnTypeInteger(rt[1])
 	if err != nil {
 		ctx.LogError("TestReturnType ParseNeoVMSmartContractReturnTypeInteger:%s error:%s", rt[1], err)
 		return false
@@ -85,7 +85,7 @@ func testReturnType(ctx *testframework.TestFrameworkContext, code common.Address
 		return false
 	}
 
-	r3, err := utils.ParseNeoVMSmartContractReturnTypeByteArray(rt[2])
+	r3, err := utils.ParseNeoVMContractReturnTypeByteArray(rt[2])
 	if err != nil {
 		ctx.LogError("TestReturnType ParseNeoVMSmartContractReturnTypeByteArray:%s error:%s", rt[2], err)
 		return false

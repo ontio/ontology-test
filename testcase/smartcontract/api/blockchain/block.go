@@ -99,7 +99,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 
 	header := block.Header
 	codeHash := utils.GetNeoVMContractAddress(code)
-	_, err = ctx.Ont.Rpc.InvokeNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		0,
 		codeHash,

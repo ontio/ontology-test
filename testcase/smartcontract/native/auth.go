@@ -71,7 +71,7 @@ func sendTestTx(ctx *testframework.TestFrameworkContext, user *account.Account, 
 	}
 	//prepare tx
 	invokeTx := sdkcomm.NewInvokeTransaction(common.DefConfig.GasPrice, common.DefConfig.GasLimit, vmtypes.Native, buf.Bytes())
-	if err := sdkcomm.SignTransaction(invokeTx, user); err != nil {
+	if err := sdkcomm.SignToTransaction(invokeTx, user); err != nil {
 		return false, fmt.Errorf("SignTransaction error:%s", err)
 	}
 	if _, err := ctx.Ont.Rpc.SendRawTransaction(invokeTx); err != nil {
