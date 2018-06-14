@@ -19,7 +19,6 @@ func TestReturnType(ctx *testframework.TestFrameworkContext) bool {
 	}
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-
 		false,
 		code,
 		"TestReturnType",
