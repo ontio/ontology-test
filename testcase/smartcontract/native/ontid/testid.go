@@ -1,22 +1,26 @@
 package ontid
 
 import (
-	"bytes"
 	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"math/big"
+
+	base58 "github.com/itchyny/base58-go"
 	"github.com/ontio/ontology-crypto/keypair"
 	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/common/serialization"
+	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
-	"github.com/ontio/ontology/smartcontract/states"
-	"math/big"
 )
 
 var test_id = "did:ont:abcd1234"
 
 func TestID(ctx *testframework.TestFrameworkContext) bool {
 	genID()
+	ctx.LogInfo("ID: %s", test_id)
 	if !registerID(ctx) {
 		ctx.LogError("register ID failed")
 		return false
@@ -49,9 +53,23 @@ func TestAttr(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func genID() {
-	max, _ := new(big.Int).SetString("FFFFFFFFFFFFFFFF", 16)
-	r, _ := rand.Int(rand.Reader, max)
-	test_id = "did:ont:" + r.String()
+	buf := make([]byte, 32)
+	rand.Read(buf)
+	h := sha256.Sum256(buf)
+	data := append([]byte{0x41}, h[:20]...)
+	checksum := sha256.Sum256(data)
+	checksum = sha256.Sum256(checksum[:])
+	data = append(data, checksum[0:4]...)
+	b, err := base58.BitcoinEncoding.Encode([]byte(new(big.Int).SetBytes(data).String()))
+	if err != nil {
+		fmt.Println(err)
+	}
+	test_id = "did:ont:" + string(b)
+}
+
+type Param struct {
+	ID  string
+	Key []byte
 }
 
 func registerID(ctx *testframework.TestFrameworkContext) bool {
@@ -63,9 +81,9 @@ func registerID(ctx *testframework.TestFrameworkContext) bool {
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
 	res := true
-
 	caddr := utils.OntIDContractAddress
-	inv := &states.Contract{
+
+	inv := &Contract{
 		Address: caddr,
 		Method:  "regIDWithPublicKey",
 		Args:    nil,
@@ -76,32 +94,28 @@ func registerID(ctx *testframework.TestFrameworkContext) bool {
 		res = false
 	}
 
-	buf := bytes.NewBuffer(nil)
-	serialization.WriteVarBytes(buf, nil)
-	serialization.WriteVarBytes(buf, pub)
-	inv.Args = buf.Bytes()
+	inv.Args = []interface{}{Param{"", pub}}
 	ok, _ = InvokeContract(ctx, inv, false)
 	if ok {
 		ctx.LogError("register should failed with invalid id")
 		res = false
 	}
-	buf.Reset()
-	serialization.WriteVarBytes(buf, []byte(test_id))
-	serialization.WriteVarBytes(buf, nil)
-	inv.Args = buf.Bytes()
+	inv.Args = []interface{}{Param{test_id, nil}}
 	ok, _ = InvokeContract(ctx, inv, false)
 	if ok {
 		ctx.LogError("register should failed with invalid key")
 		res = false
 	}
-
-	buf.Reset()
-	serialization.WriteVarBytes(buf, []byte(test_id))
-	serialization.WriteVarBytes(buf, pub)
-	inv.Args = buf.Bytes()
+	inv.Args = []interface{}{Param{test_id, pub}}
 	ok, _ = InvokeContract(ctx, inv, false)
 
 	return ok && res
+}
+
+type AddKeyParam struct {
+	ID     string
+	NewKey []byte
+	Key    []byte
 }
 
 func addKey(ctx *testframework.TestFrameworkContext) bool {
@@ -115,7 +129,7 @@ func addKey(ctx *testframework.TestFrameworkContext) bool {
 
 	res := true
 
-	c := &states.Contract{
+	c := &Contract{
 		Address: utils.OntIDContractAddress,
 		Method:  "addKey",
 		Args:    nil,
@@ -126,55 +140,35 @@ func addKey(ctx *testframework.TestFrameworkContext) bool {
 		res = false
 	}
 
-	var buf bytes.Buffer
-	serialization.WriteVarBytes(&buf, nil)
-	serialization.WriteVarBytes(&buf, []byte(key))
-	serialization.WriteVarBytes(&buf, pub)
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{AddKeyParam{"", key, pub}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
 		ctx.LogError("addKey should failed with invalid id")
 		res = false
 	}
 
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte("123"))
-	serialization.WriteVarBytes(&buf, key)
-	serialization.WriteVarBytes(&buf, pub)
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{AddKeyParam{"123", key, pub}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
 		ctx.LogError("addKey should failed with unregistered id")
 		res = false
 	}
 
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, key)
-	serialization.WriteVarBytes(&buf, nil)
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{AddKeyParam{test_id, key, nil}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
 		ctx.LogError("addKey should failed with empty key")
 		res = false
 	}
 
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, key)
-	serialization.WriteVarBytes(&buf, key1)
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{AddKeyParam{test_id, key, key1}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
 		ctx.LogError("addKey should failed with wrong key")
 		res = false
 	}
 
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, key)
-	serialization.WriteVarBytes(&buf, pub)
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{AddKeyParam{test_id, key, pub}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if !ok {
 		return false
@@ -191,35 +185,43 @@ func addKey(ctx *testframework.TestFrameworkContext) bool {
 
 	c.Method = "getKeyState"
 	for i := 1; i <= 3; i++ {
-		c.Args = keyStateArg(uint64(i))
+		c.Args = []interface{}{StateParam{test_id, i}}
 		InvokeContract(ctx, c, false)
 	}
 
 	return res
 }
 
-func keyStateArg(i uint64) []byte {
-	var buf bytes.Buffer
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarUint(&buf, i)
-	return buf.Bytes()
+type StateParam struct {
+	ID    string
+	Index int
 }
 
 func queryDDO(ctx *testframework.TestFrameworkContext) bool {
-	var buf bytes.Buffer
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	c := &states.Contract{
+	c := &Contract{
 		Address: utils.OntIDContractAddress,
 		Method:  "getDDO",
-		Args:    buf.Bytes(),
+		Args:    []interface{}{[]byte(test_id)},
 	}
-	ok, _ := InvokeContract(ctx, c, false)
+	ok, buf := InvokeContract(ctx, c, true)
 	if !ok {
 		return false
 	}
-	//ctx.LogInfo(hex.EncodeToString(res))
+	ctx.LogInfo(hex.EncodeToString(buf))
 
 	return true
+}
+
+type AddRecParam struct {
+	ID   string
+	Addr common.Address
+	Key  []byte
+}
+
+type ChangeRecParam struct {
+	ID      string
+	NewAddr common.Address
+	Addr    common.Address
 }
 
 func testRecovery(ctx *testframework.TestFrameworkContext) bool {
@@ -231,18 +233,12 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 		_, p, _ := keypair.GenerateKeyPair(keypair.PK_ECDSA, keypair.P256)
 		pubs = append(pubs, p)
 	}
-	ctx.LogError(pubs)
+
 	addr0, _ := types.AddressFromMultiPubKeys(pubs, 1)
 	addr1, _ := types.AddressFromMultiPubKeys(pubs[:3], 1)
 
-	var buf bytes.Buffer
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	addr0.Serialize(&buf)
-	//serialization.WriteVarBytes(&buf, addr0[:])
-	serialization.WriteVarBytes(&buf, pub)
-	args := buf.Bytes()
-
-	c := &states.Contract{
+	args := []interface{}{AddRecParam{test_id, addr0, pub}}
+	c := &Contract{
 		Address: utils.OntIDContractAddress,
 		Method:  "addRecovery",
 		Args:    args,
@@ -253,18 +249,17 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	addr1.Serialize(&buf)
-	addr0.Serialize(&buf)
-	//serialization.WriteVarBytes(&buf, addr1[:])
-	//serialization.WriteVarBytes(&buf, addr0[:])
-	args = buf.Bytes()
-
 	c.Method = "changeRecovery"
-	c.Args = args
+	c.Args = []interface{}{ChangeRecParam{test_id, addr1, addr0}}
 
-	tx, err := makeTx(c)
+	tx, err := ctx.Ont.Rpc.NewNativeInvokeTransaction(
+		ctx.GetGasPrice(),
+		ctx.GetGasLimit(),
+		0,
+		c.Address,
+		c.Method,
+		c.Args,
+	)
 	if err != nil {
 		ctx.LogError(err)
 		return false
@@ -275,8 +270,25 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("MultiSignToTransaction error: %s", err)
 		return false
 	}
-	ok = sendTx(ctx, tx)
+	txHash, err := ctx.Ont.Rpc.SendRawTransaction(tx)
+	if err != nil {
+		ctx.LogError("SendRawTransaction error: %s", err)
+	}
+	ok = getEvent(ctx, txHash)
+
 	return ok
+}
+
+type Attribute struct {
+	Key     []byte
+	Value   []byte
+	Valtype []byte
+}
+
+type RegIDAttrParam struct {
+	ID   string
+	Key  []byte
+	Attr []Attribute
 }
 
 func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
@@ -285,7 +297,7 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 
 	res := true
 
-	c := &states.Contract{
+	c := &Contract{
 		Address: utils.OntIDContractAddress,
 		Method:  "regIDWithAttributes",
 		Args:    nil,
@@ -297,79 +309,105 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 		res = false
 	}
 
-	var buf bytes.Buffer
-	serialization.WriteVarBytes(&buf, nil)
-	serialization.WriteVarBytes(&buf, pub)
-	serialization.WriteVarUint(&buf, 1)
-	serialization.WriteVarBytes(&buf, []byte("attr0"))
-	serialization.WriteVarBytes(&buf, []byte{0})
-	serialization.WriteVarBytes(&buf, []byte{1})
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{RegIDAttrParam{
+		"",
+		pub,
+		[]Attribute{
+			Attribute{
+				[]byte("attr0"),
+				[]byte{0},
+				[]byte{1},
+			},
+		},
+	}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
 		ctx.LogError("register should failed with invalid id")
 		res = false
 	}
 
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, nil)
-	serialization.WriteVarUint(&buf, 1)
-	serialization.WriteVarBytes(&buf, []byte("attr0"))
-	serialization.WriteVarBytes(&buf, []byte{0})
-	serialization.WriteVarBytes(&buf, []byte{1})
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{RegIDAttrParam{
+		test_id,
+		nil,
+		[]Attribute{
+			Attribute{
+				[]byte("attr0"),
+				[]byte{0},
+				[]byte{1},
+			},
+		},
+	}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
 		ctx.LogError("register should failed with invalid key")
 		res = false
 	}
 
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, pub)
-	serialization.WriteVarUint(&buf, 2)
-	serialization.WriteVarBytes(&buf, []byte("attr0"))
-	serialization.WriteVarBytes(&buf, []byte{0})
-	serialization.WriteVarBytes(&buf, []byte{1})
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{RegIDAttrParam{
+		test_id,
+		pub,
+		nil,
+	}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
 		ctx.LogError("register should failed with invalid attributes")
 		res = false
 	}
 
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, pub)
-	serialization.WriteVarUint(&buf, 2)
-	serialization.WriteVarBytes(&buf, []byte("attr0"))
-	serialization.WriteVarBytes(&buf, []byte{0})
-	serialization.WriteVarBytes(&buf, []byte{1})
-	serialization.WriteVarBytes(&buf, []byte("attr1"))
-	serialization.WriteVarBytes(&buf, []byte{1})
-	serialization.WriteVarBytes(&buf, []byte{0, 1})
-	c.Args = buf.Bytes()
+	c.Args = []interface{}{RegIDAttrParam{
+		test_id,
+		pub,
+		[]Attribute{
+			Attribute{
+				[]byte("attr0"),
+				[]byte{0},
+				[]byte{1},
+			},
+			Attribute{
+				[]byte("attr1"),
+				[]byte{1},
+				[]byte{0, 1},
+			},
+		},
+	}}
 	ok, _ = InvokeContract(ctx, c, false)
 	return ok && res
+}
+
+type AddAttrParam struct {
+	ID   string
+	Attr []Attribute
+	Key  []byte
+}
+
+type RmAttrParam struct {
+	ID      string
+	AttrKey []byte
+	Key     []byte
 }
 
 func testAttr(ctx *testframework.TestFrameworkContext) bool {
 	user, _ := ctx.GetDefaultAccount()
 	pub := keypair.SerializePublicKey(user.PublicKey)
 
-	var buf bytes.Buffer
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarUint(&buf, 2)
-	serialization.WriteVarBytes(&buf, []byte("attr1"))
-	serialization.WriteVarBytes(&buf, []byte{1})
-	serialization.WriteVarBytes(&buf, []byte{0x01, 0x02})
-	serialization.WriteVarBytes(&buf, []byte("attr2"))
-	serialization.WriteVarBytes(&buf, []byte{2})
-	serialization.WriteVarBytes(&buf, []byte("abcd"))
-	serialization.WriteVarBytes(&buf, pub)
-	args := buf.Bytes()
+	args := []interface{}{AddAttrParam{
+		test_id,
+		[]Attribute{
+			Attribute{
+				[]byte("attr1"),
+				[]byte{1},
+				[]byte{0x01, 0x02},
+			},
+			Attribute{
+				[]byte("aatr2"),
+				[]byte{2},
+				[]byte("abcd"),
+			},
+		},
+		pub,
+	}}
 
-	c := &states.Contract{
+	c := &Contract{
 		Address: utils.OntIDContractAddress,
 		Method:  "addAttributes",
 		Args:    args,
@@ -380,11 +418,12 @@ func testAttr(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	buf.Reset()
-	serialization.WriteVarBytes(&buf, []byte(test_id))
-	serialization.WriteVarBytes(&buf, []byte("attr2"))
-	serialization.WriteVarBytes(&buf, pub)
 	c.Method = "removeAttribute"
+	c.Args = []interface{}{RmAttrParam{
+		test_id,
+		[]byte("attr2"),
+		pub,
+	}}
 	ok, _ = InvokeContract(ctx, c, false)
 
 	return ok
