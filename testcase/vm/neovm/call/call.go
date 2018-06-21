@@ -18,13 +18,10 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 	codeA := "52c56b6c766b00527ac4616c766b00c36c766b51527ac46203006c766b51c3616c7566"
 	codeAddressA, _ := utils.GetContractAddress(codeA)
 
-	//Because of compiler will reverse of the address, so the we need to reverse the address of called contract.
-	//After fix of compiler, wo won't need reverse.
-	ctx.LogInfo("CodeA Address:%x, R:%x", codeAddressA, utils.BytesReverse(codeAddressA[:]))
+	ctx.LogInfo("CodeA Address:%s", codeAddressA.ToHexString())
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	txhash, err := ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-
 		false,
 		codeA,
 		"TestCallContractStaticA",
@@ -37,6 +34,8 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCallContractStatic DeploySmartContract error:%s", err)
 		return false
 	}
+
+	ctx.LogInfo("TestCallContractStatic Deploy contract a TxHash:%s", txhash.ToHexString())
 	//等待出块
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 2)
 	if err != nil {
@@ -44,9 +43,9 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	codeB := "52c56b6c766b00527ac4616c766b00c3616780711163a4da8a8e37fd469a37e6cc04d37df3696c766b51527ac46203006c766b51c3616c7566"
+	codeB := "52c56b6c766b00527ac4616c766b00c361673d711163a4da8a8e37fd469a37e6cc04d37df3696c766b51527ac46203006c766b51c3616c7566"
 	codeAddressB, _ := utils.GetContractAddress(codeB)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	txhash, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		false,
 		codeB,
@@ -60,6 +59,8 @@ func TestCallContractStatic(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestCallContractStatic DeploySmartContract error:%s", err)
 		return false
 	}
+	ctx.LogInfo("TestCallContractStatic Deploy contract b TxHash:%s", txhash.ToHexString())
+
 	//等待出块
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
@@ -110,8 +111,7 @@ using System.Numerics;
 
 public class B : SmartContract
 {
-	//Because of compiler will reverse of the address, so the we need to reverse the address of called contract.
-    [Appcall("69f37dd304cce6379a46fd378e8adaa463117180")]
+    [Appcall("69f37dd304cce6379a46fd378e8adaa46311713d")]
     public static extern int OtherContract(int input);
     public static int Main(int input)
     {
@@ -119,5 +119,5 @@ public class B : SmartContract
     }
 }
 
-Code:52c56b6c766b00527ac4616c766b00c3616780711163a4da8a8e37fd469a37e6cc04d37df3696c766b51527ac46203006c766b51c3616c7566
+Code:52c56b6c766b00527ac4616c766b00c361673d711163a4da8a8e37fd469a37e6cc04d37df3696c766b51527ac46203006c766b51c3616c7566
 */

@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"time"
 
-	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common"
@@ -23,130 +22,158 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 	}
 	initKey := "gasPrice"
 	// query init parmas
-	initParms, err := getParam(&global_params.ParamNameList{initKey}, ctx.Ont)
+	initParms, err := getParam(ctx, global_params.ParamNameList{initKey})
 	if err != nil {
 		ctx.LogError("Get global params error, the value should initialize in genesis!")
 		return false
 	}
+	testKey := "init-key"
+	testKeyValue := "init-value"
+
+	ps, err := getParam(ctx, global_params.ParamNameList{testKey})
+	if err == nil {
+		_, p := ps.GetParam(testKey)
+		testKeyValue = p.Value + "1"
+	}
+
 	// add a global params
-	initParms.SetParam(&global_params.Param{"init-key", "init-value"})
+	initParms.SetParam(&global_params.Param{testKey, testKeyValue})
 	// origin admin is origin operator
 	originOperator := originAdmin
-	setParam(originOperator, ctx.Ont, initParms)
+	setParam(ctx, originOperator, initParms)
 	// query init param, should cause error, because not create snapshot
-	_, err = getParam(&global_params.ParamNameList{"init-key"}, ctx.Ont)
+	ps, err = getParam(ctx, global_params.ParamNameList{testKey})
 	if err == nil {
-		ctx.LogError("Get global params error, the value should not take effect!")
-		return false
+		_, p := ps.GetParam(testKey)
+		if p.Value == testKeyValue {
+			ctx.LogError("Get global params:%s error, the value should not take effect!", testKey)
+			return false
+		}
 	}
 	// create snapshot of init params
-	createSnapshot(originOperator, ctx.Ont)
+	createSnapshot(ctx, originOperator)
 	// query init param, should not cause error
-	initParms, err = getParam(&global_params.ParamNameList{initKey, "init-key"}, ctx.Ont)
+	initParms, err = getParam(ctx, global_params.ParamNameList{testKey})
 	if err != nil {
-		ctx.LogError("Get global params error: %s!", err)
+		ctx.LogError("Get global params:%s error: %s!", testKey, err)
 		return false
 	}
 	// origin admin set and get global params, should not cause error
-	globalParams, err := testGetAndSet(originOperator, ctx.Ont, "originOperator0", *initParms)
+	globalParams, err := testGetAndSet(ctx, originOperator, "originOperator0", initParms)
 	if err != nil {
 		ctx.LogError("Origin operator operate global params error:%s", err)
 		return false
 	}
+
+	ctx.LogInfo("TestGlobalParam Step 1 success")
+
 	newOperator, err := ctx.NewAccount()
 	if err != nil {
 		ctx.LogError("Wallet.NewAccount error:%s", err)
 		return false
 	}
 	// new operator set and get global params, should cause error, because  he is not operator
-	globalParams, err = testGetAndSet(newOperator, ctx.Ont, "newOperator0", globalParams)
+	globalParams, err = testGetAndSet(ctx, newOperator, "newOperator0", globalParams)
 	if err == nil {
 		ctx.LogError("New operator operate global params error, should not be authorized!")
 		return false
 	}
 	// set newOperator as operator
-	setOperator(originAdmin, newOperator.Address, ctx.Ont)
+	setOperator(ctx, originAdmin, newOperator.Address)
 	// newOperator set and get global params, should not cause error, because he is operator
-	globalParams, err = testGetAndSet(newOperator, ctx.Ont, "newOperator0", globalParams)
+	globalParams, err = testGetAndSet(ctx, newOperator, "newOperator0", globalParams)
 	if err != nil {
 		ctx.LogError("New operator operate global params error: ", err)
 		return false
 	}
 	// originOperator set and get global param, should cause error, because he is not operator
-	globalParams, err = testGetAndSet(originOperator, ctx.Ont, "originOperator1", globalParams)
+	globalParams, err = testGetAndSet(ctx, originOperator, "originOperator1", globalParams)
 	if err == nil {
 		ctx.LogError("Origin operator operate global params error:, should not be authorized!")
 		return false
 	}
+
+	ctx.LogInfo("TestGlobalParam Step 2 success")
+
 	// transfer admin to newOperator
 	newAdmin := newOperator
-	transferAdmin(originAdmin, newAdmin.Address, ctx.Ont)
+	transferAdmin(ctx, originAdmin, newAdmin.Address)
 	// new admin set originOperator as current operator, should not success, because new admin does not accept
-	setOperator(newAdmin, originOperator.Address, ctx.Ont)
+	setOperator(ctx, newAdmin, originOperator.Address)
 	// originOperator operate global params, should cause error, because newAdmin is not admin
 	// and he's setOperator is not effective
-	globalParams, err = testGetAndSet(originOperator, ctx.Ont, "originOperator1", globalParams)
+	globalParams, err = testGetAndSet(ctx, originOperator, "originOperator1", globalParams)
 	if err == nil {
 		ctx.LogError("Origin operator operate global params error, should not be authorized!")
 		return false
 	}
+
+	ctx.LogInfo("TestGlobalParam Step 3 success")
+
 	// new admin accept permission
-	acceptAdmin(newAdmin, ctx.Ont)
+	acceptAdmin(ctx, newAdmin)
 	// new admin set originOperator as current operator
-	setOperator(newAdmin, originOperator.Address, ctx.Ont)
+	setOperator(ctx, newAdmin, originOperator.Address)
 	// originOperator operate global params, should not cause error
-	globalParams, err = testGetAndSet(originOperator, ctx.Ont, "originOperator1", globalParams)
+	globalParams, err = testGetAndSet(ctx, originOperator, "originOperator1", globalParams)
 	if err != nil {
 		ctx.LogError("Origin operator operate global params error: ", err)
 		return false
 	}
 	// origin admin setOperator, should not success
-	setOperator(originAdmin, newOperator.Address, ctx.Ont)
+	setOperator(ctx, originAdmin, newOperator.Address)
 	// newOperator set and get global params, should cause error
-	globalParams, err = testGetAndSet(newOperator, ctx.Ont, "newOperator1", globalParams)
+	globalParams, err = testGetAndSet(ctx, newOperator, "newOperator1", globalParams)
 	if err == nil {
 		ctx.LogError("New operator operate global params error, should not be authorized!")
 		return false
 	}
+
+	ctx.LogInfo("TestGlobalParam Step 4 success")
+	//reset admin and operator
+	transferAdmin(ctx, newAdmin, originAdmin.Address)
+	acceptAdmin(ctx, originAdmin)
+	setOperator(ctx, originOperator, originAdmin.Address)
 	return true
 }
 
-func testGetAndSet(account *account.Account, ontSdk *sdk.OntologySdk, keyword string, initParams global_params.Params,
+func testGetAndSet(ctx *testframework.TestFrameworkContext, account *account.Account, keyword string, initParams global_params.Params,
 ) (global_params.Params, error) {
 	// read original param
-	paramNameList := new(global_params.ParamNameList)
+	paramNameList := global_params.ParamNameList(make([]string, 0))
 	for _, param := range initParams {
-		(*paramNameList) = append(*paramNameList, param.Key)
+		paramNameList = append(paramNameList, param.Key)
 	}
-	queriedParams, err := getParam(paramNameList, ontSdk)
+	queriedParams, err := getParam(ctx, paramNameList)
 	if err != nil {
 		return initParams, fmt.Errorf("query param failed: %s", err)
 	}
 	// compare to original param
-	if len(*queriedParams) != len(initParams) {
+	if len(queriedParams) != len(initParams) {
 		return initParams, fmt.Errorf("query param failed: init param not equals genesis init param!")
 	}
 	for index, param := range initParams {
-		if (*queriedParams)[index].Key != param.Key || (*queriedParams)[index].Value != param.Value {
+		if queriedParams[index].Key != param.Key || queriedParams[index].Value != param.Value {
 			return initParams, fmt.Errorf("query param failed: init param not equals genesis init param!")
 		}
 	}
 
 	// set global param
-	newParams := new(global_params.Params)
-	for i := 0; i < 3; i++ {
-		key := "test-key-" + keyword + "-" + strconv.Itoa(i)
+	newParams := global_params.Params(make([]*global_params.Param, 0))
+	timeStemp := time.Now().String()
+	for i := 0; i < len(initParams); i++ {
+		key := "test-key-" + keyword + "-" + strconv.Itoa(i) + timeStemp
 		value := "test-value-" + keyword + "-" + strconv.Itoa(i)
-		(*paramNameList) = append(*paramNameList, key)
+		paramNameList = append(paramNameList, key)
 		newParams.SetParam(&global_params.Param{key, value})
 	}
-	setParam(account, ontSdk, newParams)
+	setParam(ctx, account, newParams)
 
 	// create Snapshot
-	createSnapshot(account, ontSdk)
+	createSnapshot(ctx, account)
 
 	// read param
-	queriedParams, err = getParam(paramNameList, ontSdk)
+	queriedParams, err = getParam(ctx, paramNameList)
 	if err != nil {
 		// snapshot has been created, so return the new params
 		return initParams, fmt.Errorf("query param failed: %s", err)
@@ -156,59 +183,59 @@ func testGetAndSet(account *account.Account, ontSdk *sdk.OntologySdk, keyword st
 	for _, v := range initParams {
 		newParams.SetParam(v)
 	}
-	if len(*newParams) != len(*queriedParams) {
-		return *newParams, fmt.Errorf("set param failed, the new param isn't effective!")
+	if len(newParams) != len(queriedParams) {
+		return newParams, fmt.Errorf("set param failed, the new param isn't effective!")
 	}
-	for _, param := range *newParams {
+	for _, param := range newParams {
 		if index, _ := queriedParams.GetParam(param.Key); index < 0 {
-			return *newParams, fmt.Errorf("set param failed: the new param isn't effective!")
+			return newParams, fmt.Errorf("set param failed: the new param isn't effective!")
 		}
 	}
-	return *queriedParams, err
+	return queriedParams, err
 }
 
-func transferAdmin(orignAdmin *account.Account, newAdminAddress common.Address, ontSdk *sdk.OntologySdk) {
-	ontSdk.Rpc.InvokeNativeContract(0, 10000, orignAdmin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+func transferAdmin(ctx *testframework.TestFrameworkContext, orignAdmin *account.Account, newAdminAddress common.Address) {
+	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), orignAdmin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
 		utils.ParamContractAddress, "transferAdmin", []interface{}{newAdminAddress})
-	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
-func acceptAdmin(newAdmin *account.Account, ontSdk *sdk.OntologySdk) {
-	ontSdk.Rpc.InvokeNativeContract(0, 10000, newAdmin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+func acceptAdmin(ctx *testframework.TestFrameworkContext, newAdmin *account.Account) {
+	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), newAdmin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
 		utils.ParamContractAddress, "acceptAdmin", []interface{}{newAdmin.Address})
-	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
-func setOperator(admin *account.Account, newOperator common.Address, ontSdk *sdk.OntologySdk) {
-	ontSdk.Rpc.InvokeNativeContract(0, 10000, admin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+func setOperator(ctx *testframework.TestFrameworkContext, admin *account.Account, newOperator common.Address) {
+	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), admin, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
 		utils.ParamContractAddress, "setOperator", []interface{}{newOperator})
-	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
-func setParam(account *account.Account, ontSdk *sdk.OntologySdk, params *global_params.Params) {
-	ontSdk.Rpc.InvokeNativeContract(0, 10000, account, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
-		utils.ParamContractAddress, "setGlobalParam", []interface{}{*params})
-	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+func setParam(ctx *testframework.TestFrameworkContext, account *account.Account, params global_params.Params) {
+	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), account, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+		utils.ParamContractAddress, "setGlobalParam", []interface{}{params})
+	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
-func createSnapshot(account *account.Account, ontSdk *sdk.OntologySdk) {
+func createSnapshot(ctx *testframework.TestFrameworkContext, account *account.Account) {
 	// create snapshot
-	ontSdk.Rpc.InvokeNativeContract(0, 10000, account, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), account, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
 		utils.ParamContractAddress, "createSnapshot", []interface{}{})
-	ontSdk.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
-func getParam(paramNameList *global_params.ParamNameList, ontSdk *sdk.OntologySdk) (*global_params.Params, error) {
-	tx, err := ontSdk.Rpc.NewNativeInvokeTransaction(0, 10000, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
-		utils.ParamContractAddress, "getGlobalParam", []interface{}{*paramNameList})
+func getParam(ctx *testframework.TestFrameworkContext, paramNameList global_params.ParamNameList) (global_params.Params, error) {
+	tx, err := ctx.Ont.Rpc.NewNativeInvokeTransaction(ctx.GetGasPrice(), ctx.GetGasLimit(), global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+		utils.ParamContractAddress, "getGlobalParam", []interface{}{paramNameList})
 	if err != nil {
 		return nil, err
 	}
-	result, err := ontSdk.Rpc.PrepareInvokeContract(tx)
+	result, err := ctx.Ont.Rpc.PrepareInvokeContract(tx)
 	if err != nil {
 		return nil, err
 	}
-	queriedParams := new(global_params.Params)
+	queriedParams := global_params.Params(make([]*global_params.Param, 0))
 	data, err := hex.DecodeString(result.Result.(string))
 	if err != nil {
 		err = fmt.Errorf("get param error: decode result error!")
