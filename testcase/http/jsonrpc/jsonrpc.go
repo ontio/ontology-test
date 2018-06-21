@@ -1,29 +1,44 @@
 package jsonrpc
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/common"
+	"github.com/ontio/ontology/common/constants"
+	"github.com/ontio/ontology/common/serialization"
+	"github.com/ontio/ontology/core/payload"
+	"github.com/ontio/ontology/core/types"
+	"github.com/ontio/ontology/smartcontract/service/native/ont"
+	nvutils "github.com/ontio/ontology/smartcontract/service/native/utils"
 )
 
 func TestGetBlockByHeight(ctx *testframework.TestFrameworkContext) bool {
-	block, err := ctx.Ont.Rpc.GetBlockByHeight(10)
+	blockCount, err := ctx.Ont.Rpc.GetBlockCount()
+	if err != nil {
+		ctx.LogError("TestGetBlockByHeight GetBlockCount error:%s", err)
+		return false
+	}
+	_, err = ctx.Ont.Rpc.GetBlockByHeight(blockCount - 1)
 	if err != nil {
 		ctx.LogError("ctx.Ont.Rpc.GetBlockByHeight error:%s", err)
 		return false
 	}
-	fmt.Println(block)
 	return true
 }
 
 func TestGetBlockByHash(ctx *testframework.TestFrameworkContext) bool {
-	bs, err := common.HexToBytes("72fe5d25ff63b2cf33e697d79f9b4f310d6e919deeeeaabffd79c293ab50fef9")
-	txhash, err := common.Uint256ParseFromBytes(bs)
+	blockCount, err := ctx.Ont.Rpc.GetBlockCount()
 	if err != nil {
-		ctx.LogError("common.Uint256ParseFromBytes error:%s", err)
+		ctx.LogError("TestGetBlockByHash GetBlockCount error:%s", err)
 		return false
 	}
-	block, err := ctx.Ont.Rpc.GetBlockByHash(txhash)
+
+	blockHash, err := ctx.Ont.Rpc.GetBlockHash(blockCount - 1)
+	if err != nil {
+		ctx.LogError("TestGetBlockByHash GetBlockHash error:%s", err)
+		return false
+	}
+	block, err := ctx.Ont.Rpc.GetBlockByHash(blockHash)
 	if err != nil {
 		ctx.LogError("ctx.Ont.Rpc.GetBlockByHash error:%s", err)
 		return false
@@ -33,12 +48,12 @@ func TestGetBlockByHash(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func TestGetBalance(ctx *testframework.TestFrameworkContext) bool {
-	address, err := common.AddressFromBase58("TA8ZD2Z9R25Y2uibc96FdBn3owhTqZZRy6")
+	defAcc, err := ctx.GetDefaultAccount()
 	if err != nil {
-		ctx.LogError("common.AddressFromBase58 error:%s", err)
+		ctx.LogError("TestGetBalance GetDefaultAccount error:%s", err)
 		return false
 	}
-	balance, err := ctx.Ont.Rpc.GetBalance(address)
+	balance, err := ctx.Ont.Rpc.GetBalance(defAcc.Address)
 	if err != nil {
 		ctx.LogError("ctx.Ont.Rpc.GetBalance error:%s", err)
 		return false
@@ -53,17 +68,23 @@ func TestGetBlockCount(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("ctx.Ont.Rpc.GetBlockCount error:%s", err)
 		return false
 	}
-	fmt.Println("num:", num)
+	ctx.LogInfo("GetBlockCount:", num)
 	return true
 }
 
 func TestGetBlockHash(ctx *testframework.TestFrameworkContext) bool {
-	blkhash, err := ctx.Ont.Rpc.GetBlockHash(1)
+	blockCount, err := ctx.Ont.Rpc.GetBlockCount()
 	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetBlockHash error:%s", err)
+		ctx.LogError("TestGetBlockByHash GetBlockCount error:%s", err)
 		return false
 	}
-	fmt.Println("blkhash:", blkhash)
+
+	blockHash, err := ctx.Ont.Rpc.GetBlockHash(blockCount - 1)
+	if err != nil {
+		ctx.LogError("TestGetBlockByHash GetBlockHash error:%s", err)
+		return false
+	}
+	ctx.LogInfo("blkhash:%s", blockHash)
 	return true
 }
 
@@ -73,79 +94,98 @@ func TestGetCurrentBlockHash(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("ctx.Ont.Rpc.GetCurrentBlockHash error:%s", err)
 		return false
 	}
-	fmt.Println("blkhash:", blkhash)
+	ctx.LogInfo("TestGetCurrentBlockHash blkhash:%s", blkhash.ToHexString())
 	return true
 }
 
 func TestGetRawTransaction(ctx *testframework.TestFrameworkContext) bool {
-	txhashbs, err := common.HexToBytes("a6733c1aa5f0885062121ce98fdd647c8e1bf4cb6e0e618ee9c9cd19b4c79997")
+	block, err := ctx.Ont.Rpc.GetBlockByHeight(0)
 	if err != nil {
-		ctx.LogError("common.HexToBytes error:%s", err)
+		ctx.LogError("TestGetRawTransaction GetBlockByHeight error:%s", err)
 		return false
 	}
-	txhash, err := common.Uint256ParseFromBytes(txhashbs)
-	if err != nil {
-		ctx.LogError("common.Uint256ParseFromBytes error:%s", err)
-		return false
-	}
-	tx, err := ctx.Ont.Rpc.GetRawTransaction(txhash)
+	txBaseHash := block.Transactions[0].Hash()
+	tx, err := ctx.Ont.Rpc.GetRawTransaction(txBaseHash)
 	if err != nil {
 		ctx.LogError("ctx.Ont.Rpc.GetRawTransaction error:%s", err)
 		return false
 	}
-	fmt.Println("transaction:", tx)
+	txHash := tx.Hash()
+	if txHash != txBaseHash {
+		ctx.LogError("TestGetRawTransaction %x != %x", txHash, txBaseHash)
+		return false
+	}
 	return true
 }
 
 func TestGetSmartContract(ctx *testframework.TestFrameworkContext) bool {
-	bs, err := common.HexToBytes("80b0cc71bda8653599c5666cae084bff587e2de1")
-	addr, err := common.AddressParseFromBytes(bs)
+	block, err := ctx.Ont.Rpc.GetBlockByHeight(0)
 	if err != nil {
-		ctx.LogError("common.AddressFromBase58 error:%s", err)
+		ctx.LogError("GetBlockByHeight error:%s", err)
 		return false
 	}
-	code, err := ctx.Ont.Rpc.GetSmartContract(addr)
+	//The first transaction is ont deploy transaction
+	ont := block.Transactions[0]
+	payload := ont.Payload.(*payload.DeployCode)
+
+	contractAddress := types.AddressFromVmCode(payload.Code)
+	contract, err := ctx.Ont.Rpc.GetSmartContract(contractAddress)
 	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetSmartContract error:%s", err)
+		ctx.LogError("GetSmartContract error:%s", err)
 		return false
 	}
-	fmt.Println("code:", code)
+	ctx.LogInfo("TestGetSmartContract:\n Code:%x\n Author:%s\n Verson:%s\n NeedStorage:%v\n Email:%s\n Description:%s\n",
+		contract.Code, contract.Author, contract.Version, contract.NeedStorage, contract.Email, contract.Description)
 	return true
 }
 
 func TestGetSmartContractEvent(ctx *testframework.TestFrameworkContext) bool {
-	txbytes, err := common.HexToBytes("a6733c1aa5f0885062121ce98fdd647c8e1bf4cb6e0e618ee9c9cd19b4c79997")
+	events, err := ctx.Ont.Rpc.GetSmartContractEventByBlock(0)
 	if err != nil {
-		ctx.LogError("common.HexToBytes error:%s", err)
+		ctx.LogError("TestGetSmartContractEvent GetSmartContractEventByBlock error:%s", err)
 		return false
 	}
-	txhash, err := common.Uint256ParseFromBytes(txbytes)
+
+	scEvt, err := ctx.Ont.Rpc.GetSmartContractEventWithHexString(events[0].TxHash)
 	if err != nil {
-		ctx.LogError("common.Uint256ParseFromBytes error:%s", err)
+		ctx.LogError("TestGetSmartContractEvent GetSmartContractEvent error:%s", err)
 		return false
 	}
-	smartcodeevent, err := ctx.Ont.Rpc.GetSmartContractEvent(txhash)
-	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetSmartContractEvent error:%s", err)
-		return false
+
+	fmt.Printf(" TxHash:%s\n", scEvt.TxHash)
+	fmt.Printf(" State:%d\n", scEvt.State)
+	fmt.Printf(" GasConsumed:%d\n", scEvt.GasConsumed)
+	for _, notify := range scEvt.Notify {
+		fmt.Printf(" SmartContractAddress:%s\n", notify.ContractAddress)
+		states := notify.States.([]interface{})
+		name := states[0].(string)
+		from := states[1].(string)
+		to := states[2].(string)
+		value := states[3].(float64)
+		fmt.Printf(" State Name:%s from:%s to:%s value:%d\n", name, from, to, int(value))
 	}
-	fmt.Println("smartcodeevent:", smartcodeevent)
 	return true
 }
 
 func TestGetStorage(ctx *testframework.TestFrameworkContext) bool {
-	codeaddress, err := common.HexToBytes("80b0cc71bda8653599c5666cae084bff587e2de1")
-	addr, err := common.AddressParseFromBytes(codeaddress)
+	value, err := ctx.Ont.Rpc.GetStorage(nvutils.OntContractAddress, []byte(ont.TOTALSUPPLY_NAME))
 	if err != nil {
-		ctx.LogError("common.AddressParseFromBytes error:%s", err)
+		ctx.LogError("TestGetStorage error:%s", err)
 		return false
 	}
-	keyBytes, err := common.HexToBytes("key")
-	storage, err := ctx.Ont.Rpc.GetStorage(addr, keyBytes)
-	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetSmartContractEvent error:%s", err)
+	if value == nil {
+		ctx.LogError("TestGetStorage value is nil")
 		return false
 	}
-	fmt.Println("storage:", storage)
+	totalSupply, err := serialization.ReadUint64(bytes.NewReader(value))
+	if err != nil {
+		ctx.LogError("TestGetStorage serialization.ReadUint64 error:%s", err)
+		return false
+	}
+	if totalSupply != constants.ONT_TOTAL_SUPPLY {
+		ctx.LogError("TestGetStorage totalSupply %d != %d", totalSupply, constants.ONT_TOTAL_SUPPLY)
+		return false
+	}
+	ctx.LogInfo("TestGetStorage %d\n", totalSupply)
 	return true
 }

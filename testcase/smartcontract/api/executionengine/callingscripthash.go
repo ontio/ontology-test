@@ -30,7 +30,7 @@ using System.Numerics;
 
 public class B : SmartContract
 {
-    [Appcall("7d0cd19e13a388af45af797fff87894cecb6d480")]
+    [Appcall("7d0cd19e13a388af45af797fff87894cecb6d4ae")]
     public static extern byte[] CallContract();
     public static void Main()
     {
@@ -38,7 +38,7 @@ public class B : SmartContract
         Storage.Put(Storage.CurrentContext, "callScript", callScript);
     }
 }
-Code := 51c56b616167624c902239566a0b7dd4a59dcf38ab57aa36a6706c766b00527ac46168164e656f2e53746f726167652e476574436f6e746578740a63616c6c5363726970746c766b00c3615272680f4e656f2e53746f726167652e50757461616c7566
+Code := 51c56b616167aed4b6ec4c8987ff7f79af45af88a3139ed10c7d6c766b00527ac461681953797374656d2e53746f726167652e476574436f6e746578740a63616c6c5363726970746c766b00c3615272681253797374656d2e53746f726167652e50757461616c7566
 */
 
 func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
@@ -53,7 +53,6 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-
 		true,
 		codeA,
 		"TestCallingScriptHash",
@@ -73,12 +72,11 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	codeB := "51c56b61616780d4b6ec4c8987ff7f79af45af88a3139ed10c7d6c766b00527ac46168164e656f2e53746f726167652e476574436f6e746578740a63616c6c5363726970746c766b00c3615272680f4e656f2e53746f726167652e50757461616c7566"
+	codeB := "51c56b616167aed4b6ec4c8987ff7f79af45af88a3139ed10c7d6c766b00527ac461681953797374656d2e53746f726167652e476574436f6e746578740a63616c6c5363726970746c766b00c3615272681253797374656d2e53746f726167652e50757461616c7566"
 	codeAddressB, _ := utils.GetContractAddress(codeB)
 
 	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-
 		true,
 		codeB,
 		"TestCallingScriptHash",
@@ -101,7 +99,7 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAddressB,
-		[]interface{}{0})
+		[]interface{}{})
 
 	if err != nil {
 		ctx.LogError("TestCallingScriptHash error:%s", err)
@@ -120,9 +118,10 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	ctx.LogInfo("CodeA Address:%x, R:%x", codeAddressA, utils.BytesReverse(codeAddressA[:]))
+	ctx.LogInfo("CodeA Address:%s", codeAddressA.ToHexString())
+	ctx.LogInfo("CodeB Address:%s", codeAddressB.ToHexString())
 
-	err = ctx.AssertToByteArray(callScript, codeAddressA[:])
+	err = ctx.AssertToByteArray(callScript, codeAddressB[:])
 	if err != nil {
 		ctx.LogError("TestCallingScriptHash AssertToByteArray error:%s", err)
 		return false

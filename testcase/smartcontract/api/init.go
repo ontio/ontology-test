@@ -19,7 +19,6 @@
 package api
 
 import (
-	"github.com/ontio/ontology-test/testcase/smartcontract/api/appcall"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/blockchain"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/contract"
 	"github.com/ontio/ontology-test/testcase/smartcontract/api/executionengine"
@@ -36,11 +35,9 @@ func TestSmartContractApi() {
 	testframework.TFramework.RegTestCase("TestContractDestroy", contract.TestContractDestroy)
 	testframework.TFramework.RegTestCase("TestCallingScriptHash", executionengine.TestCallingScriptHash)
 	testframework.TFramework.RegTestCase("TestCheckWitness", runtime.TestCheckWitness)
-	testframework.TFramework.RegTestCase("TestRuntimLog", runtime.TestRuntimLog)
+	//testframework.TFramework.RegTestCase("TestRuntimLog", runtime.TestRuntimLog)
 	testframework.TFramework.RegTestCase("TestRuntimeNotify", runtime.TestRuntimeNotify)
 	testframework.TFramework.RegTestCase("TestGetTxHash", transaction.TestGetTxHash)
 	testframework.TFramework.RegTestCase("TestGetTxType", transaction.TestGetTxType)
 	testframework.TFramework.RegTestCase("TestStorage", storage.TestStorage)
-	testframework.TFramework.RegTestCase("TestCallingContract", appcall.TestCallingContract)
-	testframework.TFramework.RegTestCase("TestNativeTotalSupply", appcall.TestNativeTotalSupply)
 }

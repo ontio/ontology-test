@@ -26,34 +26,34 @@ import (
 	vtypes "github.com/ontio/ontology/vm/neovm/types"
 )
 
-//
-//using Neo.SmartContract.Framework;
-//using Neo.SmartContract.Framework.Services.Neo;
-//using Neo.SmartContract.Framework.Services.System;
-//using System;
-//using System.ComponentModel;
-//using System.Numerics;
-//
-//class OnTest : SmartContract
-//{
-//    public static object[] Main(int height)
-//    {
-//        //object[] ret = new object[8];
-//        Block block = Blockchain.GetBlock((uint)height);
-//        Storage.Put(Storage.CurrentContext, "hash", block.Hash);
-//        Storage.Put(Storage.CurrentContext, "index", block.Index);
-//        Storage.Put(Storage.CurrentContext, "merkRoot", block.MerkleRoot);
-//        Storage.Put(Storage.CurrentContext, "nextConsensus", block.NextConsensus);
-//        Storage.Put(Storage.CurrentContext, "prevHash", block.PrevHash);
-//        Storage.Put(Storage.CurrentContext, "timeStamp", block.Timestamp);
-//        Storage.Put(Storage.CurrentContext, "version", block.Version);
-//
-//        return null;
-//    }
-//}
+/*
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Services.Neo;
+using Neo.SmartContract.Framework.Services.System;
+using System;
+using System.ComponentModel;
+using System.Numerics;
 
+class OnTest : SmartContract
+{
+    public static object[] Main(int height)
+    {
+        //object[] ret = new object[8];
+        Block block = Blockchain.GetBlock((uint)height);
+        Storage.Put(Storage.CurrentContext, "hash", block.Hash);
+        Storage.Put(Storage.CurrentContext, "index", block.Index);
+        Storage.Put(Storage.CurrentContext, "merkRoot", block.MerkleRoot);
+        Storage.Put(Storage.CurrentContext, "nextConsensus", block.NextConsensus);
+        Storage.Put(Storage.CurrentContext, "prevHash", block.PrevHash);
+        Storage.Put(Storage.CurrentContext, "timeStamp", block.Timestamp);
+        Storage.Put(Storage.CurrentContext, "version", block.Version);
+
+        return null;
+    }
+}
+*/
 func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
-	code := "53c56b6c766b00527ac4616c766b00c36168174e656f2e426c6f636b636861696e2e476574426c6f636b6c766b51527ac46168164e656f2e53746f726167652e476574436f6e7465787404686173686c766b51c36168124e656f2e4865616465722e47657448617368615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e7465787405696e6465786c766b51c36168134e656f2e4865616465722e476574496e646578615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e74657874086d65726b526f6f746c766b51c36168184e656f2e4865616465722e4765744d65726b6c65526f6f74615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e746578740d6e657874436f6e73656e7375736c766b51c361681b4e656f2e4865616465722e4765744e657874436f6e73656e737573615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e746578740870726576486173686c766b51c36168164e656f2e4865616465722e4765745072657648617368615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e746578740974696d655374616d706c766b51c36168174e656f2e4865616465722e47657454696d657374616d70615272680f4e656f2e53746f726167652e507574616168164e656f2e53746f726167652e476574436f6e746578740776657273696f6e6c766b51c36168154e656f2e4865616465722e47657456657273696f6e615272680f4e656f2e53746f726167652e50757461006c766b52527ac46203006c766b52c3616c7566"
+	code := "53c56b6c766b00527ac4616c766b00c361681a53797374656d2e426c6f636b636861696e2e476574426c6f636b6c766b51527ac461681953797374656d2e53746f726167652e476574436f6e7465787404686173686c766b51c361681553797374656d2e4865616465722e47657448617368615272681253797374656d2e53746f726167652e5075746161681953797374656d2e53746f726167652e476574436f6e7465787405696e6465786c766b51c361681653797374656d2e4865616465722e476574496e646578615272681253797374656d2e53746f726167652e5075746161681953797374656d2e53746f726167652e476574436f6e74657874086d65726b526f6f746c766b51c361681d4f6e746f6c6f67792e4865616465722e4765744d65726b6c65526f6f74615272681253797374656d2e53746f726167652e5075746161681953797374656d2e53746f726167652e476574436f6e746578740d6e657874436f6e73656e7375736c766b51c36168204f6e746f6c6f67792e4865616465722e4765744e657874436f6e73656e737573615272681253797374656d2e53746f726167652e5075746161681953797374656d2e53746f726167652e476574436f6e746578740870726576486173686c766b51c361681953797374656d2e4865616465722e4765745072657648617368615272681253797374656d2e53746f726167652e5075746161681953797374656d2e53746f726167652e476574436f6e746578740974696d655374616d706c766b51c361681a53797374656d2e4865616465722e47657454696d657374616d70615272681253797374656d2e53746f726167652e5075746161681953797374656d2e53746f726167652e476574436f6e746578740776657273696f6e6c766b51c361681a4f6e746f6c6f67792e4865616465722e47657456657273696f6e615272681253797374656d2e53746f726167652e50757461006c766b52527ac46203006c766b52c3616c7566"
 
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
@@ -138,7 +138,8 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	err = ctx.AssertToInt(vtypes.NewByteArray(index).GetBigInteger(), int(header.Height))
+	bValue, _ := vtypes.NewByteArray(index).GetBigInteger()
+	err = ctx.AssertToInt(bValue, int(header.Height))
 	if err != nil {
 		ctx.LogError("TestGetBlock Height AssertToInt error: %s", err)
 		return false

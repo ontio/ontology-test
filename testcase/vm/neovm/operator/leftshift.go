@@ -10,7 +10,7 @@ import (
 )
 
 func TestOperationLeftShift(ctx *testframework.TestFrameworkContext) bool {
-	code := "52C56B6C766B00527AC46C766B51527AC46C766B00C36C766B51C3011F8498616C7566"
+	code := "53c56b6c766b00527ac46c766b51527ac4616c766b00c36c766b51c3011f84986c766b52527ac46203006c766b52c3616c7566"
 	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
@@ -52,10 +52,6 @@ func TestOperationLeftShift(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	if !testOperationLeftShift(ctx, codeAddress, -1, 2) {
-		return false
-	}
-
-	if !testOperationLeftShift(ctx, codeAddress, 1, -1) {
 		return false
 	}
 

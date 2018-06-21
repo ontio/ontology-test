@@ -11,7 +11,7 @@ import (
 )
 
 func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
-	code := "51C56B6C766B00527AC46C766B00C3616C7566"
+	code := "52c56b6c766b00527ac4616c766b00c36c766b51527ac46203006c766b51c3616c7566"
 	codeAddress, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
@@ -39,15 +39,19 @@ func TestAsByteArrayBigInteger(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	input := new(big.Int).SetInt64(-233545554)
+	input := new(big.Int).SetInt64(1)
+	if !testAsArray_BigInteger(ctx, codeAddress, input) {
+		return false
+	}
+	input = new(big.Int).SetInt64(0)
+	if !testAsArray_BigInteger(ctx, codeAddress, input) {
+		return false
+	}
+	input = new(big.Int).SetInt64(-233545554)
 	if !testAsArray_BigInteger(ctx, codeAddress, input) {
 		return false
 	}
 	input = new(big.Int).SetInt64(-3434)
-	if !testAsArray_BigInteger(ctx, codeAddress, input) {
-		return false
-	}
-	input = new(big.Int).SetInt64(1)
 	if !testAsArray_BigInteger(ctx, codeAddress, input) {
 		return false
 	}
@@ -58,13 +62,13 @@ func testAsArray_BigInteger(ctx *testframework.TestFrameworkContext, code common
 	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
 		code,
 		[]interface{}{input},
-		sdkcom.NEOVM_TYPE_BYTE_ARRAY,
+		sdkcom.NEOVM_TYPE_INTEGER,
 	)
 	if err != nil {
 		ctx.LogError("TestAsByteArrayBigInteger InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToByteArray(res, input.Bytes())
+	err = ctx.AssertBigInteger(res, input)
 
 	if err != nil {
 		ctx.LogError("TestAsByteArrayBigInteger test failed %s", err)

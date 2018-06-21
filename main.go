@@ -38,7 +38,7 @@ var (
 
 func init() {
 	flag.StringVar(&TestConfig, "cfg", "./config_test.json", "Config of ontology-test")
-	flag.StringVar(&LogConfig, "lfg", "./log/log4go.xml", "Log config of ontology-test")
+	flag.StringVar(&LogConfig, "lfg", "./log4go.xml", "Log config of ontology-test")
 	flag.StringVar(&TestCases, "t", "", "Test case to run. use ',' to split test case")
 	flag.Parse()
 }

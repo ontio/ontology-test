@@ -25,7 +25,7 @@ import (
 
 //Register test case
 func TestSmartContract() {
+	api.TestSmartContractApi()
 	native.TestNative()
 	neovm.TestNeoVM()
-	api.TestSmartContractApi()
 }

@@ -15,8 +15,10 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 	txHash, err := ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(), signer, contractCodeAddress, []interface{}{})
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract InvokeNeoVMSmartContract error:%s", err)
+		return false
 	}
 
+	ctx.LogInfo("TestInvokeSmartContract txHash:%s\n", txHash.ToHexString())
 	//WaitForGenerateBlock
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {

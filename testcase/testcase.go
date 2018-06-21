@@ -25,8 +25,7 @@ import (
 
 //TestCase list
 func init() {
-	smartcontract.TestSmartContract()
-	vm.TestVM()
 	http.TestHttp()
-
+	vm.TestVM()
+	smartcontract.TestSmartContract()
 }

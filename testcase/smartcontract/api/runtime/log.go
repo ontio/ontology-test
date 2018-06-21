@@ -24,7 +24,7 @@ public class HelloWorld : SmartContract
 */
 
 func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
-	code := "51c56b6c766b00527ac4616c766b00c361680f4e656f2e52756e74696d652e4c6f6761616c7566"
+	code := "51c56b6c766b00527ac4616c766b00c361681253797374656d2e52756e74696d652e4c6f6761616c7566"
 	codeAddr, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 
@@ -60,7 +60,7 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestRuntimLog InvokeSmartContract error:%s", err)
 		return false
 	}
-
+	ctx.LogInfo("TestRuntimLog invoke Tx:%s\n", txHash.ToHexString())
 	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract GetSmartContractEvent error:%s", err)

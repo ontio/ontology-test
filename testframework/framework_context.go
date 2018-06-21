@@ -154,7 +154,7 @@ func (this *TestFrameworkContext) AssertToString(value interface{}, expect strin
 func (this *TestFrameworkContext) AssertToByteArray(value interface{}, expect []byte) error {
 	v, ok := value.([]byte)
 	if !ok {
-		return fmt.Errorf("Assert:%v to string failed", value)
+		return fmt.Errorf("Assert:%v to byte array failed", value)
 	}
 	if !bytes.EqualFold(v, expect) {
 		return fmt.Errorf("%x not equal:%x", v, expect)

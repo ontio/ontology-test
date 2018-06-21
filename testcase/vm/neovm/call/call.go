@@ -106,12 +106,11 @@ SmartContractB
 
 using Neo.SmartContract.Framework;
 using Neo.SmartContract.Framework.Services.Neo;
-usingtestcase/smartcontract/native/transfer.go System.Numerics;
+using System.Numerics;
 
 public class B : SmartContract
 {
 	//Because of compiler will reverse of the address, so the we need to reverse the address of called contract.
-	//After fix of compiler, wo won't need reverse.
     [Appcall("69f37dd304cce6379a46fd378e8adaa463117180")]
     public static extern int OtherContract(int input);
     public static int Main(int input)

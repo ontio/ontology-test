@@ -60,34 +60,19 @@ func testReturnType(ctx *testframework.TestFrameworkContext, code common.Address
 		return false
 	}
 
-	r1, err := utils.ParseNeoVMContractReturnTypeInteger(rt[0])
-	if err != nil {
-		ctx.LogError("TestReturnType ParseNeoVMSmartContractReturnTypeInteger:%s error:%s", rt[0], err)
-		return false
-	}
-	err = ctx.AssertToInt(r1, args[0])
+	err = ctx.AssertToInt(rt[0], args[0])
 	if err != nil {
 		ctx.LogError("TestReturnType AssertToInt error:%s", err)
 		return false
 	}
 
-	r2, err := utils.ParseNeoVMContractReturnTypeInteger(rt[1])
-	if err != nil {
-		ctx.LogError("TestReturnType ParseNeoVMSmartContractReturnTypeInteger:%s error:%s", rt[1], err)
-		return false
-	}
-	err = ctx.AssertToInt(r2, args[1])
+	err = ctx.AssertToInt(rt[1], args[1])
 	if err != nil {
 		ctx.LogError("TestReturnType AssertToInt error:%s", err)
 		return false
 	}
 
-	r3, err := utils.ParseNeoVMContractReturnTypeByteArray(rt[2])
-	if err != nil {
-		ctx.LogError("TestReturnType ParseNeoVMSmartContractReturnTypeByteArray:%s error:%s", rt[2], err)
-		return false
-	}
-	err = ctx.AssertToByteArray(r3, arg3)
+	err = ctx.AssertToByteArray(rt[2], arg3)
 	if err != nil {
 		ctx.LogError("AssertToByteArray error:%s", err)
 		return false
