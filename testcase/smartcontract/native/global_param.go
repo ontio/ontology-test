@@ -67,11 +67,8 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 
 	ctx.LogInfo("TestGlobalParam Step 1 success")
 
-	newOperator, err := ctx.NewAccount()
-	if err != nil {
-		ctx.LogError("Wallet.NewAccount error:%s", err)
-		return false
-	}
+	newOperator := ctx.NewAccount()
+
 	// new operator set and get global params, should cause error, because  he is not operator
 	globalParams, err = testGetAndSet(ctx, newOperator, "newOperator0", globalParams)
 	if err == nil {

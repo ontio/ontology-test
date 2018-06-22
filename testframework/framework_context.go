@@ -23,8 +23,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	log4 "github.com/alecthomas/log4go"
-	"github.com/ontio/ontology-crypto/keypair"
-	s "github.com/ontio/ontology-crypto/signature"
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-test/common"
 	"github.com/ontio/ontology/account"
@@ -77,12 +75,8 @@ func (this *TestFrameworkContext) GetAccount(addr string) (*account.Account, err
 	return this.Wallet.GetAccountByLabel(addr, []byte(common.DefConfig.Password))
 }
 
-func (this *TestFrameworkContext) NewAccount(label ...string) (*account.Account, error) {
-	label_tag := ""
-	if len(label) > 0 {
-		label_tag = label[0]
-	}
-	return this.Wallet.NewAccount(label_tag, keypair.PK_ECDSA, keypair.P256, s.SHA256withECDSA, []byte(common.DefConfig.Password))
+func (this *TestFrameworkContext) NewAccount() *account.Account {
+	return account.NewAccount("")
 }
 
 //FailNow will stop test, and skip all haven't not test case

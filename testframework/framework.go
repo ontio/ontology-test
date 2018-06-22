@@ -50,6 +50,10 @@ type TestFramework struct {
 	ont *sdk.OntologySdk
 	//OntWallet object
 	wallet account.Client
+	//Callback func before running test
+	before func(ctx *TestFrameworkContext)
+	//Callback func After running test
+	after func(ctx *TestFrameworkContext)
 }
 
 //NewTestFramework return a TestFramework instance
@@ -70,6 +74,14 @@ func (this *TestFramework) RegTestCase(name string, testCase TestCase) {
 	this.testCasesMap[testCaseId] = testCase
 }
 
+func (this *TestFramework) SetBeforeCallback(callback func(ctx *TestFrameworkContext)) {
+	this.before = callback
+}
+
+func (this *TestFramework) SetAfterCallback(callback func(ctx *TestFrameworkContext)) {
+	this.after = callback
+}
+
 //Start run test case
 func (this *TestFramework) Start(testCases []string) {
 	if len(testCases) > 0 {
@@ -87,6 +99,8 @@ func (this *TestFramework) Start(testCases []string) {
 			this.runTestList(taseCaseList)
 			return
 		}
+		log4.Info("Not test case to run")
+		return
 	}
 	this.runTestList(this.testCases)
 }
@@ -94,21 +108,27 @@ func (this *TestFramework) Start(testCases []string) {
 func (this *TestFramework) runTestList(testCaseList []TestCase) {
 	this.onTestStart()
 	defer this.onTestFinish(testCaseList)
-	failNowCh := make(chan interface{}, 0)
+	failNowCh := make(chan interface{}, 10)
+	ctx := NewTestFrameworkContext(this.ont, this.wallet, failNowCh)
+	if this.before != nil {
+		this.before(ctx)
+	}
+	if this.after != nil {
+		defer this.after(ctx)
+	}
 	for i, testCase := range testCaseList {
 		select {
 		case <-failNowCh:
 			this.onTestFailNow()
 			return
 		default:
-			this.runTest(i+1, failNowCh, testCase)
+			this.runTest(i+1, ctx, testCase)
 		}
 	}
 }
 
 //Run a single test case
-func (this *TestFramework) runTest(index int, failNowCh chan interface{}, testCase TestCase) {
-	ctx := NewTestFrameworkContext(this.ont, this.wallet, failNowCh)
+func (this *TestFramework) runTest(index int, ctx *TestFrameworkContext, testCase TestCase) {
 	this.onBeforeTestCaseStart(index, testCase)
 	ok := testCase(ctx)
 	this.onAfterTestCaseFinish(index, testCase, ok)

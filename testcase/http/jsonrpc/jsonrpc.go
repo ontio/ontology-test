@@ -2,7 +2,6 @@ package jsonrpc
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common/constants"
 	"github.com/ontio/ontology/common/serialization"
@@ -43,7 +42,11 @@ func TestGetBlockByHash(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("ctx.Ont.Rpc.GetBlockByHash error:%s", err)
 		return false
 	}
-	fmt.Println(block)
+	bHash := block.Hash()
+	if bHash != blockHash {
+		ctx.LogError("TestGetBlockByHash block hash %s != %s", blockHash.ToHexString(), bHash.ToHexString())
+		return false
+	}
 	return true
 }
 
@@ -58,7 +61,7 @@ func TestGetBalance(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("ctx.Ont.Rpc.GetBalance error:%s", err)
 		return false
 	}
-	fmt.Println(balance)
+	ctx.LogInfo("%v", balance)
 	return true
 }
 
@@ -134,8 +137,13 @@ func TestGetSmartContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("GetSmartContract error:%s", err)
 		return false
 	}
-	ctx.LogInfo("TestGetSmartContract:\n Code:%x\n Author:%s\n Verson:%s\n NeedStorage:%v\n Email:%s\n Description:%s\n",
-		contract.Code, contract.Author, contract.Version, contract.NeedStorage, contract.Email, contract.Description)
+	ctx.LogInfo("TestGetSmartContract:")
+	ctx.LogInfo("Code:%x", contract.Code)
+	ctx.LogInfo("Author:%s", contract.Author)
+	ctx.LogInfo("Version:%s", contract.Version)
+	ctx.LogInfo("NeedStorage:%v", contract.NeedStorage)
+	ctx.LogInfo("Email:%s", contract.Email)
+	ctx.LogInfo("Description:%s", contract.Description)
 	return true
 }
 
@@ -152,17 +160,17 @@ func TestGetSmartContractEvent(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	fmt.Printf(" TxHash:%s\n", scEvt.TxHash)
-	fmt.Printf(" State:%d\n", scEvt.State)
-	fmt.Printf(" GasConsumed:%d\n", scEvt.GasConsumed)
+	ctx.LogInfo(" TxHash:%s", scEvt.TxHash)
+	ctx.LogInfo(" State:%d", scEvt.State)
+	ctx.LogInfo(" GasConsumed:%d", scEvt.GasConsumed)
 	for _, notify := range scEvt.Notify {
-		fmt.Printf(" SmartContractAddress:%s\n", notify.ContractAddress)
+		ctx.LogInfo(" SmartContractAddress:%s", notify.ContractAddress)
 		states := notify.States.([]interface{})
 		name := states[0].(string)
 		from := states[1].(string)
 		to := states[2].(string)
 		value := states[3].(float64)
-		fmt.Printf(" State Name:%s from:%s to:%s value:%d\n", name, from, to, int(value))
+		ctx.LogInfo(" State Name:%s from:%s to:%s value:%d", name, from, to, int(value))
 	}
 	return true
 }

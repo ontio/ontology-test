@@ -63,7 +63,10 @@ func main() {
 		log4.Error("OpenOrCreateWallet %s error:%s", common.DefConfig.WalletFile, err)
 		return
 	}
-	testCases := strings.Split(TestCases, ",")
+	testCases := make([]string, 0)
+	if TestCases != "" {
+		testCases = strings.Split(TestCases, ",")
+	}
 	testframework.TFramework.SetOntSdk(ontSdk)
 	testframework.TFramework.SetWallet(wallet)
 	//Start run test case

@@ -30,11 +30,7 @@ func TestOntTransfer(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("Wallet.GetDefaultAccount error:%s", err)
 		return false
 	}
-	user, err := ctx.NewAccount()
-	if err != nil {
-		ctx.LogError("Wallet.NewAccount error:%s", err)
-		return false
-	}
+	user := ctx.NewAccount()
 
 	adminBalanceBefore, err := ctx.Ont.Rpc.GetBalance(admin.Address)
 	if err != nil {

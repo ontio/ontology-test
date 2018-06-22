@@ -54,6 +54,7 @@ func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract,
 		)
 		if err != nil {
 			ctx.LogError("InvokeNativeContract error: %s", err)
+			return false, nil
 		}
 		return getEvent(ctx, txHash), nil
 	} else {
