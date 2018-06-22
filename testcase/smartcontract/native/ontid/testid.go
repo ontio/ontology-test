@@ -346,7 +346,13 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 	c.Args = []interface{}{RegIDAttrParam{
 		test_id,
 		pub,
-		nil,
+		[]Attribute{
+			Attribute{
+				nil,
+				[]byte{0},
+				[]byte{1},
+			},
+		},
 	}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
@@ -399,7 +405,7 @@ func testAttr(ctx *testframework.TestFrameworkContext) bool {
 				[]byte{0x01, 0x02},
 			},
 			Attribute{
-				[]byte("aatr2"),
+				[]byte("attr2"),
 				[]byte{2},
 				[]byte("abcd"),
 			},
