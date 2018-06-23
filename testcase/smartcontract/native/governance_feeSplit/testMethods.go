@@ -805,3 +805,32 @@ func InBlackList(ctx *testframework.TestFrameworkContext) bool {
 	fmt.Println("result is:", inBlackList)
 	return true
 }
+
+type WithdrawOngParam struct {
+	Path       string
+	PeerPubkey string
+}
+
+func WithdrawOng(ctx *testframework.TestFrameworkContext) bool {
+	data, err := ioutil.ReadFile("./params/WithdrawOng.json")
+	if err != nil {
+		ctx.LogError("ioutil.ReadFile failed %v", err)
+		return false
+	}
+	withdrawOngParam := new(WithdrawOngParam)
+	err = json.Unmarshal(data, withdrawOngParam)
+	if err != nil {
+		ctx.LogError("json.Unmarshal failed %v", err)
+		return false
+	}
+	user, ok := getAccount(ctx, withdrawOngParam.Path)
+	if !ok {
+		return false
+	}
+	ok = withdrawOng(ctx, user)
+	if !ok {
+		return false
+	}
+	waitForBlock(ctx)
+	return true
+}

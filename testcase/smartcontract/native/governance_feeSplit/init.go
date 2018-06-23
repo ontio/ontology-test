@@ -86,4 +86,5 @@ func TestGovernanceMethods() {
 	testframework.TFramework.RegTestCase("GetTotalStake", GetTotalStake)
 	testframework.TFramework.RegTestCase("GetPenaltyStake", GetPenaltyStake)
 	testframework.TFramework.RegTestCase("InBlackList", InBlackList)
+	testframework.TFramework.RegTestCase("WithdrawOng", WithdrawOng)
 }

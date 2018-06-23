@@ -126,6 +126,20 @@ func withdraw(ctx *testframework.TestFrameworkContext, user *account.Account, pe
 	return true
 }
 
+func withdrawOng(ctx *testframework.TestFrameworkContext, user *account.Account) bool {
+	params := &governance.WithdrawOngParam{
+		Address:        user.Address,
+	}
+	contractAddress := utils.GovernanceContractAddress
+	method := "withdrawOng"
+	_, err := ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, OntIDVersion,
+		contractAddress, method, []interface{}{params})
+	if err != nil {
+		ctx.LogError("invokeNativeContract error")
+	}
+	return true
+}
+
 func commitDpos(ctx *testframework.TestFrameworkContext, user *account.Account) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "commitDpos"
