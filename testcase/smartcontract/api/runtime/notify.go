@@ -16,8 +16,10 @@ using System.Numerics;
 
 public class HelloWorld : SmartContract
 {
-    [DisplayName("notify")]
-    public static event Action<string, string> Notify;
+    public delegate void PushDelegate(string operation,string msg);
+
+     [DisplayName("notify")]
+     public static event PushDelegate Notify;
 
     public static void Main()
     {
@@ -27,7 +29,7 @@ public class HelloWorld : SmartContract
 */
 
 func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
-	code := "00c56b61610568656c6c6f05776f726c64617c066e6f7469667953c168124e656f2e52756e74696d652e4e6f7469667961616c7566"
+	code := "00c56b61610568656c6c6f05776f726c64617c066e6f7469667953c1681553797374656d2e52756e74696d652e4e6f7469667961616c7566"
 	codeAddr, _ := utils.GetContractAddress(code)
 	signer, err := ctx.GetDefaultAccount()
 
