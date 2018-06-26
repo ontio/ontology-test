@@ -61,29 +61,5 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	ctx.LogInfo("TestRuntimLog invoke Tx:%s\n", txHash.ToHexString())
-	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
-	if err != nil {
-		ctx.LogError("TestInvokeSmartContract GetSmartContractEvent error:%s", err)
-		return false
-	}
-
-	ctx.LogInfo("======events log===== %+v", events)
-
-	return true
-
-	//transfer := events[0].States
-	//ctx.LogInfo("%+v", transfer)
-
-	//notify , ok := res.(map[string]interface{})
-	//if !ok {
-	//	ctx.LogError("TestLog res asset to map[string]interface{} error:%s", err)
-	//	return false
-	//}
-	//
-	//log := notify["Message"]
-	//if input !=log {
-	//	ctx.LogError("TestLog log error %s != %s", input, log)
-	//	return false
-	//}
 	return true
 }
