@@ -12,6 +12,7 @@ import (
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/smartcontract/service/native/global_params"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
+	"github.com/ontio/ontology/smartcontract/service/neovm"
 )
 
 func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
@@ -21,45 +22,46 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	initKey := "gasPrice"
+	initKeySet := append(neovm.GAS_TABLE_KEYS, initKey)
 	// query init parmas
-	initParms, err := getParam(ctx, global_params.ParamNameList{initKey})
-	if err != nil {
-		ctx.LogError("Get global params error, the value should initialize in genesis!")
-		return false
-	}
-	testKey := "init-key"
-	testKeyValue := "init-value"
-
-	ps, err := getParam(ctx, global_params.ParamNameList{testKey})
-	if err == nil {
-		_, p := ps.GetParam(testKey)
-		testKeyValue = p.Value + "1"
-	}
-
-	// add a global params
-	initParms.SetParam(&global_params.Param{testKey, testKeyValue})
-	// origin admin is origin operator
-	originOperator := originAdmin
-	setParam(ctx, originOperator, initParms)
-	// query init param, should cause error, because not create snapshot
-	ps, err = getParam(ctx, global_params.ParamNameList{testKey})
-	if err == nil {
-		_, p := ps.GetParam(testKey)
-		if p.Value == testKeyValue {
-			ctx.LogError("Get global params:%s error, the value should not take effect!", testKey)
+	initParams, err := getParam(ctx, global_params.ParamNameList(initKeySet))
+	for _, param := range initParams {
+		if param.Value == "" || err != nil {
+			ctx.LogError("Get global params error, the value should initialize in genesis!")
 			return false
 		}
+	}
+
+	testKey := "init-key"
+	testKeyValue := "init-value"
+	ps, err := getParam(ctx, global_params.ParamNameList{testKey})
+	if _, initParam := ps.GetParam(testKey); err != nil || initParam.Value == testKeyValue {
+		ctx.LogError("Get global params:%s : %s error, %v", testKey, initParam.Value, err)
+		return false
+	}
+	testKeyValue += "-test"
+
+	// add a global params
+	initParams.SetParam(global_params.Param{testKey, testKeyValue})
+	// origin admin is origin operator
+	originOperator := originAdmin
+	setParam(ctx, originOperator, initParams)
+	// query init param, param value is "", because not create snapshot
+	ps, err = getParam(ctx, global_params.ParamNameList{testKey})
+	if _, testParam := ps.GetParam(testKey); testParam.Value == testKeyValue || err != nil {
+		ctx.LogError("Get global params:%s error, the value should not take effect!", testKey)
+		return false
 	}
 	// create snapshot of init params
 	createSnapshot(ctx, originOperator)
 	// query init param, should not cause error
-	initParms, err = getParam(ctx, global_params.ParamNameList{testKey})
-	if err != nil {
-		ctx.LogError("Get global params:%s error: %s!", testKey, err)
+	initParams, err = getParam(ctx, global_params.ParamNameList{testKey})
+	if _, testParam := initParams.GetParam(testKey); testParam.Value != testKeyValue || err != nil {
+		ctx.LogError("Get global params:%s, value is %s, error: %s!", testKey, err)
 		return false
 	}
 	// origin admin set and get global params, should not cause error
-	globalParams, err := testGetAndSet(ctx, originOperator, "originOperator0", initParms)
+	globalParams, err := testGetAndSet(ctx, originOperator, "originOperator0", initParams)
 	if err != nil {
 		ctx.LogError("Origin operator operate global params error:%s", err)
 		return false
@@ -80,7 +82,7 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 	// newOperator set and get global params, should not cause error, because he is operator
 	globalParams, err = testGetAndSet(ctx, newOperator, "newOperator0", globalParams)
 	if err != nil {
-		ctx.LogError("New operator operate global params error: ", err)
+		ctx.LogError("New operator operate global params error: %s ", err)
 		return false
 	}
 	// originOperator set and get global param, should cause error, because he is not operator
@@ -130,7 +132,7 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 	//reset admin and operator
 	transferAdmin(ctx, newAdmin, originAdmin.Address)
 	acceptAdmin(ctx, originAdmin)
-	setOperator(ctx, originOperator, originAdmin.Address)
+	setOperator(ctx, originAdmin, originOperator.Address)
 	return true
 }
 
@@ -146,23 +148,24 @@ func testGetAndSet(ctx *testframework.TestFrameworkContext, account *account.Acc
 		return initParams, fmt.Errorf("query param failed: %s", err)
 	}
 	// compare to original param
-	if len(queriedParams) != len(initParams) {
-		return initParams, fmt.Errorf("query param failed: init param not equals genesis init param!")
+	if len(queriedParams) != len(paramNameList) {
+		return initParams, fmt.Errorf("query param failed: result num is not equals queried num!")
 	}
 	for index, param := range initParams {
 		if queriedParams[index].Key != param.Key || queriedParams[index].Value != param.Value {
-			return initParams, fmt.Errorf("query param failed: init param not equals genesis init param!")
+			return initParams, fmt.Errorf("query param failed: queried param %s : %s should not take effect!",
+				queriedParams[index].Key, queriedParams[index].Value, param.Key, param.Value)
 		}
 	}
 
 	// set global param
-	newParams := global_params.Params(make([]*global_params.Param, 0))
+	newParams := global_params.Params(make([]global_params.Param, 0))
 	timeStemp := time.Now().String()
 	for i := 0; i < len(initParams); i++ {
 		key := "test-key-" + keyword + "-" + strconv.Itoa(i) + timeStemp
 		value := "test-value-" + keyword + "-" + strconv.Itoa(i)
 		paramNameList = append(paramNameList, key)
-		newParams.SetParam(&global_params.Param{key, value})
+		newParams.SetParam(global_params.Param{key, value})
 	}
 	setParam(ctx, account, newParams)
 
@@ -181,11 +184,11 @@ func testGetAndSet(ctx *testframework.TestFrameworkContext, account *account.Acc
 		newParams.SetParam(v)
 	}
 	if len(newParams) != len(queriedParams) {
-		return newParams, fmt.Errorf("set param failed, the new param isn't effective!")
+		return initParams, fmt.Errorf("set param failed, the new param isn't effective!")
 	}
 	for _, param := range newParams {
-		if index, _ := queriedParams.GetParam(param.Key); index < 0 {
-			return newParams, fmt.Errorf("set param failed: the new param isn't effective!")
+		if index, queriedParam := queriedParams.GetParam(param.Key); index < 0 || queriedParam.Value != param.Value {
+			return initParams, fmt.Errorf("set param failed: result param value is not equal to queried value!")
 		}
 	}
 	return queriedParams, err
@@ -209,15 +212,15 @@ func setOperator(ctx *testframework.TestFrameworkContext, admin *account.Account
 	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
-func setParam(ctx *testframework.TestFrameworkContext, account *account.Account, params global_params.Params) {
-	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), account, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+func setParam(ctx *testframework.TestFrameworkContext, operator *account.Account, params global_params.Params) {
+	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), operator, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
 		utils.ParamContractAddress, "setGlobalParam", []interface{}{params})
 	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
 
-func createSnapshot(ctx *testframework.TestFrameworkContext, account *account.Account) {
+func createSnapshot(ctx *testframework.TestFrameworkContext, operator *account.Account) {
 	// create snapshot
-	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), account, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
+	ctx.Ont.Rpc.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), operator, global_params.VERSION_CONTRACT_GLOBAL_PARAMS,
 		utils.ParamContractAddress, "createSnapshot", []interface{}{})
 	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 }
@@ -232,7 +235,7 @@ func getParam(ctx *testframework.TestFrameworkContext, paramNameList global_para
 	if err != nil {
 		return nil, err
 	}
-	queriedParams := global_params.Params(make([]*global_params.Param, 0))
+	queriedParams := global_params.Params(make([]global_params.Param, 0))
 	data, err := hex.DecodeString(result.Result.(string))
 	if err != nil {
 		err = fmt.Errorf("get param error: decode result error!")
