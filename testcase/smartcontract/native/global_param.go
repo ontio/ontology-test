@@ -38,8 +38,9 @@ func TestGlobalParam(ctx *testframework.TestFrameworkContext) bool {
 	if _, initParam := ps.GetParam(testKey); err != nil || initParam.Value == testKeyValue {
 		ctx.LogError("Get global params:%s : %s error, %v", testKey, initParam.Value, err)
 		return false
+	} else {
+		testKeyValue = initParam.Value + "-test"
 	}
-	testKeyValue += "-test"
 
 	// add a global params
 	initParams.SetParam(global_params.Param{testKey, testKeyValue})
