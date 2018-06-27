@@ -1,6 +1,7 @@
 package ontid
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
@@ -9,9 +10,9 @@ import (
 
 	base58 "github.com/itchyny/base58-go"
 	"github.com/ontio/ontology-crypto/keypair"
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
+	"github.com/ontio/ontology/common/serialization"
 	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
@@ -203,11 +204,25 @@ func queryDDO(ctx *testframework.TestFrameworkContext) bool {
 		Method:  "getDDO",
 		Args:    []interface{}{[]byte(test_id)},
 	}
-	ok, buf := InvokeContract(ctx, c, true)
+	ok, res := InvokeContract(ctx, c, true)
 	if !ok {
 		return false
 	}
-	ctx.LogInfo(hex.EncodeToString(buf))
+
+	buf := bytes.NewBuffer(res)
+	keys, err := serialization.ReadVarBytes(buf)
+	if err != nil {
+		ctx.LogError("parse keys from DDO failed, %s", err)
+		return false
+	}
+	ctx.LogInfo("keys: %s", hex.EncodeToString(keys))
+
+	attr, err := serialization.ReadVarBytes(buf)
+	if err != nil {
+		ctx.LogError("parse attributes from DDO failed, %s", err)
+		return false
+	}
+	ctx.LogInfo("attributes: %s", hex.EncodeToString(attr))
 
 	return true
 }
@@ -249,32 +264,15 @@ func testRecovery(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
+	_, pub1, _ := keypair.GenerateKeyPair(keypair.PK_SM2, keypair.SM2P256V1)
+	tmp := keypair.SerializePublicKey(pub1)
+	c.Method = "addKey"
+	c.Args = []interface{}{AddKeyParam{test_id, tmp, addr0[:]}}
+	MultiSigInvoke(ctx, c, 1, pubs, user)
+
 	c.Method = "changeRecovery"
 	c.Args = []interface{}{ChangeRecParam{test_id, addr1, addr0}}
-
-	tx, err := ctx.Ont.Rpc.NewNativeInvokeTransaction(
-		ctx.GetGasPrice(),
-		ctx.GetGasLimit(),
-		0,
-		c.Address,
-		c.Method,
-		c.Args,
-	)
-	if err != nil {
-		ctx.LogError(err)
-		return false
-	}
-
-	err = sdkcom.MultiSignToTransaction(tx, 1, pubs, user)
-	if err != nil {
-		ctx.LogError("MultiSignToTransaction error: %s", err)
-		return false
-	}
-	txHash, err := ctx.Ont.Rpc.SendRawTransaction(tx)
-	if err != nil {
-		ctx.LogError("SendRawTransaction error: %s", err)
-	}
-	ok = getEvent(ctx, txHash)
+	MultiSigInvoke(ctx, c, 1, pubs, user)
 
 	return ok
 }
@@ -346,7 +344,13 @@ func regIDWithAttr(ctx *testframework.TestFrameworkContext) bool {
 	c.Args = []interface{}{RegIDAttrParam{
 		test_id,
 		pub,
-		nil,
+		[]Attribute{
+			Attribute{
+				nil,
+				[]byte{0},
+				[]byte{1},
+			},
+		},
 	}}
 	ok, _ = InvokeContract(ctx, c, false)
 	if ok {
@@ -399,7 +403,7 @@ func testAttr(ctx *testframework.TestFrameworkContext) bool {
 				[]byte{0x01, 0x02},
 			},
 			Attribute{
-				[]byte("aatr2"),
+				[]byte("attr2"),
 				[]byte{2},
 				[]byte("abcd"),
 			},

@@ -1,9 +1,13 @@
 package ontid
 
 import (
+	"encoding/hex"
 	"time"
 
+	"github.com/ontio/ontology-crypto/keypair"
+	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/testframework"
+	"github.com/ontio/ontology/account"
 	"github.com/ontio/ontology/common"
 )
 
@@ -69,11 +73,43 @@ func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract,
 			return false, nil
 		}
 
-		buf, ok := res.Result.([]byte)
+		str, ok := res.Result.(string)
 		if !ok {
 			ctx.LogError("error result value type")
 			return false, nil
 		}
+		ctx.LogInfo("result: %s", str)
+		buf, err := hex.DecodeString(str)
+		if err != nil {
+			ctx.LogError("error hex code")
+			return false, nil
+		}
 		return true, buf
 	}
+}
+
+func MultiSigInvoke(ctx *testframework.TestFrameworkContext, c *Contract, m uint16, pubs []keypair.PublicKey, user *account.Account) bool {
+	tx, err := ctx.Ont.Rpc.NewNativeInvokeTransaction(
+		ctx.GetGasPrice(),
+		ctx.GetGasLimit(),
+		0,
+		c.Address,
+		c.Method,
+		c.Args,
+	)
+	if err != nil {
+		ctx.LogError(err)
+		return false
+	}
+
+	err = sdkcom.MultiSignToTransaction(tx, m, pubs, user)
+	if err != nil {
+		ctx.LogError("MultiSignToTransaction error: %s", err)
+		return false
+	}
+	txHash, err := ctx.Ont.Rpc.SendRawTransaction(tx)
+	if err != nil {
+		ctx.LogError("SendRawTransaction error: %s", err)
+	}
+	return getEvent(ctx, txHash)
 }
