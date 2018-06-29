@@ -2,9 +2,15 @@ package jsonrpc
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"math"
+
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common/constants"
 	"github.com/ontio/ontology/common/serialization"
+	"github.com/ontio/ontology/consensus/vbft"
+	"github.com/ontio/ontology/consensus/vbft/config"
 	"github.com/ontio/ontology/core/payload"
 	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/smartcontract/service/native/ont"
@@ -196,4 +202,67 @@ func TestGetStorage(ctx *testframework.TestFrameworkContext) bool {
 	}
 	ctx.LogInfo("TestGetStorage %d\n", totalSupply)
 	return true
+}
+
+func TestGetVbftInfo(ctx *testframework.TestFrameworkContext) bool {
+	blkNum, err := ctx.Ont.Rpc.GetBlockCount()
+	if err != nil {
+		ctx.LogError("TestGetVbftInfo GetBlockCount error:%s", err)
+		return false
+	}
+	blk, err := ctx.Ont.Rpc.GetBlockByHeight(blkNum - 1)
+	if err != nil {
+		ctx.LogError("TestGetVbftInfo GetBlockByHeight error:%s", err)
+		return false
+	}
+	block, err := initVbftBlock(blk)
+	if err != nil {
+		ctx.LogError("TestGetVbftInfo initVbftBlock error:%s", err)
+		return false
+	}
+
+	var cfg vconfig.ChainConfig
+	if block.Info.NewChainConfig != nil {
+		cfg = *block.Info.NewChainConfig
+	} else {
+		var cfgBlock *types.Block
+		if block.Info.LastConfigBlockNum != math.MaxUint32 {
+			cfgBlock, err = ctx.Ont.Rpc.GetBlockByHeight(block.Info.LastConfigBlockNum)
+			if err != nil {
+				ctx.LogError("TestGetVbftInfo chainconfig GetBlockByHeight error:%s", err)
+				return false
+			}
+		}
+		blk, err := initVbftBlock(cfgBlock)
+		if err != nil {
+			ctx.LogError("TestGetVbftInfo initVbftBlock error:%s", err)
+			return false
+		}
+		if blk.Info.NewChainConfig == nil {
+			ctx.LogError("TestGetVbftInfo newchainconfig error:%s", err)
+			return false
+		}
+		cfg = *blk.Info.NewChainConfig
+	}
+	fmt.Printf("block vbft chainConfig, View:%d, N:%d, C:%d, BlockMsgDelay:%v, HashMsgDelay:%v, PeerHandshakeTimeout:%v, MaxBlockChangeView:%d, PosTable:%v\n",
+		cfg.View, cfg.N, cfg.C, cfg.BlockMsgDelay, cfg.HashMsgDelay, cfg.PeerHandshakeTimeout, cfg.MaxBlockChangeView, cfg.PosTable)
+	for _, p := range cfg.Peers {
+		fmt.Printf("peerInfo Index: %d, ID:%v\n", p.Index, p.ID)
+	}
+	return true
+}
+
+func initVbftBlock(block *types.Block) (*vbft.Block, error) {
+	if block == nil {
+		return nil, fmt.Errorf("nil block in initVbftBlock")
+	}
+
+	blkInfo := &vconfig.VbftBlockInfo{}
+	if err := json.Unmarshal(block.Header.ConsensusPayload, blkInfo); err != nil {
+		return nil, fmt.Errorf("unmarshal blockInfo: %s", err)
+	}
+	return &vbft.Block{
+		Block: block,
+		Info:  blkInfo,
+	}, nil
 }
