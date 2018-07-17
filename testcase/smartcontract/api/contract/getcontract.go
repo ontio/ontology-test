@@ -87,7 +87,7 @@ func TestGetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 2)
 	if err != nil {
 		ctx.LogError("TestGetContract - WaitForGenerateBlock error: %s", err)
 		return false

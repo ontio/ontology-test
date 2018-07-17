@@ -16,7 +16,7 @@ func TestOperationAdd(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestOperationAdd GetContractAddress error:%s", err)
 		return false
 	}
-	ctx.LogInfo("TestOperationAdd contact address:%s\n", codeAddress.ToHexString())
+	ctx.LogInfo("TestOperationAdd contact address:%s", codeAddress.ToHexString())
 	signer, err := ctx.GetDefaultAccount()
 	if err != nil {
 		ctx.LogError("TestOperationAdd GetDefaultAccount error:%s", err)
@@ -36,7 +36,7 @@ func TestOperationAdd(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestOperationAdd DeploySmartContract error:%s", err)
 		return false
 	}
-	ctx.LogInfo("DeployContract TxHash:%s\n", tx.ToHexString())
+	ctx.LogInfo("DeployContract TxHash:%s", tx.ToHexString())
 	//等待出块
 	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {

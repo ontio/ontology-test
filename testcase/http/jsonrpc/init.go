@@ -13,5 +13,5 @@ func TestRpc() {
 	testframework.TFramework.RegTestCase("TestGetSmartContract", TestGetSmartContract)
 	testframework.TFramework.RegTestCase("TestGetSmartContractEvent", TestGetSmartContractEvent)
 	testframework.TFramework.RegTestCase("TestGetStorage", TestGetStorage)
-	testframework.TFramework.RegTestCase("TestGetVbftInfo", TestGetVbftInfo)
+	//testframework.TFramework.RegTestCase("TestGetVbftInfo", TestGetVbftInfo)
 }
