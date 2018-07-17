@@ -5,5 +5,5 @@
   "WalletFile":"./wallet.dat",
   "Password":"wangbing",
   "GasPrice":0,
-  "GasLimit":10000000
+  "GasLimit":100000000
 }

@@ -93,7 +93,7 @@ func TestGetBlockHash(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestGetBlockByHash GetBlockHash error:%s", err)
 		return false
 	}
-	ctx.LogInfo("blkhash:%s", blockHash)
+	ctx.LogInfo("blkhash:%s", blockHash.ToHexString())
 	return true
 }
 

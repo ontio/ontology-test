@@ -8,6 +8,7 @@ import (
 
 func TestNative() {
 	testframework.TFramework.RegTestCase("TestOntTransfer", TestOntTransfer)
+	testframework.TFramework.RegTestCase("TestOntTransferMulti", TestOntTransferMulti)
 	testframework.TFramework.RegTestCase("TestWithdrawONG", TestWithdrawONG)
 	testframework.TFramework.RegTestCase("TestGlobalParam", TestGlobalParam)
 	testframework.TFramework.RegTestCase("TestAuth", auth.TestAuthContract)
