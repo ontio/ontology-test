@@ -12,7 +12,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(), signer, contractCodeAddress, []interface{}{})
+	txHash, err := ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(), signer, contractCodeAddress, []interface{}{})
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract InvokeNeoVMSmartContract error:%s", err)
 		return false
@@ -20,7 +20,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 
 	ctx.LogInfo("TestInvokeSmartContract txHash:%s\n", txHash.ToHexString())
 	//WaitForGenerateBlock
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract WaitForGenerateBlock error:%s", err)
 		return false
@@ -28,7 +28,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 
 	//Test GetStorageItem api
 	skey := "Hello"
-	svalue, err := ctx.Ont.Rpc.GetStorage(contractCodeAddress, []byte(skey))
+	svalue, err := ctx.Ont.GetStorage(contractCodeAddress.ToHexString(), []byte(skey))
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract GetStorageItem key:%s error:%s", skey, err)
 		return false
@@ -40,7 +40,7 @@ func TestInvokeSmartContract(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	//GetEventLog, to check the result of invoke
-	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	events, err := ctx.Ont.GetSmartContractEvent(txHash.ToHexString())
 	if err != nil {
 		ctx.LogError("TestInvokeSmartContract GetSmartContractEvent error:%s", err)
 		return false

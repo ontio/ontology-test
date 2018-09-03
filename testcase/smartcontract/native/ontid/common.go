@@ -1,13 +1,11 @@
 package ontid
 
 import (
-	"encoding/hex"
 	"time"
 
 	"github.com/ontio/ontology-crypto/keypair"
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/account"
+	sdk"github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology/common"
 )
 
@@ -18,12 +16,12 @@ type Contract struct {
 }
 
 func getEvent(ctx *testframework.TestFrameworkContext, txHash common.Uint256) bool {
-	_, err := ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err := ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("WaitForGenerateBlock error: %s", err)
 		return false
 	}
-	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	events, err := ctx.Ont.GetSmartContractEvent(txHash.ToHexString())
 	if err != nil {
 		ctx.LogError("GetSmartContractEvent error: %s", err)
 		return false
@@ -47,7 +45,7 @@ func getEvent(ctx *testframework.TestFrameworkContext, txHash common.Uint256) bo
 func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract, isPreInvoke bool) (bool, []byte) {
 	if !isPreInvoke {
 		user, _ := ctx.GetDefaultAccount()
-		txHash, err := ctx.Ont.Rpc.InvokeNativeContract(
+		txHash, err := ctx.Ont.Native.InvokeNativeContract(
 			ctx.GetGasPrice(),
 			ctx.GetGasLimit(),
 			user,
@@ -62,7 +60,7 @@ func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract,
 		}
 		return getEvent(ctx, txHash), nil
 	} else {
-		res, err := ctx.Ont.Rpc.PrepareInvokeNativeContract(
+		res, err := ctx.Ont.Native.PreExecInvokeNativeContract(
 			contract.Address,
 			0,
 			contract.Method,
@@ -73,23 +71,18 @@ func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract,
 			return false, nil
 		}
 
-		str, ok := res.Result.(string)
-		if !ok {
+		data, err := res.Result.ToByteArray()
+		if err != nil {
 			ctx.LogError("error result value type")
 			return false, nil
 		}
-		ctx.LogInfo("result: %s", str)
-		buf, err := hex.DecodeString(str)
-		if err != nil {
-			ctx.LogError("error hex code")
-			return false, nil
-		}
-		return true, buf
+		ctx.LogInfo("result: %s", data)
+		return true, data
 	}
 }
 
-func MultiSigInvoke(ctx *testframework.TestFrameworkContext, c *Contract, m uint16, pubs []keypair.PublicKey, user *account.Account) bool {
-	tx, err := ctx.Ont.Rpc.NewNativeInvokeTransaction(
+func MultiSigInvoke(ctx *testframework.TestFrameworkContext, c *Contract, m uint16, pubs []keypair.PublicKey, user *sdk.Account) bool {
+	tx, err := ctx.Ont.Native.NewNativeInvokeTransaction(
 		ctx.GetGasPrice(),
 		ctx.GetGasLimit(),
 		0,
@@ -102,12 +95,12 @@ func MultiSigInvoke(ctx *testframework.TestFrameworkContext, c *Contract, m uint
 		return false
 	}
 
-	err = sdkcom.MultiSignToTransaction(tx, m, pubs, user)
+	err = ctx.Ont.MultiSignToTransaction(tx, m, pubs, user)
 	if err != nil {
 		ctx.LogError("MultiSignToTransaction error: %s", err)
 		return false
 	}
-	txHash, err := ctx.Ont.Rpc.SendRawTransaction(tx)
+	txHash, err := ctx.Ont.SendTransaction(tx)
 	if err != nil {
 		ctx.LogError("SendRawTransaction error: %s", err)
 	}

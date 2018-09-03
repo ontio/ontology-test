@@ -61,9 +61,8 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
-
 		true,
 		code,
 		"TestGetBlock",
@@ -77,20 +76,20 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestGetBlock - WaitForGenerateBlock error: %s", err)
 		return false
 	}
 
-	height, err := ctx.Ont.Rpc.GetBlockCount()
+	height, err := ctx.Ont.GetCurrentBlockHeight()
 	if err != nil {
-		ctx.LogError("TestGetBlock - GetBlockCount error: %s", err)
+		ctx.LogError("TestGetBlock - GetCurrentBlockHeight error: %s", err)
 		return false
 	}
 
 	height -= 1
-	block, err := ctx.Ont.Rpc.GetBlockByHeight(height)
+	block, err := ctx.Ont.GetBlockByHeight(height)
 	if err != nil {
 		ctx.LogError("TestGetBlock GetBlockByHeight error: %s", err)
 		return false
@@ -98,7 +97,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 
 	header := block.Header
 	codeHash, _ := utils.GetContractAddress(code)
-	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeHash,
 		[]interface{}{int(height)})
@@ -108,7 +107,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestGetBlock WaitForGenerateBlock error: %s", err)
 		return false
@@ -119,7 +118,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	vmHash, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("hash"))
+	vmHash, err := ctx.Ont.GetStorage(codeHash.ToHexString(), []byte("hash"))
 	if err != nil {
 		ctx.LogError("TestGetBlock - GetStorage1111 error: %s", err)
 		return false
@@ -132,7 +131,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	index, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("index"))
+	index, err := ctx.Ont.GetStorage(codeHash.ToHexString(), []byte("index"))
 	if err != nil {
 		ctx.LogError("TestGetBlock - GetStorage4 error: %s", err)
 		return false
@@ -147,7 +146,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 
 	return true
 
-	merker, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("merkRoot"))
+	merker, err := ctx.Ont.GetStorage(codeHash.ToHexString(), []byte("merkRoot"))
 	if err != nil {
 		ctx.LogError("TestGetBlock - GetStorage error: %s", err)
 		return false
@@ -159,7 +158,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	bookkeeper, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("nextConsensus"))
+	bookkeeper, err := ctx.Ont.GetStorage(codeHash.ToHexString(), []byte("nextConsensus"))
 	if err != nil {
 		ctx.LogError("TestGetBlock - GetStorage error: %s", err)
 		return false
@@ -171,7 +170,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	prevHash, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("prevHash"))
+	prevHash, err := ctx.Ont.GetStorage(codeHash.ToHexString(), []byte("prevHash"))
 	if err != nil {
 		ctx.LogError("TestGetBlock - GetStorage error: %s", err)
 		return false
@@ -183,7 +182,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	timeStamp, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("timeStamp"))
+	timeStamp, err := ctx.Ont.GetStorage(codeHash.ToHexString(), []byte("timeStamp"))
 	if err != nil {
 		ctx.LogError("TestGetBlock - GetStorage error: %s", err)
 		return false
@@ -195,7 +194,7 @@ func TestGetBlock(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	version, err := ctx.Ont.Rpc.GetStorage(codeHash, []byte("version"))
+	version, err := ctx.Ont.GetStorage(codeHash.ToHexString(), []byte("version"))
 	if err != nil {
 		ctx.LogError("TestGetBlock - GetStorage error: %s", err)
 		return false

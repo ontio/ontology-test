@@ -3,7 +3,6 @@ package datatype
 import (
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
@@ -17,7 +16,7 @@ func TestReturnType(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestReturnType GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		false,
 		code,
@@ -32,7 +31,7 @@ func TestReturnType(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestReturnType WaitForGenerateBlock error:%s", err)
 		return false
@@ -44,35 +43,46 @@ func TestReturnType(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testReturnType(ctx *testframework.TestFrameworkContext, code common.Address, args []int, arg3 []byte) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		code,
 		[]interface{}{args[0], args[1], arg3},
-		[]interface{}{sdkcom.NEOVM_TYPE_INTEGER, sdkcom.NEOVM_TYPE_INTEGER, sdkcom.NEOVM_TYPE_BYTE_ARRAY},
 	)
 	if err != nil {
 		ctx.LogError("TestReturnType InvokeSmartContract error:%s", err)
 		return false
 	}
 
-	rt, ok := res.([]interface{})
-	if !ok {
-		ctx.LogError("%s assert to array failed.", res)
+	rt, err := res.Result.ToArray()
+	if err != nil {
+		ctx.LogError("TestReturnType Result.ToArray error:%s", err)
 		return false
 	}
-
-	err = ctx.AssertToInt(rt[0], args[0])
+	a1, err := rt[0].ToInteger()
+	if err != nil {
+		ctx.LogError("TestReturnType Result.ToByteArray error:%s", err)
+		return false
+	}
+	err = ctx.AssertToInt(a1, args[0])
 	if err != nil {
 		ctx.LogError("TestReturnType AssertToInt error:%s", err)
 		return false
 	}
-
-	err = ctx.AssertToInt(rt[1], args[1])
+	a2, err := rt[1].ToInteger()
+	if err != nil {
+		ctx.LogError("TestReturnType Result.ToByteArray error:%s", err)
+		return false
+	}
+	err = ctx.AssertToInt(a2, args[1])
 	if err != nil {
 		ctx.LogError("TestReturnType AssertToInt error:%s", err)
 		return false
 	}
-
-	err = ctx.AssertToByteArray(rt[2], arg3)
+	a3, err := rt[2].ToByteArray()
+	if err != nil {
+		ctx.LogError("TestReturnType ToByteArray error:%s", err)
+		return false
+	}
+	err = ctx.AssertToByteArray(a3, arg3)
 	if err != nil {
 		ctx.LogError("AssertToByteArray error:%s", err)
 		return false

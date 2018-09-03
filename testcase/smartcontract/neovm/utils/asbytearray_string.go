@@ -3,7 +3,6 @@ package utils
 import (
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 )
@@ -16,7 +15,7 @@ func TestAsByteArrayString(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestAsByteArrayString GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		false,
 		code,
@@ -31,23 +30,27 @@ func TestAsByteArrayString(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestAsByteArrayString WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
 	input := "Hello World"
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		codeAddress,
 		[]interface{}{input},
-		sdkcom.NEOVM_TYPE_BYTE_ARRAY,
 	)
 	if err != nil {
 		ctx.LogError("TestAsByteArrayString InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToByteArray(res, []byte(input))
+	resValue,err := res.Result.ToByteArray()
+	if err != nil {
+		ctx.LogError("TestAsByteArrayString Result.ToByteArray error:%s", err)
+		return false
+	}
+	err = ctx.AssertToByteArray(resValue, []byte(input))
 	if err != nil {
 		ctx.LogError("TestAsByteArrayString test failed %s", err)
 		return false

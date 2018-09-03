@@ -56,9 +56,8 @@ func main() {
 	}
 
 	ontSdk := sdk.NewOntologySdk()
-	ontSdk.Rpc.SetAddress(common.DefConfig.JsonRpcAddress)
-
-	wallet, err := ontSdk.OpenOrCreateWallet(common.DefConfig.WalletFile)
+	ontSdk.NewRpcClient().SetAddress(common.DefConfig.JsonRpcAddress)
+	wallet, err := ontSdk.OpenWallet(common.DefConfig.WalletFile)
 	if err != nil {
 		log4.Error("OpenOrCreateWallet %s error:%s", common.DefConfig.WalletFile, err)
 		return

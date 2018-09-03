@@ -32,65 +32,65 @@ func TestOntTransfer(ctx *testframework.TestFrameworkContext) bool {
 	}
 	user := ctx.NewAccount()
 
-	adminBalanceBefore, err := ctx.Ont.Rpc.GetBalance(admin.Address)
+	adminBalanceBefore, err := ctx.Ont.Native.Ont.BalanceOf(admin.Address)
 	if err != nil {
 		ctx.LogError("Rpc.GetBalance error:%s", err)
 		return false
 	}
 
-	if adminBalanceBefore.Ont == 0 {
+	if adminBalanceBefore == 0 {
 		ctx.LogWarn("TestOntTransfer failed. Balance of admin is 0")
 		return false
 	}
-	ctx.LogInfo("adminBalanceBefore %d", adminBalanceBefore.Ont)
+	ctx.LogInfo("adminBalanceBefore %d", adminBalanceBefore)
 
-	userBalanceBefore, err := ctx.Ont.Rpc.GetBalance(user.Address)
+	userBalanceBefore, err := ctx.Ont.Native.Ont.BalanceOf(user.Address)
 	if err != nil {
 		ctx.LogError("Rpc.GetBalance error:%s", err)
 		return false
 	}
-	ctx.LogInfo("userBalanceBefore %d", userBalanceBefore.Ont)
+	ctx.LogInfo("userBalanceBefore %d", userBalanceBefore)
 
 	amount := uint64(100)
-	_, err = ctx.Ont.Rpc.Transfer(ctx.GetGasPrice(), ctx.GetGasLimit(), "ONT", admin, user.Address, amount)
+	_, err = ctx.Ont.Native.Ont.Transfer(ctx.GetGasPrice(), ctx.GetGasLimit(), admin, user.Address, amount)
 	if err != nil {
 		ctx.LogError("Rpc.Transfer error:%s", err)
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
-	adminBalanceAfter, err := ctx.Ont.Rpc.GetBalance(admin.Address)
+	adminBalanceAfter, err := ctx.Ont.Native.Ont.BalanceOf(admin.Address)
 	if err != nil {
 		if err != nil {
 			ctx.LogError("Rpc.GetBalance error:%s", err)
 			return false
 		}
 	}
-	ctx.LogInfo("adminBalanceAfter :%d", adminBalanceAfter.Ont)
+	ctx.LogInfo("adminBalanceAfter :%d", adminBalanceAfter)
 
-	userBalanceAfter, err := ctx.Ont.Rpc.GetBalance(user.Address)
+	userBalanceAfter, err := ctx.Ont.Native.Ont.BalanceOf(user.Address)
 	if err != nil {
 		ctx.LogError("Rpc.GetBalance error:%s", err)
 		return false
 	}
-	ctx.LogInfo("userBalanceAfter :%d", userBalanceAfter.Ont)
+	ctx.LogInfo("userBalanceAfter :%d", userBalanceAfter)
 
 	//Assert admin balance
-	adminRes := adminBalanceBefore.Ont - amount
-	if adminRes != adminBalanceAfter.Ont {
-		ctx.LogError("TestOntTransfer failed. Admin balance after transfer %d != %d", adminBalanceAfter.Ont, adminRes)
+	adminRes := adminBalanceBefore - amount
+	if adminRes != adminBalanceAfter {
+		ctx.LogError("TestOntTransfer failed. Admin balance after transfer %d != %d", adminBalanceAfter, adminRes)
 		return false
 	}
 
 	//Assert user balance
-	userRes := userBalanceBefore.Ont + amount
-	if userRes != userBalanceAfter.Ont {
-		ctx.LogError("TestOntTransfer failed. User balance after transfer %d != %d", userBalanceAfter.Ont, userRes)
+	userRes := userBalanceBefore + amount
+	if userRes != userBalanceAfter {
+		ctx.LogError("TestOntTransfer failed. User balance after transfer %d != %d", userBalanceAfter, userRes)
 		return false
 	}
 	return true

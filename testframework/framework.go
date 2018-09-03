@@ -23,7 +23,6 @@ import (
 	"fmt"
 	log4 "github.com/alecthomas/log4go"
 	sdk "github.com/ontio/ontology-go-sdk"
-	"github.com/ontio/ontology/account"
 	"reflect"
 	"time"
 )
@@ -49,7 +48,7 @@ type TestFramework struct {
 	//OntologySdk object
 	ont *sdk.OntologySdk
 	//OntWallet object
-	wallet account.Client
+	wallet *sdk.Wallet
 	//Callback func before running test
 	before func(ctx *TestFrameworkContext)
 	//Callback func After running test
@@ -141,13 +140,13 @@ func (this *TestFramework) SetOntSdk(ont *sdk.OntologySdk) {
 }
 
 //SetWallet wallet instance to test framework
-func (this *TestFramework) SetWallet(wallet account.Client) {
+func (this *TestFramework) SetWallet(wallet *sdk.Wallet) {
 	this.wallet = wallet
 }
 
 //onTestStart invoke at the beginning of test
 func (this *TestFramework) onTestStart() {
-	version, _ := this.ont.Rpc.GetVersion()
+	version, _ := this.ont.GetVersion()
 	log4.Info("===============================================================")
 	log4.Info("-------Ontology Test Start Version:%s", version)
 	log4.Info("===============================================================")

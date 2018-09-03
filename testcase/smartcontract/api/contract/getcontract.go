@@ -55,7 +55,7 @@ func TestGetContract(ctx *testframework.TestFrameworkContext) bool {
 
 	codeA := "53c56b6c766b00527ac4616c766b00c361681d53797374656d2e426c6f636b636861696e2e476574436f6e747261637461681b4f6e746f6c6f67792e436f6e74726163742e4765745363726970746c766b51527ac461681953797374656d2e53746f726167652e476574436f6e74657874067363726970746c766b51c3615272681253797374656d2e53746f726167652e50757461006c766b52527ac46203006c766b52c3616c7566"
 	codeAAddr, _ := utils.GetContractAddress(codeA)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		codeA,
@@ -72,7 +72,7 @@ func TestGetContract(ctx *testframework.TestFrameworkContext) bool {
 
 	codeB := "51c56b610c48656c6c6f20576f726c64216c766b00527ac46203006c766b00c3616c7566"
 	codeBAddr, _ := utils.GetContractAddress(codeB)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		codeB,
@@ -87,13 +87,13 @@ func TestGetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 2)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 2)
 	if err != nil {
 		ctx.LogError("TestGetContract - WaitForGenerateBlock error: %s", err)
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAAddr,
 		[]interface{}{codeBAddr[:]})
@@ -103,7 +103,7 @@ func TestGetContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	script, err := ctx.Ont.Rpc.GetStorage(codeAAddr, []byte("script"))
+	script, err := ctx.Ont.GetStorage(codeAAddr.ToHexString(), []byte("script"))
 	if err != nil {
 		ctx.LogError("TestGetContract - GetStorage error: %s", err)
 		return false

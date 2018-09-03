@@ -51,7 +51,7 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		codeA,
@@ -66,7 +66,7 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestCallingScriptHash WaitForGenerateBlock error:%s", err)
 		return false
@@ -75,7 +75,7 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 	codeB := "51c56b616167aed4b6ec4c8987ff7f79af45af88a3139ed10c7d6c766b00527ac461681953797374656d2e53746f726167652e476574436f6e746578740a63616c6c5363726970746c766b00c3615272681253797374656d2e53746f726167652e50757461616c7566"
 	codeAddressB, _ := utils.GetContractAddress(codeB)
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		codeB,
@@ -90,13 +90,13 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestCallingScriptHash WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAddressB,
 		[]interface{}{})
@@ -106,13 +106,13 @@ func TestCallingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestCallingScriptHash WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
-	callScript, err := ctx.Ont.Rpc.GetStorage(codeAddressB, []byte("callScript"))
+	callScript, err := ctx.Ont.GetStorage(codeAddressB.ToHexString(), []byte("callScript"))
 	if err != nil {
 		ctx.LogError("TestCallingScriptHash - GetStorage error: %s", err)
 		return false

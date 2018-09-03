@@ -3,7 +3,6 @@ package executionengine
 import (
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 )
@@ -33,7 +32,7 @@ func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		code,
@@ -48,25 +47,28 @@ func TestExecutingScriptHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestExecutingScriptHash WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		codeAddress,
 		[]interface{}{},
-		sdkcom.NEOVM_TYPE_BYTE_ARRAY,
 	)
 	if err != nil {
 		ctx.LogError("TestExecutingScriptHash error: %s", err)
 		return false
 	}
+	resValue, err := res.Result.ToByteArray()
+	if err != nil {
+		ctx.LogError("TestExecutingScriptHash Result.ToByteArray error: %s", err)
+		return false
+	}
+	ctx.LogInfo("TestExecutingScriptHash res: %s", resValue)
 
-	ctx.LogInfo("TestExecutingScriptHash res: %s", res)
-
-	err = ctx.AssertToByteArray(res, codeAddress[:])
+	err = ctx.AssertToByteArray(resValue, codeAddress[:])
 	if err != nil {
 		ctx.LogError("AssertToByteArray error:%s", err)
 		return false

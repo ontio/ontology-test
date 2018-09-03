@@ -38,7 +38,7 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	txHash, err := ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		code,
@@ -53,7 +53,7 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestGetTxType WaitForGenerateBlock error: %s", err)
 		return false
@@ -61,7 +61,7 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 
 	code = "53c56b6c766b00527ac4616c766b00c361682053797374656d2e426c6f636b636861696e2e4765745472616e73616374696f6e6c766b51527ac461681953797374656d2e53746f726167652e476574436f6e74657874067478547970656c766b51c361681c4f6e746f6c6f67792e5472616e73616374696f6e2e47657454797065615272681253797374656d2e53746f726167652e50757461006c766b52527ac46203006c766b52c3616c7566"
 	codeAddr, _ := utils.GetContractAddress(code)
-	txHash, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	txHash, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 
 		true,
@@ -76,13 +76,13 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestGetTxType DeploySmartContract error: %s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestGetTxType WaitForGenerateBlock error: %s", err)
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAddr,
 		[]interface{}{txHash.ToArray()})
@@ -92,7 +92,7 @@ func TestGetTxType(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txType, err := ctx.Ont.Rpc.GetStorage(codeAddr, []byte("txType"))
+	txType, err := ctx.Ont.GetStorage(codeAddr.ToHexString(), []byte("txType"))
 	if err != nil {
 		ctx.LogError("TestGetTxType - GetStorage error: %s", err)
 		return false

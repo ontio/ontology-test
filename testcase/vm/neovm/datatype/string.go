@@ -3,7 +3,6 @@ package datatype
 import (
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 )
@@ -16,7 +15,7 @@ func TestString(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestString GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 
 		false,
@@ -32,21 +31,25 @@ func TestString(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestString WaitForGenerateBlock error:%s", err)
 		return false
 	}
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		codeAddress,
 		[]interface{}{},
-		sdkcom.NEOVM_TYPE_STRING,
 	)
 	if err != nil {
 		ctx.LogError("TestString InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToString(res, "Hello World")
+	resValue, err := res.Result.ToString()
+	if err != nil {
+		ctx.LogError("TestString Result.ToString error:%s", err)
+		return false
+	}
+	err = ctx.AssertToString(resValue, "Hello World")
 	if err != nil {
 		ctx.LogError("TestString test failed %s", err)
 		return false

@@ -1,27 +1,21 @@
 package auth
 
 import (
+	"crypto/rand"
+	"crypto/sha256"
 	"fmt"
+	"github.com/itchyny/base58-go"
+	"github.com/ontio/ontology-crypto/keypair"
+	sdk "github.com/ontio/ontology-go-sdk"
+	sdkutils "github.com/ontio/ontology-go-sdk/utils"
+	"github.com/ontio/ontology-test/testframework"
+	"github.com/ontio/ontology/common"
+	Auth "github.com/ontio/ontology/smartcontract/service/native/auth"
+	"github.com/ontio/ontology/smartcontract/service/native/utils"
+	"golang.org/x/crypto/ripemd160"
 	"io"
 	"math/big"
 	"time"
-
-	//"time"
-	"crypto/rand"
-	"crypto/sha256"
-
-	base58 "github.com/itchyny/base58-go"
-	"github.com/ontio/ontology-crypto/keypair"
-	"github.com/ontio/ontology-test/testframework"
-	"github.com/ontio/ontology/account"
-	"github.com/ontio/ontology/common"
-	//"github.com/ontio/ontology/common"
-	sdkutils "github.com/ontio/ontology-go-sdk/utils"
-	//"github.com/ontio/ontology/core/genesis"
-	Auth "github.com/ontio/ontology/smartcontract/service/native/auth"
-
-	"github.com/ontio/ontology/smartcontract/service/native/utils"
-	"golang.org/x/crypto/ripemd160"
 )
 
 var (
@@ -30,11 +24,11 @@ var (
 	p2         = genOntID(rand.Reader)
 	p3         = genOntID(rand.Reader)
 	p4         = genOntID(rand.Reader)
-	admin      = account.NewAccount("SHA256withECDSA")
-	a1         = account.NewAccount("SHA256withECDSA")
-	a2         = account.NewAccount("SHA256withECDSA")
-	a3         = account.NewAccount("SHA256withECDSA")
-	a4         = account.NewAccount("SHA256withECDSA")
+	admin      = sdk.NewAccount()
+	a1         = sdk.NewAccount()
+	a2         = sdk.NewAccount()
+	a3         = sdk.NewAccount()
+	a4         = sdk.NewAccount()
 )
 
 var contractAddr common.Address
@@ -148,13 +142,18 @@ func setup(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	//get default user's balance
-	userBalance, err := ctx.Ont.Rpc.GetBalance(user.Address)
+	userOntBalance, err := ctx.Ont.Native.Ont.BalanceOf(user.Address)
 	if err != nil {
 		ctx.LogError("cannot get user's balance: ", err)
 		return false
 	}
-	ctx.LogInfo("user's ong balance is %d", userBalance.Ong)
-	ctx.LogInfo("user's ont balance is %d", userBalance.Ont)
+	userOngBalance, err := ctx.Ont.Native.Ong.BalanceOf(user.Address)
+	if err != nil {
+		ctx.LogError("cannot get user's balance: ", err)
+		return false
+	}
+	ctx.LogInfo("user's ong balance is %d", userOngBalance)
+	ctx.LogInfo("user's ont balance is %d", userOntBalance)
 
 	ret := deployAppContract(ctx, user)
 	if !ret {
@@ -212,7 +211,7 @@ func genOntID(rand io.Reader) []byte {
 	return []byte(idString)
 }
 
-func deployAppContract(ctx *testframework.TestFrameworkContext, user *account.Account) bool {
+func deployAppContract(ctx *testframework.TestFrameworkContext, user *sdk.Account) bool {
 	/*
 		code, err := ioutil.ReadFile("./contract.nvm")
 		if err != nil {
@@ -230,7 +229,7 @@ func deployAppContract(ctx *testframework.TestFrameworkContext, user *account.Ac
 		ctx.LogError("depolyAppContract GetDefaultAccount error:%s", err)
 		return false
 	}
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	txHash, err := ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		contractCode,
@@ -250,7 +249,7 @@ func deployAppContract(ctx *testframework.TestFrameworkContext, user *account.Ac
 		return false
 	}
 	//WaitForGenerateBlock
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestDeploySmartContract WaitForGenerateBlock error:%s", err)
 		return false
@@ -266,11 +265,11 @@ type Contract struct {
 	Args    []interface{}
 }
 
-func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract, user *account.Account, native bool) bool {
+func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract, user *sdk.Account, native bool) bool {
 	var txHash common.Uint256
 	var err error
 	if native {
-		txHash, err = ctx.Ont.Rpc.InvokeNativeContract(
+		txHash, err = ctx.Ont.Native.InvokeNativeContract(
 			ctx.GetGasPrice(),
 			ctx.GetGasLimit(),
 			user,
@@ -280,7 +279,7 @@ func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract,
 			contract.Args,
 		)
 	} else {
-		txHash, err = ctx.Ont.Rpc.InvokeNeoVMContract(
+		txHash, err = ctx.Ont.NeoVM.InvokeNeoVMContract(
 			ctx.GetGasPrice(),
 			ctx.GetGasLimit(),
 			user,
@@ -293,13 +292,13 @@ func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract,
 		ctx.LogError(err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 2)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 2)
 	if err != nil {
 		ctx.LogError("WaitForGenerateBlock error: %s", err)
 		return false
 	}
 
-	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	events, err := ctx.Ont.GetSmartContractEvent(txHash.ToHexString())
 	if err != nil {
 		ctx.LogError("GetSmartContractEvent error: %s", err)
 		return false
@@ -318,7 +317,7 @@ func InvokeContract(ctx *testframework.TestFrameworkContext, contract *Contract,
 	}
 }
 
-func regOntID(ctx *testframework.TestFrameworkContext, ontID []byte, user *account.Account) bool {
+func regOntID(ctx *testframework.TestFrameworkContext, ontID []byte, user *sdk.Account) bool {
 	pubKey := keypair.SerializePublicKey(user.PublicKey)
 	param := &Param{
 		ontID, pubKey,
@@ -331,7 +330,7 @@ func regOntID(ctx *testframework.TestFrameworkContext, ontID []byte, user *accou
 	return InvokeContract(ctx, contract, user, true)
 }
 
-func initContractAdmin(ctx *testframework.TestFrameworkContext, user *account.Account) bool {
+func initContractAdmin(ctx *testframework.TestFrameworkContext, user *sdk.Account) bool {
 	//prepare invoke param
 	contract := &Contract{
 		Address: (contractAddr),
@@ -341,7 +340,7 @@ func initContractAdmin(ctx *testframework.TestFrameworkContext, user *account.Ac
 	return InvokeContract(ctx, contract, user, false)
 }
 
-func callFunc(ctx *testframework.TestFrameworkContext, user *account.Account, caller []byte, fn string) bool {
+func callFunc(ctx *testframework.TestFrameworkContext, user *sdk.Account, caller []byte, fn string) bool {
 	contract := &Contract{
 		Address: contractAddr,
 		Method:  "",
@@ -349,7 +348,7 @@ func callFunc(ctx *testframework.TestFrameworkContext, user *account.Account, ca
 	}
 	return InvokeContract(ctx, contract, user, false)
 }
-func assignFuncsToRole(ctx *testframework.TestFrameworkContext, user *account.Account, funcs []string, role string) bool {
+func assignFuncsToRole(ctx *testframework.TestFrameworkContext, user *sdk.Account, funcs []string, role string) bool {
 	//prepare invoke param
 	param := &Auth.FuncsToRoleParam{
 		ContractAddr: contractAddr,
@@ -366,7 +365,7 @@ func assignFuncsToRole(ctx *testframework.TestFrameworkContext, user *account.Ac
 	return InvokeContract(ctx, contract, user, true)
 }
 
-func assignOntIDsToRole(ctx *testframework.TestFrameworkContext, user *account.Account, persons [][]byte, role string) bool {
+func assignOntIDsToRole(ctx *testframework.TestFrameworkContext, user *sdk.Account, persons [][]byte, role string) bool {
 	param := &Auth.OntIDsToRoleParam{
 		ContractAddr: contractAddr,
 		AdminOntID:   adminOntID,
@@ -382,7 +381,7 @@ func assignOntIDsToRole(ctx *testframework.TestFrameworkContext, user *account.A
 	return InvokeContract(ctx, contract, user, true)
 }
 
-func verifyToken(ctx *testframework.TestFrameworkContext, user *account.Account, caller []byte, fn string) bool {
+func verifyToken(ctx *testframework.TestFrameworkContext, user *sdk.Account, caller []byte, fn string) bool {
 	param := &Auth.VerifyTokenParam{
 		ContractAddr: contractAddr,
 		Caller:       caller,
@@ -397,7 +396,7 @@ func verifyToken(ctx *testframework.TestFrameworkContext, user *account.Account,
 	return InvokeContract(ctx, contract, user, true)
 }
 
-func delegate(ctx *testframework.TestFrameworkContext, user *account.Account, from, to []byte, role string, period uint64) bool {
+func delegate(ctx *testframework.TestFrameworkContext, user *sdk.Account, from, to []byte, role string, period uint64) bool {
 	param := &Auth.DelegateParam{
 		ContractAddr: contractAddr,
 		From:         from,
@@ -415,7 +414,7 @@ func delegate(ctx *testframework.TestFrameworkContext, user *account.Account, fr
 	return InvokeContract(ctx, contract, user, true)
 }
 
-func withdraw(ctx *testframework.TestFrameworkContext, user *account.Account, from, to []byte,
+func withdraw(ctx *testframework.TestFrameworkContext, user *sdk.Account, from, to []byte,
 	role string) bool {
 	param := &Auth.WithdrawParam{
 		ContractAddr: contractAddr,

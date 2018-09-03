@@ -52,7 +52,7 @@ func TestGetTxHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	txHash, err := ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		code,
@@ -67,7 +67,7 @@ func TestGetTxHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestGetTxHash WaitForGenerateBlock error: %s", err)
 		return false
@@ -75,7 +75,7 @@ func TestGetTxHash(ctx *testframework.TestFrameworkContext) bool {
 
 	code = "52c56b6c766b00527ac4616c766b00c361682053797374656d2e426c6f636b636861696e2e4765745472616e73616374696f6e6c766b51527ac461681953797374656d2e53746f726167652e476574436f6e74657874067478486173686c766b51c361681a53797374656d2e5472616e73616374696f6e2e47657448617368615272681253797374656d2e53746f726167652e50757461616c7566"
 	codeAddr, _ := utils.GetContractAddress(code)
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 
 		true,
@@ -86,13 +86,13 @@ func TestGetTxHash(ctx *testframework.TestFrameworkContext) bool {
 		"",
 		"")
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestGetTxHash WaitForGenerateBlock error: %s", err)
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAddr,
 		[]interface{}{txHash.ToArray()})
@@ -102,13 +102,13 @@ func TestGetTxHash(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestGetTxHash WaitForGenerateBlock error: %s", err)
 		return false
 	}
 
-	hash, err := ctx.Ont.Rpc.GetStorage(codeAddr, []byte("txHash"))
+	hash, err := ctx.Ont.GetStorage(codeAddr.ToHexString(), []byte("txHash"))
 	if err != nil {
 		ctx.LogError("TestGetTxHash - GetStorage error: %s", err)
 		return false

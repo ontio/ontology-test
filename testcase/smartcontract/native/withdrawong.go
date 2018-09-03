@@ -27,74 +27,78 @@ func TestWithdrawONG(ctx *testframework.TestFrameworkContext) bool {
 	defAccount, _ := ctx.GetDefaultAccount()
 	newAccount := ctx.NewAccount()
 
-	balanceBefore, err := ctx.Ont.Rpc.GetBalance(defAccount.Address)
+	balanceBefore, err := ctx.Ont.Native.Ont.BalanceOf(defAccount.Address)
 	if err != nil {
 		ctx.LogError("TestWithdrawONG GetBalance error:%s", err)
 		return false
 	}
-	if balanceBefore.Ont == 0 {
+	if balanceBefore == 0 {
 		ctx.LogError("TestWithdrawONG ont balance = 0")
 		return false
 	}
 
-	ctx.LogInfo("TestWithdrawONG Balance ONT:%d ONG:%d", balanceBefore.Ont, balanceBefore.Ong)
+	ctx.LogInfo("TestWithdrawONG Balance ONT:%d", balanceBefore)
 
 	amount := uint64(100000)
-	if balanceBefore.Ont < amount {
-		amount = balanceBefore.Ont
+	if balanceBefore < amount {
+		amount = balanceBefore
 	}
-	_, err = ctx.Ont.Rpc.Transfer(ctx.GetGasPrice(), ctx.GetGasLimit(), "ont", defAccount, newAccount.Address, 10000)
+	_, err = ctx.Ont.Native.Ont.Transfer(ctx.GetGasPrice(), ctx.GetGasLimit(),  defAccount, newAccount.Address, 10000)
 	if err != nil {
 		ctx.LogError("TestWithdrawONG Transfer ont error:%s", err)
 		return false
 	}
-	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 
-	unBoungONG, err := ctx.Ont.Rpc.UnboundONG(defAccount.Address)
+
+	ongBalanceBefor, err := ctx.Ont.Native.Ong.BalanceOf(defAccount.Address)
+	if err != nil {
+		ctx.LogError("TestWithdrawONG BalanceOf ong error:%s", err)
+		return false
+	}
+	unBoundONG, err := ctx.Ont.Native.Ong.UnboundONG(defAccount.Address)
 	if err != nil {
 		ctx.LogError("TestWithdrawONG UnboundONG error:%s", err)
 		return false
 	}
-	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 
-	ctx.LogInfo("TestWithdrawONG UnboundONG:%d", unBoungONG)
-	if unBoungONG == 0 {
+	ctx.LogInfo("TestWithdrawONG UnboundONG:%d", unBoundONG)
+	if unBoundONG == 0 {
 		ctx.LogError("TestWithdrawONG UnboundONG = 0")
 		return false
 	}
 
-	withdrawAmount := unBoungONG - 1
-	_, err = ctx.Ont.Rpc.WithdrawONG(ctx.GetGasPrice(), ctx.GetGasLimit(), defAccount, withdrawAmount)
+	withdrawAmount := unBoundONG - 1
+	_, err = ctx.Ont.Native.Ong.WithdrawONG(ctx.GetGasPrice(), ctx.GetGasLimit(), defAccount, withdrawAmount)
 	if err != nil {
 		ctx.LogError("TestWithdrawONG WithdrawONG error:%s", err)
 		return false
 	}
 
-	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 
-	unBoungONGAfter, err := ctx.Ont.Rpc.UnboundONG(defAccount.Address)
+	unBoundONGAfter, err := ctx.Ont.Native.Ong.UnboundONG(defAccount.Address)
 	if err != nil {
 		ctx.LogError("TestWithdrawONG UnboundONG error:%s", err)
 		return false
 	}
 
-	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
-
-	if unBoungONGAfter != unBoungONG-withdrawAmount {
-		ctx.LogError("TestWithdrawONG unBoungONGAfter:%d != %d", unBoungONGAfter, unBoungONG-withdrawAmount)
+	if unBoundONGAfter != unBoundONG-withdrawAmount {
+		ctx.LogError("TestWithdrawONG unBoundONGAfter:%d != %d", unBoundONGAfter, unBoundONG-withdrawAmount)
 		return false
 	}
 
-	balanceAfter, err := ctx.Ont.Rpc.GetBalance(defAccount.Address)
+	ongBalanceAfter, err := ctx.Ont.Native.Ong.BalanceOf(defAccount.Address)
 	if err != nil {
 		ctx.LogError("TestWithdrawONG GetBalance error:%s", err)
 		return false
 	}
 
-	ctx.LogInfo("TestWithdrawONG Balance after ONT:%d ONG:%d", balanceAfter.Ont, balanceAfter.Ong)
+	ctx.LogInfo("TestWithdrawONG Balance after ONG:%d",  ongBalanceAfter)
 
-	if balanceAfter.Ong != balanceBefore.Ong+withdrawAmount {
-		ctx.LogError("TestWithdrawONG ong balance %d != %d", balanceAfter.Ong, balanceBefore.Ong+withdrawAmount)
+	if ongBalanceAfter != ongBalanceBefor+withdrawAmount {
+		ctx.LogError("TestWithdrawONG ong balance %d != %d", ongBalanceAfter, ongBalanceBefor+withdrawAmount)
 		return false
 	}
 

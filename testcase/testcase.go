@@ -42,60 +42,72 @@ func BeforeTestCase(ctx *testframework.TestFrameworkContext) {
 		return
 	}
 	newAccount := ctx.NewAccount()
+	ontBalance, err := ctx.Ont.Native.Ont.BalanceOf(defAccount.Address)
+	if err != nil {
+		ctx.LogError("GetBalance error:%s", err)
+		ctx.FailNow()
+		return
+	}
 	amount := uint64(10000)
-	balance, err := ctx.Ont.Rpc.GetBalance(defAccount.Address)
+	ongBalance, err := ctx.Ont.Native.Ong.BalanceOf(defAccount.Address)
 	if err != nil {
 		ctx.LogError("GetBalance error:%s", err)
 		ctx.FailNow()
 		return
 	}
 	minONG := uint64(100000 * math.Pow10(9))
-	if balance.Ong > minONG {
-		ctx.LogInfo("Default account balance ont:%d ong:%d", balance.Ont, balance.Ong)
+	if ongBalance > minONG {
+		ctx.LogInfo("Default account balance ont:%d ong:%d", ontBalance, ongBalance)
 		return
 	}
-	if balance.Ont == 0 {
+	if ontBalance == 0 {
 		ctx.LogWarn("Default Account balance = 0 ")
 		return
 	}
-	if balance.Ont < amount {
-		amount = balance.Ont
+	if ontBalance < amount {
+		amount = ontBalance
 	}
-	_, err = ctx.Ont.Rpc.Transfer(ctx.GetGasPrice(), ctx.GetGasLimit(), "ont", defAccount, newAccount.Address, amount)
+	_, err = ctx.Ont.Native.Ont.Transfer(ctx.GetGasPrice(), ctx.GetGasLimit(), defAccount, newAccount.Address, amount)
 	if err != nil {
 		ctx.LogError("Transfer error:%s", err)
 		ctx.FailNow()
 		return
 	}
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("WaitForGenerateBlock error:%s", err)
 		ctx.FailNow()
 		return
 	}
-	unboundONG, err := ctx.Ont.Rpc.UnboundONG(defAccount.Address)
+	unboundONG, err := ctx.Ont.Native.Ong.UnboundONG(defAccount.Address)
 	if err != nil {
 		ctx.LogError("UnboundONG error:%s", err)
 		ctx.FailNow()
 		return
 	}
-	_, err = ctx.Ont.Rpc.WithdrawONG(ctx.GetGasPrice(), ctx.GetGasLimit(), defAccount, unboundONG)
+	_, err = ctx.Ont.Native.Ong.WithdrawONG(ctx.GetGasPrice(), ctx.GetGasLimit(), defAccount, unboundONG)
 	if err != nil {
 		ctx.LogError("WithdrawONG error:%s", err)
 		ctx.FailNow()
 		return
 	}
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("WaitForGenerateBlock error:%s", err)
 		ctx.FailNow()
 		return
 	}
-	balance, err = ctx.Ont.Rpc.GetBalance(defAccount.Address)
+	ontBalanceAft, err := ctx.Ont.Native.Ont.BalanceOf(defAccount.Address)
 	if err != nil {
 		ctx.LogInfo("GetBalance error:%s", err)
 		ctx.FailNow()
 		return
 	}
-	ctx.LogInfo("Default account balance ont:%d ong:%d", balance.Ont, balance.Ong)
+	ongBalanceAft, err := ctx.Ont.Native.Ong.BalanceOf(defAccount.Address)
+	if err != nil {
+		ctx.LogInfo("GetBalance error:%s", err)
+		ctx.FailNow()
+		return
+	}
+	ctx.LogInfo("Default account balance ont:%d ong:%d", ontBalanceAft, ongBalanceAft)
 }

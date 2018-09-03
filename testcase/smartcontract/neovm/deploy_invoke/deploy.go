@@ -12,7 +12,7 @@ func TestDeploySmartContract(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestDeploySmartContract GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		contractCode,
@@ -29,7 +29,8 @@ func TestDeploySmartContract(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//WaitForGenerateBlock
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
+	
 	if err != nil {
 		ctx.LogError("TestDeploySmartContract WaitForGenerateBlock error:%s", err)
 		return false

@@ -42,7 +42,7 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		code,
@@ -57,21 +57,21 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 
 	if err != nil {
 		ctx.LogError("TestCheckWitness WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
-	checker, err := ctx.Wallet.NewAccount("", keypair.PK_ECDSA, keypair.P256, signature.SHA256withECDSA, []byte("test"))
+	checker, err := ctx.Wallet.NewAccount( keypair.PK_ECDSA, keypair.P256, signature.SHA256withECDSA, []byte("test"))
 
 	if err != nil {
 		ctx.LogError("TestCheckWitness generate account error:%s", err)
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAddress,
 		[]interface{}{checker.Address[:]})
@@ -79,9 +79,9 @@ func TestCheckWitness(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestDomainSmartContract InvokeNeoVMSmartContract error: %s", err)
 	}
 
-	ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 
-	res, err := ctx.Ont.Rpc.GetStorage(codeAddress, []byte("result"))
+	res, err := ctx.Ont.GetStorage(codeAddress.ToHexString(), []byte("result"))
 	if err != nil {
 		ctx.LogError("TestDomainSmartContract GetStorageItem key:hello error: %s", err)
 		return false

@@ -33,7 +33,7 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		code,
@@ -44,14 +44,14 @@ func TestRuntimLog(ctx *testframework.TestFrameworkContext) bool {
 		"")
 
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 2)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 2)
 
 	if err != nil {
 		ctx.LogError("TestRuntimLog WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	txHash, err := ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAddr,
 		[]interface{}{"ontology"})

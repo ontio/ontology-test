@@ -3,7 +3,6 @@ package operator
 import (
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
@@ -22,7 +21,7 @@ func TestOperationAdd(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestOperationAdd GetDefaultAccount error:%s", err)
 		return false
 	}
-	tx, err := ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	tx, err := ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		false,
 		code,
@@ -38,7 +37,7 @@ func TestOperationAdd(ctx *testframework.TestFrameworkContext) bool {
 	}
 	ctx.LogInfo("DeployContract TxHash:%s", tx.ToHexString())
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestOperationAdd WaitForGenerateBlock error:%s", err)
 		return false
@@ -64,16 +63,20 @@ func TestOperationAdd(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationAdd(ctx *testframework.TestFrameworkContext, codeAddress common.Address, a, b int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		codeAddress,
 		[]interface{}{a, b},
-		sdkcom.NEOVM_TYPE_INTEGER,
 	)
 	if err != nil {
 		ctx.LogError("TestOperationAdd InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToInt(res, a+b)
+	resValue,err := res.Result.ToInteger()
+	if err != nil {
+		ctx.LogError("TestOperationAdd Result.ToInteger error:%s", err)
+		return false
+	}
+	err = ctx.AssertToInt(resValue, a+b)
 	if err != nil {
 		ctx.LogError("TestOperationAdd test failed %s , %d, %d", err, a, b)
 		return false

@@ -4,7 +4,6 @@ import (
 	"math/big"
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
@@ -18,7 +17,7 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestAsBigInteger GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		false,
 		code,
@@ -33,7 +32,7 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestAsBigInteger WaitForGenerateBlock error:%s", err)
 		return false
@@ -55,16 +54,24 @@ func TestAsBigInteger(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testAsBigInteger(ctx *testframework.TestFrameworkContext, code common.Address, b *big.Int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		code,
 		[]interface{}{b},
-		sdkcom.NEOVM_TYPE_INTEGER,
 	)
 	if err != nil {
 		ctx.LogError("TestAsBigInteger InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertBigInteger(res, b)
+	if res.State == 0 {
+		ctx.LogError("TestAsBigInteger PreExecInvokeNeoVMContract failed. state == 0")
+		return false
+	}
+	resValue, err := res.Result.ToInteger()
+	if err != nil {
+		ctx.LogError("TestAsBigInteger Result.ToInteger error:%s", err)
+		return false
+	}
+	err = ctx.AssertBigInteger(resValue, b)
 	if err != nil {
 		ctx.LogError("TestAsBigInteger test failed %s", err)
 		return false

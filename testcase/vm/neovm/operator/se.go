@@ -3,7 +3,6 @@ package operator
 import (
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
@@ -17,7 +16,7 @@ func TestOperationSmallerEqual(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestOperationSmallerEqual GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 
 		false,
@@ -33,7 +32,7 @@ func TestOperationSmallerEqual(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestOperationSmallerEqual WaitForGenerateBlock error:%s", err)
 		return false
@@ -59,16 +58,20 @@ func TestOperationSmallerEqual(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testOperationSmallerEqual(ctx *testframework.TestFrameworkContext, code common.Address, a, b int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		code,
 		[]interface{}{a, b},
-		sdkcom.NEOVM_TYPE_BOOL,
 	)
 	if err != nil {
 		ctx.LogError("TestOperationSmallerEqual InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToBoolean(res, a <= b)
+	resValue, err := res.Result.ToBool()
+	if err != nil {
+		ctx.LogError("TestOperationLarger Result.ToBool error:%s", err)
+		return false
+	}
+	err = ctx.AssertToBoolean(resValue, a <= b)
 	if err != nil {
 		ctx.LogError("TestOperationLarger test %d <= %d failed %s", a, b, err)
 		return false

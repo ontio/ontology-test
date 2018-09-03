@@ -38,7 +38,7 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		code,
@@ -48,13 +48,13 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		"",
 		"")
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestRuntimeNotify WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
-	txHash, err := ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	txHash, err := ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAddr,
 		[]interface{}{},
@@ -65,13 +65,13 @@ func TestRuntimeNotify(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestRuntimeNotify WaitForGenerateBlock error:%s", err)
 		return false
 	}
 
-	events, err := ctx.Ont.Rpc.GetSmartContractEvent(txHash)
+	events, err := ctx.Ont.GetSmartContractEvent(txHash.ToHexString())
 	if err != nil {
 		ctx.LogError("TestRuntimeNotify GetSmartContractEvent error:%s", err)
 		return false

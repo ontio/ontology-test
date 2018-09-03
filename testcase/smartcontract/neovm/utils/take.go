@@ -3,7 +3,6 @@ package utils
 import (
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
@@ -17,7 +16,7 @@ func TestTake(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestAsString GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		false,
 		code,
@@ -32,7 +31,7 @@ func TestTake(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestTake WaitForGenerateBlock error:%s", err)
 		return false
@@ -54,10 +53,9 @@ func TestTake(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testTake(ctx *testframework.TestFrameworkContext, code common.Address, b []byte, count int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		code,
 		[]interface{}{b, count},
-		sdkcom.NEOVM_TYPE_BYTE_ARRAY,
 	)
 	if err != nil {
 		ctx.LogError("TestTake InvokeSmartContract error:%s", err)
@@ -67,7 +65,12 @@ func testTake(ctx *testframework.TestFrameworkContext, code common.Address, b []
 	if count > len(b) {
 		r = len(b)
 	}
-	err = ctx.AssertToByteArray(res, b[0:r])
+	resValue, err := res.Result.ToByteArray()
+	if err != nil {
+		ctx.LogError("TestTake Result.ToByteArray error:%s", err)
+		return false
+	}
+	err = ctx.AssertToByteArray(resValue, b[0:r])
 	if err != nil {
 		ctx.LogError("TestTake test failed %s", err)
 		return false

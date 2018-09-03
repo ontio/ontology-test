@@ -39,7 +39,7 @@ func TestStorage(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	tx, err := ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	tx, err := ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		true,
 		code,
@@ -55,13 +55,13 @@ func TestStorage(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	ctx.LogInfo("TestStorage deploy tx:%s", tx.ToHexString())
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestStorage WaitForGenerateBlock error: %s", err)
 		return false
 	}
 
-	invoTx, err := ctx.Ont.Rpc.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	invoTx, err := ctx.Ont.NeoVM.InvokeNeoVMContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		codeAddr,
 		[]interface{}{})
@@ -73,24 +73,24 @@ func TestStorage(ctx *testframework.TestFrameworkContext) bool {
 
 	ctx.LogInfo("TestStorage invoke tx:%s\n", invoTx.ToHexString())
 
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 
 	if err != nil {
 		ctx.LogError("TestStorage WaitForGenerateBlock error: %s", err)
 		return false
 	}
 
-	v1, err := ctx.Ont.Rpc.GetStorage(codeAddr, []byte("k1"))
+	v1, err := ctx.Ont.GetStorage(codeAddr.ToHexString(), []byte("k1"))
 	if err != nil {
 		ctx.LogError("TestStorage GetStorage k1 error:%s", err)
 		return false
 	}
-	v2, err := ctx.Ont.Rpc.GetStorage(codeAddr, []byte("k2"))
+	v2, err := ctx.Ont.GetStorage(codeAddr.ToHexString(), []byte("k2"))
 	if err != nil {
 		ctx.LogError("TestStorage GetStorage k2 error:%s", err)
 		return false
 	}
-	v3, err := ctx.Ont.Rpc.GetStorage(codeAddr, []byte("k3"))
+	v3, err := ctx.Ont.GetStorage(codeAddr.ToHexString(), []byte("k3"))
 	if err != nil {
 		ctx.LogError("TestStorage GetStorage k3 error:%s", err)
 		return false

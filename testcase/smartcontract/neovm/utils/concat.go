@@ -3,7 +3,6 @@ package utils
 import (
 	"time"
 
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 )
@@ -16,7 +15,7 @@ func TestConcat(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestConcat GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 		false,
 		code,
@@ -31,23 +30,27 @@ func TestConcat(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestConcat WaitForGenerateBlock error:%s", err)
 		return false
 	}
 	input1 := "Hello"
 	input2 := "World"
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		codeAddress,
 		[]interface{}{input1, input2},
-		sdkcom.NEOVM_TYPE_BYTE_ARRAY,
 	)
 	if err != nil {
 		ctx.LogError("TestConcat InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToByteArray(res, []byte(string(input1)+string(input2)))
+	resValue, err := res.Result.ToByteArray()
+	if err != nil {
+		ctx.LogError("TestConcat Result.ToByteArray error:%s", err)
+		return false
+	}
+	err = ctx.AssertToByteArray(resValue, []byte(string(input1)+string(input2)))
 	if err != nil {
 		ctx.LogError("TestConcat test failed %s", err)
 		return false

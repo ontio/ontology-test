@@ -2,8 +2,6 @@ package cond_loop
 
 import (
 	"time"
-
-	sdkcom "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology-test/testframework"
 	"github.com/ontio/ontology/common"
@@ -17,7 +15,7 @@ func TestFor(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("TestFor GetDefaultAccount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.DeploySmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
+	_, err = ctx.Ont.NeoVM.DeployNeoVMSmartContract(ctx.GetGasPrice(), ctx.GetGasLimit(),
 		signer,
 
 		false,
@@ -33,7 +31,7 @@ func TestFor(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	//等待出块
-	_, err = ctx.Ont.Rpc.WaitForGenerateBlock(30*time.Second, 1)
+	_, err = ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
 	if err != nil {
 		ctx.LogError("TestFor WaitForGenerateBlock error:%s", err)
 		return false
@@ -55,16 +53,20 @@ func TestFor(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func testFor(ctx *testframework.TestFrameworkContext, code common.Address, a int) bool {
-	res, err := ctx.Ont.Rpc.PrepareInvokeNeoVMContractWithRes(
+	res, err := ctx.Ont.NeoVM.PreExecInvokeNeoVMContract(
 		code,
 		[]interface{}{a},
-		sdkcom.NEOVM_TYPE_INTEGER,
 	)
 	if err != nil {
 		ctx.LogError("TestFor InvokeSmartContract error:%s", err)
 		return false
 	}
-	err = ctx.AssertToInt(res, forloop(a))
+	resValue, err := res.Result.ToInteger()
+	if err != nil {
+		ctx.LogError("TestFor Result.ToInteger error:%s", err)
+		return false
+	}
+	err = ctx.AssertToInt(resValue, forloop(a))
 	if err != nil {
 		ctx.LogError("TestFor test for %d failed %s", a, err)
 		return false

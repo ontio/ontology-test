@@ -1,4 +1,4 @@
-package jsonrpc
+package http
 
 import (
 	"bytes"
@@ -18,34 +18,34 @@ import (
 )
 
 func TestGetBlockByHeight(ctx *testframework.TestFrameworkContext) bool {
-	blockCount, err := ctx.Ont.Rpc.GetBlockCount()
+	curBlockHeight, err := ctx.Ont.GetCurrentBlockHeight()
 	if err != nil {
 		ctx.LogError("TestGetBlockByHeight GetBlockCount error:%s", err)
 		return false
 	}
-	_, err = ctx.Ont.Rpc.GetBlockByHeight(blockCount - 1)
+	_, err = ctx.Ont.GetBlockByHeight(curBlockHeight )
 	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetBlockByHeight error:%s", err)
+		ctx.LogError("ctx.Ont.GetBlockByHeight error:%s", err)
 		return false
 	}
 	return true
 }
 
 func TestGetBlockByHash(ctx *testframework.TestFrameworkContext) bool {
-	blockCount, err := ctx.Ont.Rpc.GetBlockCount()
+	curBlockHeight, err := ctx.Ont.GetCurrentBlockHeight()
 	if err != nil {
 		ctx.LogError("TestGetBlockByHash GetBlockCount error:%s", err)
 		return false
 	}
 
-	blockHash, err := ctx.Ont.Rpc.GetBlockHash(blockCount - 1)
+	blockHash, err := ctx.Ont.GetBlockHash(curBlockHeight)
 	if err != nil {
 		ctx.LogError("TestGetBlockByHash GetBlockHash error:%s", err)
 		return false
 	}
-	block, err := ctx.Ont.Rpc.GetBlockByHash(blockHash)
+	block, err := ctx.Ont.GetBlockByHash(blockHash.ToHexString())
 	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetBlockByHash error:%s", err)
+		ctx.LogError("ctx.Ont.GetBlockByHash error:%s", err)
 		return false
 	}
 	bHash := block.Hash()
@@ -56,39 +56,24 @@ func TestGetBlockByHash(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
-func TestGetBalance(ctx *testframework.TestFrameworkContext) bool {
-	defAcc, err := ctx.GetDefaultAccount()
+func TestGetCurrentBlockHeight(ctx *testframework.TestFrameworkContext) bool {
+	num, err := ctx.Ont.GetCurrentBlockHeight()
 	if err != nil {
-		ctx.LogError("TestGetBalance GetDefaultAccount error:%s", err)
+		ctx.LogError("ctx.Ont.GetCurrentBlockHeight error:%s", err)
 		return false
 	}
-	balance, err := ctx.Ont.Rpc.GetBalance(defAcc.Address)
-	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetBalance error:%s", err)
-		return false
-	}
-	ctx.LogInfo("%v", balance)
-	return true
-}
-
-func TestGetBlockCount(ctx *testframework.TestFrameworkContext) bool {
-	num, err := ctx.Ont.Rpc.GetBlockCount()
-	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetBlockCount error:%s", err)
-		return false
-	}
-	ctx.LogInfo("GetBlockCount:", num)
+	ctx.LogInfo("CurrentBlockHeight:", num)
 	return true
 }
 
 func TestGetBlockHash(ctx *testframework.TestFrameworkContext) bool {
-	blockCount, err := ctx.Ont.Rpc.GetBlockCount()
+	blockCount, err := ctx.Ont.GetCurrentBlockHeight()
 	if err != nil {
 		ctx.LogError("TestGetBlockByHash GetBlockCount error:%s", err)
 		return false
 	}
 
-	blockHash, err := ctx.Ont.Rpc.GetBlockHash(blockCount - 1)
+	blockHash, err := ctx.Ont.GetBlockHash(blockCount)
 	if err != nil {
 		ctx.LogError("TestGetBlockByHash GetBlockHash error:%s", err)
 		return false
@@ -98,9 +83,9 @@ func TestGetBlockHash(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func TestGetCurrentBlockHash(ctx *testframework.TestFrameworkContext) bool {
-	blkhash, err := ctx.Ont.Rpc.GetCurrentBlockHash()
+	blkhash, err := ctx.Ont.GetCurrentBlockHash()
 	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetCurrentBlockHash error:%s", err)
+		ctx.LogError("ctx.Ont.GetCurrentBlockHash error:%s", err)
 		return false
 	}
 	ctx.LogInfo("TestGetCurrentBlockHash blkhash:%s", blkhash.ToHexString())
@@ -108,15 +93,15 @@ func TestGetCurrentBlockHash(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func TestGetRawTransaction(ctx *testframework.TestFrameworkContext) bool {
-	block, err := ctx.Ont.Rpc.GetBlockByHeight(0)
+	block, err := ctx.Ont.GetBlockByHeight(0)
 	if err != nil {
 		ctx.LogError("TestGetRawTransaction GetBlockByHeight error:%s", err)
 		return false
 	}
 	txBaseHash := block.Transactions[0].Hash()
-	tx, err := ctx.Ont.Rpc.GetRawTransaction(txBaseHash)
+	tx, err := ctx.Ont.GetTransaction(txBaseHash.ToHexString())
 	if err != nil {
-		ctx.LogError("ctx.Ont.Rpc.GetRawTransaction error:%s", err)
+		ctx.LogError("ctx.Ont.GetRawTransaction error:%s", err)
 		return false
 	}
 	txHash := tx.Hash()
@@ -128,7 +113,7 @@ func TestGetRawTransaction(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func TestGetSmartContract(ctx *testframework.TestFrameworkContext) bool {
-	block, err := ctx.Ont.Rpc.GetBlockByHeight(0)
+	block, err := ctx.Ont.GetBlockByHeight(0)
 	if err != nil {
 		ctx.LogError("GetBlockByHeight error:%s", err)
 		return false
@@ -138,7 +123,7 @@ func TestGetSmartContract(ctx *testframework.TestFrameworkContext) bool {
 	payload := ont.Payload.(*payload.DeployCode)
 
 	contractAddress := types.AddressFromVmCode(payload.Code)
-	contract, err := ctx.Ont.Rpc.GetSmartContract(contractAddress)
+	contract, err := ctx.Ont.GetSmartContract(contractAddress.ToHexString())
 	if err != nil {
 		ctx.LogError("GetSmartContract error:%s", err)
 		return false
@@ -154,13 +139,13 @@ func TestGetSmartContract(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func TestGetSmartContractEvent(ctx *testframework.TestFrameworkContext) bool {
-	events, err := ctx.Ont.Rpc.GetSmartContractEventByBlock(0)
+	events, err := ctx.Ont.GetSmartContractEventByBlock(0)
 	if err != nil {
 		ctx.LogError("TestGetSmartContractEvent GetSmartContractEventByBlock error:%s", err)
 		return false
 	}
 
-	scEvt, err := ctx.Ont.Rpc.GetSmartContractEventWithHexString(events[0].TxHash)
+	scEvt, err := ctx.Ont.GetSmartContractEvent(events[0].TxHash)
 	if err != nil {
 		ctx.LogError("TestGetSmartContractEvent GetSmartContractEvent error:%s", err)
 		return false
@@ -182,7 +167,7 @@ func TestGetSmartContractEvent(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func TestGetStorage(ctx *testframework.TestFrameworkContext) bool {
-	value, err := ctx.Ont.Rpc.GetStorage(nvutils.OntContractAddress, []byte(ont.TOTALSUPPLY_NAME))
+	value, err := ctx.Ont.GetStorage(nvutils.OntContractAddress.ToHexString(), []byte(ont.TOTALSUPPLY_NAME))
 	if err != nil {
 		ctx.LogError("TestGetStorage error:%s", err)
 		return false
@@ -205,12 +190,12 @@ func TestGetStorage(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func TestGetVbftInfo(ctx *testframework.TestFrameworkContext) bool {
-	blkNum, err := ctx.Ont.Rpc.GetBlockCount()
+	blkNum, err := ctx.Ont.GetCurrentBlockHeight()
 	if err != nil {
 		ctx.LogError("TestGetVbftInfo GetBlockCount error:%s", err)
 		return false
 	}
-	blk, err := ctx.Ont.Rpc.GetBlockByHeight(blkNum - 1)
+	blk, err := ctx.Ont.GetBlockByHeight(blkNum)
 	if err != nil {
 		ctx.LogError("TestGetVbftInfo GetBlockByHeight error:%s", err)
 		return false
@@ -227,7 +212,7 @@ func TestGetVbftInfo(ctx *testframework.TestFrameworkContext) bool {
 	} else {
 		var cfgBlock *types.Block
 		if block.Info.LastConfigBlockNum != math.MaxUint32 {
-			cfgBlock, err = ctx.Ont.Rpc.GetBlockByHeight(block.Info.LastConfigBlockNum)
+			cfgBlock, err = ctx.Ont.GetBlockByHeight(block.Info.LastConfigBlockNum)
 			if err != nil {
 				ctx.LogError("TestGetVbftInfo chainconfig GetBlockByHeight error:%s", err)
 				return false
